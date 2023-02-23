@@ -1,0 +1,35 @@
+{
+  "name": "railsware/mailtrap-php",
+  "description": "The MailTrap SDK provides methods for all API functions.",
+  "keywords": [],
+  "homepage": "https://github.com/railsware/mailtrap-php",
+  "license": "MIT",
+  "require": {
+    "php": "^7.4 || ^8.0",
+    "ext-curl": "*",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "symfony/http-client": "^5.4|^6.0",
+    "symfony/mailer": "^5.4|^6.0",
+    "phpunit/phpunit": "^9"
+  },
+  "suggest": {
+    "symfony/http-client": "HTTP client",
+    "symfony/mailer": "Mailer Component"
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit"
+  },
+  "autoload": {
+    "psr-4": {
+      "Mailtrap\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Mailtrap\\Tests\\": "tests/"
+    }
+  },
+  "minimum-stability": "dev"
+}
