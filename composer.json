@@ -7,14 +7,24 @@
   "require": {
     "php": "^7.4 || ^8.0",
     "ext-curl": "*",
-    "ext-json": "*"
+    "ext-json": "*",
+    "psr/http-message": "^1.0",
+    "psr/http-client-implementation": "^1.0",
+    "php-http/httplug": "^2.0",
+    "php-http/message-factory": "^1.0",
+    "php-http/discovery": "^1.0",
+    "webmozart/assert": "^1.11",
+    "symfony/mime": "^5.4|^6.0"
   },
   "require-dev": {
+    "php-http/mock-client": "^1.0",
+    "php-http/message": "^1.0",
     "symfony/http-client": "^5.4|^6.0",
-    "symfony/mailer": "^5.4|^6.0",
-    "phpunit/phpunit": "^9"
+    "phpunit/phpunit": "^9",
+    "nyholm/psr7": "^1.5"
   },
   "suggest": {
+    "nyholm/psr7": "PSR-7 message implementation",
     "symfony/http-client": "HTTP client",
     "symfony/mailer": "Mailer Component"
   },
@@ -31,5 +41,10 @@
       "Mailtrap\\Tests\\": "tests/"
     }
   },
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
+  }
 }
