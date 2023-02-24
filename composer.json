@@ -13,7 +13,6 @@
     "php-http/httplug": "^2.0",
     "php-http/message-factory": "^1.0",
     "php-http/discovery": "^1.0",
-    "webmozart/assert": "^1.11",
     "symfony/mime": "^5.4|^6.0"
   },
   "require-dev": {
@@ -25,8 +24,7 @@
   },
   "suggest": {
     "nyholm/psr7": "PSR-7 message implementation",
-    "symfony/http-client": "HTTP client",
-    "symfony/mailer": "Mailer Component"
+    "symfony/http-client": "HTTP client"
   },
   "scripts": {
     "test": "vendor/bin/phpunit"
@@ -41,10 +39,5 @@
       "Mailtrap\\Tests\\": "tests/"
     }
   },
-  "minimum-stability": "dev",
-  "config": {
-    "allow-plugins": {
-      "php-http/discovery": true
-    }
-  }
+  "minimum-stability": "dev"
 }
