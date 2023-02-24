@@ -1,5 +1,11 @@
 Official Mailtrap PHP client
 ===============
+![GitHub Actions](https://github.com/railsware/mailtrap-php/actions/workflows/ci.yml/badge.svg) 
+![GitHub Actions](https://github.com/railsware/mailtrap-php/actions/workflows/ci-phpunit.yml/badge.svg)
+![GitHub Actions](https://github.com/railsware/mailtrap-php/actions/workflows/ci-psalm.yaml/badge.svg)
+
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/railsware/mailtrap-php.svg?style=flat-square)](https://packagist.org/packages/railsware/mailtrap-php)
+[![Total Downloads](https://img.shields.io/packagist/dt/railsware/mailtrap-php.svg?style=flat-square)](https://packagist.org/packages/railsware/mailtrap-php)
 
 In-progress...
 
