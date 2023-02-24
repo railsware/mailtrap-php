@@ -1,0 +1,44 @@
+name: CI-PHPUnit-Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches:
+      - 'release/**'
+      - 'feature/**'
+      - 'main'
+
+jobs:
+  phpunit-tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        php-versions: [ '7.4','8.0','8.1','8.2' ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Change php the one from matrix
+        run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-versions }}
+
+      - name: Get PHP version
+        run: php -v
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "COMPOSER_DIR=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.COMPOSER_DIR }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run phpunit tests
+        run: composer test

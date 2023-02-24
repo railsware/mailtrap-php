@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mailtrap\Api;
 
 use Mailtrap\ConfigInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class AbstractApi
@@ -22,7 +23,7 @@ abstract class AbstractApi
         $this->config = $config;
     }
 
-    protected function get(string $path, array $requestHeaders = [])
+    protected function get(string $path, array $requestHeaders = []): ResponseInterface
     {
         return $this->config->getHttpClientBuilder()->getHttpClient()->get($path, $requestHeaders);
     }

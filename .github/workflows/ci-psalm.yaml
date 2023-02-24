@@ -1,0 +1,44 @@
+name: CI-Psalm-Analyze
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches:
+      - 'release/**'
+      - 'feature/**'
+      - 'main'
+
+jobs:
+  psalm-analyze:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        php-versions: [ '8.1' ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Change php the one from matrix
+        run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-versions }}
+
+      - name: Get PHP version
+        run: php -v
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "COMPOSER_DIR=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.COMPOSER_DIR }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run Psalm analyze
+        run: vendor/bin/psalm
