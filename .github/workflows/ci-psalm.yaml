@@ -21,21 +21,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Change php the one from matrix
-        run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-versions }}
+      - name: Setup PHP
+        id: setup-php
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, intl, curl
 
-      - name: Get PHP version
-        run: php -v
+      - name: Print PHP version
+        run: echo ${{ steps.setup-php.outputs.php-version }}
 
       - name: Get Composer Cache Directory
         id: composer-cache
         run: echo "COMPOSER_DIR=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v3
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
         with:
-          path: ${{ steps.composer-cache.outputs.COMPOSER_DIR }}
+          path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
+          restore-keys: ${{ runner.os }}-composer-
 
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-progress

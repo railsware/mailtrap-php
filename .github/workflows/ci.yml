@@ -21,8 +21,15 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Change php the one from matrix
-      run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php-versions }}
+    - name: Setup PHP
+      id: setup-php
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: mbstring, intl, curl
+
+    - name: Print PHP version
+      run: echo ${{ steps.setup-php.outputs.php-version }}
 
     - name: Validate composer.json
       run: composer validate
