@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mailtrap\Api;
 
-use Mailtrap\Config;
+use Mailtrap\ConfigInterface;
 
 /**
  * Class AbstractApi
@@ -15,9 +15,9 @@ abstract class AbstractApi
     public const SENDMAIL_HOST = 'https://send.api.mailtrap.io';
     public const SENDMAIL_SANDBOX_HOST = 'https://sandbox.api.mailtrap.io';
 
-    protected Config $config;
+    protected ConfigInterface $config;
 
-    public function __construct(Config $config)
+    public function __construct(ConfigInterface $config)
     {
         $this->config = $config;
     }

@@ -18,7 +18,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 /**
  * Class Builder
  */
-class HttpClientBuilder
+class HttpClientBuilder implements HttpClientBuilderInterface
 {
     private ClientInterface $httpClient;
 

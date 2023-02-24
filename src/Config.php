@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mailtrap;
 
 use Mailtrap\HttpClient\HttpClientBuilder;
+use Mailtrap\HttpClient\HttpClientBuilderInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -12,19 +13,24 @@ use Psr\Http\Message\StreamFactoryInterface;
 /**
  * Class Config
  */
-class Config
+class Config implements ConfigInterface
 {
     private string $apiToken;
 
     private ?ClientInterface $httpClient = null;
 
-    private ?HttpClientBuilder $httpClientBuilder = null;
+    private ?HttpClientBuilderInterface $httpClientBuilder = null;
 
     private ?RequestFactoryInterface $requestFactory = null;
 
     private ?StreamFactoryInterface $streamFactory = null;
 
     private ?string $host = null;
+
+    public function getApiToken(): string
+    {
+        return $this->apiToken;
+    }
 
     public function setApiToken(string $apiToken): Config
     {
@@ -45,7 +51,7 @@ class Config
         return $this;
     }
 
-    public function getHttpClientBuilder(): HttpClientBuilder
+    public function getHttpClientBuilder(): HttpClientBuilderInterface
     {
         if (null === $this->httpClientBuilder) {
             $this->httpClientBuilder = new HttpClientBuilder(
