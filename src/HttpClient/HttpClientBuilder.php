@@ -21,13 +21,9 @@ use Psr\Http\Message\StreamFactoryInterface;
 class HttpClientBuilder implements HttpClientBuilderInterface
 {
     private ClientInterface $httpClient;
-
     private RequestFactoryInterface $requestFactory;
-
     private StreamFactoryInterface $streamFactory;
-
     private ?HttpMethodsClientInterface $pluginClient = null;
-
     private string $apiToken;
 
     public function __construct(
@@ -36,13 +32,13 @@ class HttpClientBuilder implements HttpClientBuilderInterface
         RequestFactoryInterface $requestFactory = null,
         StreamFactoryInterface $streamFactory = null
     ) {
+        $this->apiToken = $apiToken;
         $this->httpClient = $httpClient ?? HttpClientDiscovery::find();
         $this->requestFactory = $requestFactory ?? Psr17FactoryDiscovery::findRequestFactory();
         $this->streamFactory = $streamFactory ?? Psr17FactoryDiscovery::findStreamFactory();
-        $this->apiToken = $apiToken;
     }
 
-    public function getHttpClient(): HttpMethodsClientInterface
+    public function getHttpClient(): ClientInterface
     {
         if (null === $this->pluginClient) {
             $plugins = [

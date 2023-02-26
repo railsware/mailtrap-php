@@ -2,9 +2,9 @@
 
 namespace Mailtrap\HttpClient;
 
-use Http\Client\Common\HttpMethodsClientInterface;
+use Psr\Http\Client\ClientInterface;
 
 interface HttpClientBuilderInterface
 {
-    public function getHttpClient(): HttpMethodsClientInterface;
+    public function getHttpClient(): ClientInterface;
 }

@@ -11,7 +11,7 @@ use Psr\Http\Message\ResponseInterface;
  */
 final class ResponseHelper
 {
-    public static function toArray(ResponseInterface $response)
+    public static function toArray(ResponseInterface $response): array
     {
         return json_decode($response->getBody()->__toString(), true, 512, JSON_THROW_ON_ERROR);
     }

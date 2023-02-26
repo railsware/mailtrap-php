@@ -16,27 +16,20 @@ use Psr\Http\Message\StreamFactoryInterface;
 class Config implements ConfigInterface
 {
     private string $apiToken;
-
     private ?ClientInterface $httpClient = null;
-
     private ?HttpClientBuilderInterface $httpClientBuilder = null;
-
     private ?RequestFactoryInterface $requestFactory = null;
-
     private ?StreamFactoryInterface $streamFactory = null;
-
     private ?string $host = null;
+
+    public function __construct(string $apiToken)
+    {
+        $this->apiToken = $apiToken;
+    }
 
     public function getApiToken(): string
     {
         return $this->apiToken;
-    }
-
-    public function setApiToken(string $apiToken): Config
-    {
-        $this->apiToken = $apiToken;
-
-        return $this;
     }
 
     public function getHost(): ?string
@@ -63,6 +56,13 @@ class Config implements ConfigInterface
         }
 
         return $this->httpClientBuilder;
+    }
+
+    public function setHttpClientBuilder(HttpClientBuilderInterface $httpClientBuilder): self
+    {
+        $this->httpClientBuilder = $httpClientBuilder;
+
+        return $this;
     }
 
     public function setHttpClient(ClientInterface $httpClient): self
