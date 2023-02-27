@@ -37,7 +37,7 @@ class Config implements ConfigInterface
         return $this->host;
     }
 
-    public function setHost(string $host): Config
+    public function setHost(?string $host): self
     {
         $this->host = $host;
 

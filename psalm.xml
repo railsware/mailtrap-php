@@ -2,6 +2,8 @@
 <psalm
     errorLevel="7"
     resolveFromConfigFile="true"
+    findUnusedBaselineEntry="false"
+    findUnusedCode="false"
     cacheDirectory=".psalm-cache"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"

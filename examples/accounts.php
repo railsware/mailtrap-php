@@ -16,7 +16,6 @@ require __DIR__ . '/../vendor/autoload.php';
  * ->setStreamFactory(StreamFactoryInterface)
  */
 $config = new Config('23...YOUR_API_KEY_HERE...4c');
-
 $mailTrap = new MailtrapClient($config);
 
 /**
