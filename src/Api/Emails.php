@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mailtrap\Api;
 
 use Mailtrap\Exception\LogicException;
+use Mailtrap\Exception\RuntimeException;
 use Mailtrap\Header\CategoryHeader;
 use Mailtrap\Header\CustomVariableHeader;
 use Mailtrap\Header\Template\TemplateUuidHeader;
@@ -92,16 +93,28 @@ class Emails extends AbstractApi
 
             switch(true) {
                 case $header instanceof CustomVariableHeader:
-                    $payload[CustomVariableHeader::VAR_NAME][$header->getName()] = $header->getValue();
-                    break;
-                case $header instanceof CategoryHeader:
-                    $payload[CategoryHeader::VAR_NAME] = $header->getBodyAsString();
-                    break;
-                case $header instanceof TemplateUuidHeader:
-                    $payload[TemplateUuidHeader::VAR_NAME] = $header->getBodyAsString();
+                    $payload[CustomVariableHeader::VAR_NAME][$header->getName()] = $header->getBodyAsString();
                     break;
                 case $header instanceof TemplateVariableHeader:
                     $payload[TemplateVariableHeader::VAR_NAME][$header->getName()] = $header->getBodyAsString();
+                    break;
+                case $header instanceof CategoryHeader:
+                    if (!empty($payload[CategoryHeader::VAR_NAME])) {
+                        throw new RuntimeException(
+                            sprintf('Too many "%s" instances present in the email headers. Mailtrap does not accept more than 1 category on an email.', CategoryHeader::class)
+                        );
+                    }
+
+                    $payload[CategoryHeader::VAR_NAME] = $header->getBodyAsString();
+                    break;
+                case $header instanceof TemplateUuidHeader:
+                    if (!empty($payload[TemplateUuidHeader::VAR_NAME])) {
+                        throw new RuntimeException(
+                            sprintf('Too many "%s" instances present in the email headers. Mailtrap does not accept more than 1 template UUID on an email.', TemplateUuidHeader::class)
+                        );
+                    }
+
+                    $payload[TemplateUuidHeader::VAR_NAME] = $header->getBodyAsString();
                     break;
                 default:
                     $payload['headers'][$header->getName()] = $header->getBodyAsString();

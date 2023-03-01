@@ -9,16 +9,112 @@ Official Mailtrap PHP client
 [![Total Downloads](https://img.shields.io/packagist/dt/railsware/mailtrap-php.svg?style=flat)](https://packagist.org/packages/railsware/mailtrap-php)
 
 
-
-In-progress...
-
 ## Installation
-You can install the package via composer:
+You can install the package via [composer](http://getcomposer.org/)
+
+The Mailtrap API Client is not hard coupled to Guzzle, React, Zend, Symfony HTTP or any other library that sends
+HTTP messages. Instead, it uses the [PSR-18](https://www.php-fig.org/psr/psr-18/) client abstraction.
+
+This will give you the flexibility to choose what [HTTP client](https://docs.php-http.org/en/latest/clients.html) you want to use.
+
+If you just want to get started quickly you should run the following command:
+
 ```bash
-composer require railsware/mailtrap-php
+composer require railsware/mailtrap-php symfony/http-client nyholm/psr7
 ```
 
+## Usage
+You should use Composer autoloader in your application to automatically load your dependencies. 
+All the examples below assume you've already included this in your file:
 
+Here's how to send a message using the SDK:
+
+```php
+<?php
+
+use Mailtrap\Config;
+use Mailtrap\Header\CategoryHeader;
+use Mailtrap\Header\CustomVariableHeader;
+use Mailtrap\Helper\ResponseHelper;
+use Mailtrap\MailtrapClient;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Header\UnstructuredHeader;
+
+require __DIR__ . 'vendor/autoload.php';
+
+$mailTrap = new MailtrapClient(
+    new Config('23...YOUR_API_KEY_HERE...4c')
+);
+
+/**
+ * Email Sending API
+ *
+ * POST https://send.api.mailtrap.io/api/send
+ */
+try {
+    $email = (new Email())
+        ->from(new Address('mailtrap@example.com', 'Mailtrap Test'))
+        ->to(new Address('email@example.com', 'Jon'))
+        ->cc('mailtrapqa@example.com')
+        ->addCc('staging@example.com')
+        ->bcc('mailtrapdev@example.com')
+        ->subject('Best practices of building HTML emails')
+        ->text('Hey! Learn the best practices of building HTML emails and play with ready-to-go templates. Mailtrap’s Guide on How to Build HTML Email is live on our blog')
+        ->html(
+            '<html>
+            <body>
+            <p><br>Hey</br>
+            Learn the best practices of building HTML emails and play with ready-to-go templates.</p>
+            <p><a href="https://mailtrap.io/blog/build-html-email/">Mailtrap’s Guide on How to Build HTML Email</a> is live on our blog</p>
+            <img src="cid:logo">
+            </body>
+        </html>'
+        )
+        ->embed(fopen('https://mailtrap.io/wp-content/uploads/2021/04/mailtrap-new-logo.svg', 'r'), 'logo', 'image/svg+xml')
+        ->attachFromPath('README.md')
+    ;
+
+    // Headers
+    $email->getHeaders()
+        ->addTextHeader('X-Message-Source', '1alf.com')
+        ->add(new UnstructuredHeader('X-Mailer', 'Mailtrap PHP Client')) // the same as addTextHeader
+    ;
+
+    // Custom Variables
+    $email->getHeaders()
+        ->add(new CustomVariableHeader('user_id', '45982'))
+        ->add(new CustomVariableHeader('batch_id', 'PSJ-12'))
+    ;
+
+    // Category (should be only one)
+    $email->getHeaders()
+        ->add(new CategoryHeader('Integration Test'))
+    ;
+
+    $response = $mailTrap->emails()->send($email); // Email sending API (real)
+    // OR
+    $response = $mailTrap->emails()->sendToSandbox($email, 1000001); // Email Testing API (sandbox). Required second param -> inbox_id
+
+    var_dump($response->getHeaders()); //headers (array)
+    var_dump($response->getStatusCode()); //status code (int)
+    var_dump(ResponseHelper::toArray($response)); // body (array)
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), "\n";
+}
+```
+
+### All usage examples
+
+You can find more examples at [examples](examples) folder.
+
+
+## Framework integration
+
+If you are using a framework you might consider these composer packages to make the framework integration easier.
+
+* [Symfony](https://github.com/railsware/mailtrap-php/src/integration/symfony) (in-progress)
+* [Laravel](https://github.com/railsware/mailtrap-php/src/integration/symfony) (in-progress)
 
 ## Contributing
 

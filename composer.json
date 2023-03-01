@@ -1,7 +1,7 @@
 {
   "name": "railsware/mailtrap-php",
   "description": "The MailTrap SDK provides methods for all API functions.",
-  "keywords": [],
+  "keywords": ["mailtrap", "mailtrap-io", "php", "mail", "email", "sdk", "plugin", "symfony", "laravel"],
   "homepage": "https://github.com/railsware/mailtrap-php",
   "license": "MIT",
   "require": {

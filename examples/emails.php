@@ -39,9 +39,7 @@ $mailTrap = new MailtrapClient($config);
 try {
     $email = (new Email())
         ->from(new Address('mailtrap@example.com', 'Mailtrap Test'))
-        //        ->from(new Address('mailtrap@example.com', 'MailTrap'))
         ->to(new Address('email@example.com', 'Jon'))
-        ->to(new Address('newuser@example.com', 'testName'))
         ->cc('mailtrapqa@example.com')
         ->addCc('staging@example.com')
         ->bcc('mailtrapdev@example.com')
@@ -136,9 +134,7 @@ try {
 try {
     $email = (new Email())
         ->from(new Address('mailtrap@example.com', 'Mailtrap Test'))
-        //        ->from(new Address('mailtrap@example.com', 'MailTrap'))
         ->to(new Address('email@example.com', 'Jon'))
-        ->to(new Address('newuser@example.com', 'testName'))
         ->cc('mailtrapqa@example.com')
         ->addCc('staging@example.com')
         ->bcc('mailtrapdev@example.com')
