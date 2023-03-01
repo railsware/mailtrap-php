@@ -47,11 +47,6 @@ $mailTrap = new MailtrapClient(
     new Config('23...YOUR_API_KEY_HERE...4c')
 );
 
-/**
- * Email Sending API
- *
- * POST https://send.api.mailtrap.io/api/send
- */
 try {
     $email = (new Email())
         ->from(new Address('mailtrap@example.com', 'Mailtrap Test'))
@@ -113,8 +108,8 @@ You can find more examples at [examples](examples) folder.
 
 If you are using a framework you might consider these composer packages to make the framework integration easier.
 
-* [Symfony](https://github.com/railsware/mailtrap-php/src/integration/symfony) (in-progress)
-* [Laravel](https://github.com/railsware/mailtrap-php/src/integration/symfony) (in-progress)
+* [Symfony](src/integration/symfony) (in-progress)
+* [Laravel](src/integration/symfony) (in-progress)
 
 ## Contributing
 
