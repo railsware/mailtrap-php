@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Mailtrap\Api;
 
 use Mailtrap\ConfigInterface;
+use Mailtrap\Exception\HttpClientException;
+use Mailtrap\Exception\HttpException;
+use Mailtrap\Exception\HttpServerException;
 use Mailtrap\Exception\InvalidArgumentException;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -41,9 +44,61 @@ abstract class AbstractApi
         );
     }
 
+    protected function put(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
+    {
+        return $this->httpClient->put(
+            $path,
+            $requestHeaders,
+            !empty($body) ? $this->jsonEncode($body) : null
+        );
+    }
+
+    protected function patch(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
+    {
+        return $this->httpClient->patch(
+            $path,
+            $requestHeaders,
+            !empty($body) ? $this->jsonEncode($body) : null
+        );
+    }
+
+    protected function delete(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
+    {
+        return $this->httpClient->delete(
+            $path,
+            $requestHeaders,
+            !empty($body) ? $this->jsonEncode($body) : null
+        );
+    }
+
     protected function getHost(): string
     {
         return $this->config->getHost() ?: self::DEFAULT_HOST;
+    }
+
+    protected function handleResponse(ResponseInterface $response): ResponseInterface
+    {
+        $statusCode = $response->getStatusCode();
+        switch (true) {
+            case $statusCode >= 200 && $statusCode < 300:
+                // Everything fine
+                break;
+            case $statusCode >= 400 && $statusCode < 500:
+                throw HttpClientException::createFromResponse($response);
+            case $statusCode >= 500:
+                throw new HttpServerException(
+                    sprintf('Internal Server Error. HTTP response code ("%d") received from the API server.', $statusCode),
+                    $statusCode
+                );
+            default:
+                throw new HttpException(
+                    sprintf('An unexpected error occurred. HTTP response code ("%d") received.', $statusCode),
+                    $statusCode
+                );
+
+        }
+
+        return $response;
     }
 
     /**

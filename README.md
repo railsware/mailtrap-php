@@ -44,7 +44,7 @@ use Symfony\Component\Mime\Header\UnstructuredHeader;
 require __DIR__ . 'vendor/autoload.php';
 
 $mailTrap = new MailtrapClient(
-    new Config('23...YOUR_API_KEY_HERE...4c')
+    new Config('23...YOUR_API_KEY_HERE...4c') // your API toke from here https://mailtrap.io/api-tokens
 );
 
 try {
@@ -108,8 +108,8 @@ You can find more examples at [examples](examples) folder.
 
 If you are using a framework you might consider these composer packages to make the framework integration easier.
 
-* [Symfony](src/integration/symfony) (in-progress)
-* [Laravel](src/integration/symfony) (in-progress)
+* [Symfony](src/integration/symfony) (coming soon)
+* [Laravel](src/integration/symfony) (coming soon)
 
 ## Contributing
 

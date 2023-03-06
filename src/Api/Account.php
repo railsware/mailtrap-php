@@ -13,6 +13,8 @@ class Account extends AbstractApi
 {
     public function getAll(): ResponseInterface
     {
-        return $this->get($this->getHost() . '/api/accounts');
+        return $this->handleResponse(
+            $this->get($this->getHost() . '/api/accounts')
+        );
     }
 }

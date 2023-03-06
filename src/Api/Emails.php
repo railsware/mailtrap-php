@@ -22,15 +22,19 @@ class Emails extends AbstractApi
 {
     public function send(Email $email): ResponseInterface
     {
-        return $this->post($this->getHost() . '/api/send', [], $this->getPayload($email));
+        return $this->handleResponse(
+            $this->post($this->getHost() . '/api/send', [], $this->getPayload($email))
+        );
     }
 
     public function sendToSandbox(Email $email, int $inboxId): ResponseInterface
     {
-        return $this->post(
-            sprintf('%s/api/send/%s', $this->getSandBoxHost($this->getHost()), $inboxId),
-            [],
-            $this->getPayload($email)
+        return $this->handleResponse(
+            $this->post(
+                sprintf('%s/api/send/%s', $this->getSandBoxHost($this->getHost()), $inboxId),
+                [],
+                $this->getPayload($email)
+            )
         );
     }
 

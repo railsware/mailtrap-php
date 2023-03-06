@@ -40,8 +40,8 @@ class MailtrapClient
 
     private function initByName(string $name): AbstractApi
     {
-        $className = self::API_MAPPING[$name];
-        if (empty($className)) {
+        $className = !empty(self::API_MAPPING[$name]) ? self::API_MAPPING[$name] : null;
+        if (null === $className) {
             throw new InvalidArgumentException(sprintf('Undefined api instance called: "%s"', $name));
         }
 
