@@ -35,7 +35,7 @@ class TemplateVariableHeader extends AbstractHeader
     /**
      * @return string
      */
-    public function getBody()
+    public function getBody(): string
     {
         return $this->getValue();
     }
