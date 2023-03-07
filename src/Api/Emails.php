@@ -105,7 +105,7 @@ class Emails extends AbstractApi
                 case $header instanceof CategoryHeader:
                     if (!empty($payload[CategoryHeader::VAR_NAME])) {
                         throw new RuntimeException(
-                            sprintf('Too many "%s" instances present in the email headers. Mailtrap does not accept more than 1 category on an email.', CategoryHeader::class)
+                            sprintf('Too many "%s" instances present in the email headers. Mailtrap does not accept more than 1 category in the email.', CategoryHeader::class)
                         );
                     }
 
@@ -114,7 +114,7 @@ class Emails extends AbstractApi
                 case $header instanceof TemplateUuidHeader:
                     if (!empty($payload[TemplateUuidHeader::VAR_NAME])) {
                         throw new RuntimeException(
-                            sprintf('Too many "%s" instances present in the email headers. Mailtrap does not accept more than 1 template UUID on an email.', TemplateUuidHeader::class)
+                            sprintf('Too many "%s" instances present in the email headers. Mailtrap does not accept more than 1 template UUID in the email.', TemplateUuidHeader::class)
                         );
                     }
 

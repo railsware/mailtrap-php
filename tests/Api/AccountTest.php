@@ -83,7 +83,9 @@ class AccountTest extends MailtrapTestCase
             ->willReturn(new Response(401, [], json_encode($expectedData)));
 
         $this->expectException(HttpClientException::class);
-        $this->expectExceptionMessage('Incorrect API token');
+        $this->expectExceptionMessage(
+            'Unauthorized. Make sure you are sending correct credentials with the request before retrying. Errors: Incorrect API token'
+        );
 
         $this->account->getAll();
     }
