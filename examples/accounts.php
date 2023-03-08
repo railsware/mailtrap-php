@@ -2,7 +2,7 @@
 
 use Mailtrap\Config;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailtrapClient;
+use Mailtrap\MailTrapClient;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../vendor/autoload.php';
  * ->setStreamFactory(StreamFactoryInterface)
  */
 $config = new Config('23...YOUR_API_KEY_HERE...4c');
-$mailTrap = new MailtrapClient($config);
+$mailTrap = new MailTrapClient($config);
 
 /**
  * Get all accounts

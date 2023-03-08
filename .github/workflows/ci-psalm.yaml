@@ -1,4 +1,4 @@
-name: CI-Psalm-Analyze
+name: Psalm Analyze
 
 on:
   push:

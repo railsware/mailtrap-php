@@ -6,23 +6,23 @@ namespace Mailtrap\Tests;
 
 use Mailtrap\ConfigInterface;
 use Mailtrap\Exception\BadMethodCallException;
-use Mailtrap\MailtrapClient;
+use Mailtrap\MailTrapClient;
 use Mailtrap\Api;
 
 /**
- * @covers MailtrapClient
+ * @covers MailTrapClient
  *
- * Class MailtrapClientTest
+ * Class MailTrapClientTest
  */
-final class MailtrapClientTest extends MailtrapTestCase
+final class MailTrapClientTest extends MailtrapTestCase
 {
-    private ?MailtrapClient $mailTrapClient;
+    private ?MailTrapClient $mailTrapClient;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->mailTrapClient = new MailtrapClient($this->createMock(ConfigInterface::class));
+        $this->mailTrapClient = new MailTrapClient($this->createMock(ConfigInterface::class));
     }
 
     protected function tearDown(): void

@@ -6,7 +6,7 @@ use Mailtrap\Header\CustomVariableHeader;
 use Mailtrap\Header\Template\TemplateUuidHeader;
 use Mailtrap\Header\Template\TemplateVariableHeader;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailtrapClient;
+use Mailtrap\MailTrapClient;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Header\UnstructuredHeader;
@@ -23,7 +23,7 @@ require __DIR__ . '/../vendor/autoload.php';
  * ->setStreamFactory(StreamFactoryInterface)
  */
 $config = new Config('23...YOUR_API_KEY_HERE...4c');
-$mailTrap = new MailtrapClient($config);
+$mailTrap = new MailTrapClient($config);
 
 
 /**********************************************************************************************************************

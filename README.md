@@ -36,14 +36,14 @@ use Mailtrap\Config;
 use Mailtrap\Header\CategoryHeader;
 use Mailtrap\Header\CustomVariableHeader;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailtrapClient;
+use Mailtrap\MailTrapClient;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Header\UnstructuredHeader;
 
 require __DIR__ . 'vendor/autoload.php';
 
-$mailTrap = new MailtrapClient(
+$mailTrap = new MailTrapClient(
     new Config('23...YOUR_API_KEY_HERE...4c') // your API toke from here https://mailtrap.io/api-tokens
 );
 

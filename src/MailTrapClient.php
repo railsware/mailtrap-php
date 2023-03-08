@@ -14,9 +14,9 @@ use Mailtrap\Exception\InvalidArgumentException;
  * @method  Api\Account  accounts
  * @method  Api\Emails   emails
  *
- * Class MailtrapClient
+ * Class MailTrapClient
  */
-class MailtrapClient
+class MailTrapClient
 {
     private const API_MAPPING = [
         'accounts' => Account::class,

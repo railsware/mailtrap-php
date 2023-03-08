@@ -47,7 +47,7 @@ class Emails extends AbstractApi
      * By default, prod and sandbox have different URLs
      * https://send.api.mailtrap.io/api/send & https://sandbox.api.mailtrap.io/api/send/{inbox_id}
      *
-     * Also DEV can use mack server URL
+     * Also DEV can use mock server URL
      *
      * @param string $host
      *
