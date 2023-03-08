@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Mailtrap\Header\Template;
+namespace Mailtrap\EmailHeader;
 
 use Symfony\Component\Mime\Header\AbstractHeader;
 
 /**
- * MIME Header for Template UUID
+ * MIME Header for Mailtrap category
  *
  * Class CustomVariableHeader
  */
-class TemplateUuidHeader extends AbstractHeader
+class CategoryHeader extends AbstractHeader
 {
-    public const VAR_NAME = 'template_uuid';
+    public const VAR_NAME = 'category';
 
     private string $value;
 
     public function __construct(string $value)
     {
-        parent::__construct('template_uuid');
+        parent::__construct('category');
 
         $this->setValue($value);
     }

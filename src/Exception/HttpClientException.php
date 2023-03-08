@@ -23,7 +23,7 @@ class HttpClientException extends HttpException
     {
         $errorMsg = '';
         $statusCode = $response->getStatusCode();
-        $body = ResponseHelper::toArray($response) ?? [];
+        $body = ResponseHelper::toArray($response);
 
         if (isset(self::ERROR_PREFIXES[$statusCode])) {
             $errorMsg .= self::ERROR_PREFIXES[$statusCode] . ' Errors: ';

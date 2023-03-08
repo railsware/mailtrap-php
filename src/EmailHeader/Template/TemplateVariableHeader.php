@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mailtrap\Header\Template;
+namespace Mailtrap\EmailHeader\Template;
 
 use Symfony\Component\Mime\Header\AbstractHeader;
 

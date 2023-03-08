@@ -2,21 +2,13 @@
 
 use Mailtrap\Config;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailTrapClient;
+use Mailtrap\MailTrapSandboxClient;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-/**
- * Config
- *
- * ->setHost(string)
- * ->setHttpClientBuilder(HttpClientBuilderInterface)
- * ->setHttpClient(ClientInterface) # https://docs.php-http.org/en/latest/clients.html
- * ->setRequestFactory(RequestFactoryInterface)
- * ->setStreamFactory(StreamFactoryInterface)
- */
-$config = new Config('23...YOUR_API_KEY_HERE...4c');
-$mailTrap = new MailTrapClient($config);
+$mailTrap = new MailTrapSandboxClient(
+    new Config('23...YOUR_API_KEY_HERE...4c')
+);
 
 /**
  * Get all accounts
@@ -24,7 +16,7 @@ $mailTrap = new MailTrapClient($config);
  * GET https://mailtrap.io/api/accounts
  */
 try {
-    $response = $mailTrap->accounts()->getAll();
+    $response = $mailTrap->accounts()->getList();
 
     // print all possible information from the response
     var_dump($response->getHeaders()); //headers (array)

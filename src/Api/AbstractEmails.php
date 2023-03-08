@@ -6,59 +6,20 @@ namespace Mailtrap\Api;
 
 use Mailtrap\Exception\LogicException;
 use Mailtrap\Exception\RuntimeException;
-use Mailtrap\Header\CategoryHeader;
-use Mailtrap\Header\CustomVariableHeader;
-use Mailtrap\Header\Template\TemplateUuidHeader;
-use Mailtrap\Header\Template\TemplateVariableHeader;
-use Psr\Http\Message\ResponseInterface;
+use Mailtrap\EmailHeader\CategoryHeader;
+use Mailtrap\EmailHeader\CustomVariableHeader;
+use Mailtrap\EmailHeader\Template\TemplateUuidHeader;
+use Mailtrap\EmailHeader\Template\TemplateVariableHeader;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Header\Headers;
 
 /**
- * Class Emails
+ * Class AbstractEmails
  */
-class Emails extends AbstractApi
+abstract class AbstractEmails extends AbstractApi
 {
-    public function send(Email $email): ResponseInterface
-    {
-        return $this->handleResponse(
-            $this->post($this->getHost() . '/api/send', [], $this->getPayload($email))
-        );
-    }
-
-    public function sendToSandbox(Email $email, int $inboxId): ResponseInterface
-    {
-        return $this->handleResponse(
-            $this->post(
-                sprintf('%s/api/send/%s', $this->getSandBoxHost($this->getHost()), $inboxId),
-                [],
-                $this->getPayload($email)
-            )
-        );
-    }
-
-    protected function getHost(): string
-    {
-        return $this->config->getHost() ?: self::SENDMAIL_HOST;
-    }
-
-    /**
-     * By default, prod and sandbox have different URLs
-     * https://send.api.mailtrap.io/api/send & https://sandbox.api.mailtrap.io/api/send/{inbox_id}
-     *
-     * Also DEV can use mock server URL
-     *
-     * @param string $host
-     *
-     * @return string
-     */
-    private function getSandBoxHost(string $host): string
-    {
-        return $host === self::SENDMAIL_HOST ? self::SENDMAIL_SANDBOX_HOST : $host;
-    }
-
-    private function getPayload(Email $email): array
+    protected function getPayload(Email $email): array
     {
         $payload = [
             'from' => $this->getStringifierAddress($this->getSender($email->getHeaders())),

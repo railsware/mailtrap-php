@@ -1,29 +1,18 @@
 <?php
 
 use Mailtrap\Config;
-use Mailtrap\Header\CategoryHeader;
-use Mailtrap\Header\CustomVariableHeader;
-use Mailtrap\Header\Template\TemplateUuidHeader;
-use Mailtrap\Header\Template\TemplateVariableHeader;
+use Mailtrap\EmailHeader\CategoryHeader;
+use Mailtrap\EmailHeader\CustomVariableHeader;
+use Mailtrap\EmailHeader\Template\TemplateUuidHeader;
+use Mailtrap\EmailHeader\Template\TemplateVariableHeader;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailTrapClient;
+use Mailtrap\MailTrapSandboxClient;
+use Mailtrap\MailTrapSendingClient;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Header\UnstructuredHeader;
 
 require __DIR__ . '/../vendor/autoload.php';
-
-/**
- * Config
- *
- * ->setHost(string)
- * ->setHttpClientBuilder(HttpClientBuilderInterface)
- * ->setHttpClient(ClientInterface) # https://docs.php-http.org/en/latest/clients.html
- * ->setRequestFactory(RequestFactoryInterface)
- * ->setStreamFactory(StreamFactoryInterface)
- */
-$config = new Config('23...YOUR_API_KEY_HERE...4c');
-$mailTrap = new MailTrapClient($config);
 
 
 /**********************************************************************************************************************
@@ -37,8 +26,12 @@ $mailTrap = new MailTrapClient($config);
  * POST https://send.api.mailtrap.io/api/send
  */
 try {
+    $mailTrap = new MailTrapSendingClient(
+        new Config('23...YOUR_API_KEY_HERE...4c')
+    );
+
     $email = (new Email())
-        ->from(new Address('mailtrap@example.com', 'Mailtrap Test'))
+        ->from(new Address('example@YOUR-DOMAIN-HERE.com', 'Mailtrap Test')) // <--- you should use your domain here that you installed in the mailtrap.io admin area (otherwise you will get 401)
         ->to(new Address('email@example.com', 'Jon'))
         ->cc('mailtrapqa@example.com')
         ->addCc('staging@example.com')
@@ -96,8 +89,12 @@ try {
  * Optional template variables that will be used to generate actual subject, text and html from email template
  */
 try {
+    $mailTrap = new MailTrapSendingClient(
+        new Config('23...YOUR_API_KEY_HERE...4c')
+    );
+
     $email = (new Email())
-        ->from(new Address('mailtrap@example.com', 'Mailtrap Test'))
+        ->from(new Address('example@YOUR-DOMAIN-HERE.com', 'Mailtrap Test')) // <--- you should use your domain here that you installed in the mailtrap.io admin area (otherwise you will get 401)
         ->to(new Address('example@gmail.com', 'Jon'))
     ;
 
@@ -132,6 +129,10 @@ try {
  * POST https://sandbox.api.mailtrap.io/api/send/{inbox_id}
  */
 try {
+    $mailTrap = new MailTrapSandboxClient(
+        new Config('23...YOUR_API_KEY_HERE...4c')
+    );
+
     $email = (new Email())
         ->from(new Address('mailtrap@example.com', 'Mailtrap Test'))
         ->to(new Address('email@example.com', 'Jon'))
@@ -172,7 +173,7 @@ try {
     ;
 
     // Required param -> inbox_id
-    $response = $mailTrap->emails()->sendToSandbox($email, 1000001);
+    $response = $mailTrap->emails()->send($email, 1000001); // <--- you should use your inbox_id here (otherwise you will get 401)
 
     // print all possible information from the response
     var_dump($response->getHeaders()); //headers (array)

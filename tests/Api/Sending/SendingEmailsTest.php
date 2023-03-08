@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Mailtrap\Tests\Api;
+namespace Mailtrap\Tests\Api\Sending;
 
-use Mailtrap\Api\Emails;
+use Mailtrap\Api\AbstractApi;
+use Mailtrap\Api\Sending\SendingEmails;
+use Mailtrap\EmailHeader\CategoryHeader;
+use Mailtrap\EmailHeader\CustomVariableHeader;
+use Mailtrap\EmailHeader\Template\TemplateUuidHeader;
+use Mailtrap\EmailHeader\Template\TemplateVariableHeader;
 use Mailtrap\Exception\HttpClientException;
 use Mailtrap\Exception\RuntimeException;
-use Mailtrap\Header\CategoryHeader;
-use Mailtrap\Header\CustomVariableHeader;
-use Mailtrap\Header\Template\TemplateUuidHeader;
-use Mailtrap\Header\Template\TemplateVariableHeader;
 use Mailtrap\Helper\ResponseHelper;
 use Mailtrap\Tests\MailtrapTestCase;
 use Nyholm\Psr7\Response;
@@ -18,14 +19,14 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
 /**
- * @covers Emails
+ * @covers SendingEmails
  *
- * Class EmailsTest
+ * Class SendingEmailsTest
  */
-class EmailsTest extends MailtrapTestCase
+final class SendingEmailsTest extends MailtrapTestCase
 {
     /**
-     * @var Emails
+     * @var SendingEmails
      */
     private $email;
 
@@ -33,7 +34,7 @@ class EmailsTest extends MailtrapTestCase
     {
         parent::setUp();
 
-        $this->email = $this->getMockBuilder(Emails::class)
+        $this->email = $this->getMockBuilder(SendingEmails::class)
             ->onlyMethods(['post'])
             ->setConstructorArgs([$this->getConfigMock()])
             ->getMock()
@@ -70,7 +71,7 @@ class EmailsTest extends MailtrapTestCase
         $this->email
             ->expects($this->once())
             ->method('post')
-            ->with(Emails::SENDMAIL_HOST . '/api/send', [], [
+            ->with(AbstractApi::SENDMAIL_HOST . '/api/send', [], [
                 'from' => [
                     'email' => 'foo@example.com',
                     'name' => 'Ms. Foo Bar',
@@ -125,7 +126,7 @@ class EmailsTest extends MailtrapTestCase
         $this->email
             ->expects($this->once())
             ->method('post')
-            ->with(Emails::SENDMAIL_HOST . '/api/send', [], [
+            ->with(AbstractApi::SENDMAIL_HOST . '/api/send', [], [
                 'from' => [
                     'email' => 'foo@example.com',
                     'name' => 'Ms. Foo Bar',
@@ -167,7 +168,7 @@ class EmailsTest extends MailtrapTestCase
         $this->email
             ->expects($this->once())
             ->method('post')
-            ->with(Emails::SENDMAIL_HOST . '/api/send', [], [
+            ->with(AbstractApi::SENDMAIL_HOST . '/api/send', [], [
                 'from' => [
                     'email' => 'foo@example.com',
                     'name' => 'Ms. Foo Bar',
@@ -195,60 +196,6 @@ class EmailsTest extends MailtrapTestCase
         $this->assertArrayHasKey('message_ids', $responseData);
     }
 
-    public function testValidSendToSandBox(): void
-    {
-        $inboxId = 1000001;
-        $expectedData = [
-            "success" => true,
-            "message_ids" => [
-                "0c7fd939-02cf-11ed-88c2-0a58a9feac02"
-            ]
-        ];
-
-        $email = new Email();
-        $email->from(new Address('foo@example.com', 'Ms. Foo Bar'))
-            ->to(new Address('bar@example.com', 'Mr. Recipient'))
-            ->bcc('baz@example.com')
-            ->subject('Best practices of building HTML emails')
-            ->text('Some text')
-            ->html('<p>Some text</p>')
-        ;
-        $email->getHeaders()
-            ->addTextHeader('X-Message-Source', 'dev.mydomain.com');
-
-        $this->email
-            ->expects($this->once())
-            ->method('post')
-            ->with(Emails::SENDMAIL_SANDBOX_HOST . '/api/send/' . $inboxId, [], [
-                'from' => [
-                    'email' => 'foo@example.com',
-                    'name' => 'Ms. Foo Bar',
-                ],
-                'to' => [[
-                    'email' => 'bar@example.com',
-                    'name' => 'Mr. Recipient',
-                ]],
-                'subject' => 'Best practices of building HTML emails',
-                'bcc' => [[
-                    'email' => 'baz@example.com'
-                ]],
-                'text' => 'Some text',
-                'html' => '<p>Some text</p>',
-                'headers' => [
-                    'X-Message-Source' => 'dev.mydomain.com'
-                ]
-            ])
-            ->willReturn(new Response(200, [], json_encode($expectedData)));
-
-        $response = $this->email->sendToSandbox($email, $inboxId);
-        $responseData = ResponseHelper::toArray($response);
-
-        $this->assertInstanceOf(Response::class, $response);
-        $this->assertCount(2, $responseData);
-        $this->assertArrayHasKey('success', $responseData);
-        $this->assertArrayHasKey('message_ids', $responseData);
-    }
-
     public function testAttachments(): void
     {
         $email = (new Email())
@@ -256,9 +203,9 @@ class EmailsTest extends MailtrapTestCase
             ->attach('fake_body', 'fakeFile.jpg', 'image/jpg')
         ;
 
-        $method = new \ReflectionMethod(Emails::class, 'getPayload');
+        $method = new \ReflectionMethod(SendingEmails::class, 'getPayload');
         $method->setAccessible(true);
-        $payload = $method->invoke(new Emails($this->getConfigMock()), $email);
+        $payload = $method->invoke(new SendingEmails($this->getConfigMock()), $email);
 
         $this->assertArrayHasKey('attachments', $payload);
         $this->assertArrayHasKey('content', $payload['attachments'][0]);
@@ -277,9 +224,9 @@ class EmailsTest extends MailtrapTestCase
         $email = (new Email())->from(new Address('foo@example.com', 'Ms. Foo Bar'));
         $email->getHeaders()->addTextHeader($name, $value);
 
-        $method = new \ReflectionMethod(Emails::class, 'getPayload');
+        $method = new \ReflectionMethod(SendingEmails::class, 'getPayload');
         $method->setAccessible(true);
-        $payload = $method->invoke(new Emails($this->getConfigMock()), $email);
+        $payload = $method->invoke(new SendingEmails($this->getConfigMock()), $email);
 
         $this->assertArrayHasKey('headers', $payload);
         $this->assertArrayHasKey($name, $payload['headers']);
@@ -295,9 +242,9 @@ class EmailsTest extends MailtrapTestCase
         $email->getHeaders()
             ->add(new CustomVariableHeader($name, $value));
 
-        $method = new \ReflectionMethod(Emails::class, 'getPayload');
+        $method = new \ReflectionMethod(SendingEmails::class, 'getPayload');
         $method->setAccessible(true);
-        $payload = $method->invoke(new Emails($this->getConfigMock()), $email);
+        $payload = $method->invoke(new SendingEmails($this->getConfigMock()), $email);
 
         $this->assertArrayHasKey(CustomVariableHeader::VAR_NAME, $payload);
         $this->assertArrayHasKey($name, $payload[CustomVariableHeader::VAR_NAME]);
@@ -313,9 +260,9 @@ class EmailsTest extends MailtrapTestCase
         $email->getHeaders()
             ->add(new CategoryHeader($value));
 
-        $method = new \ReflectionMethod(Emails::class, 'getPayload');
+        $method = new \ReflectionMethod(SendingEmails::class, 'getPayload');
         $method->setAccessible(true);
-        $payload = $method->invoke(new Emails($this->getConfigMock()), $email);
+        $payload = $method->invoke(new SendingEmails($this->getConfigMock()), $email);
 
         $this->assertArrayHasKey(CategoryHeader::VAR_NAME, $payload);
         $this->assertEquals($value, $payload[CategoryHeader::VAR_NAME]);
@@ -335,9 +282,9 @@ class EmailsTest extends MailtrapTestCase
             )
         );
 
-        $method = new \ReflectionMethod(Emails::class, 'getPayload');
+        $method = new \ReflectionMethod(SendingEmails::class, 'getPayload');
         $method->setAccessible(true);
-        $method->invoke(new Emails($this->getConfigMock()), $email);
+        $method->invoke(new SendingEmails($this->getConfigMock()), $email);
     }
 
     /**
@@ -349,9 +296,9 @@ class EmailsTest extends MailtrapTestCase
         $email->getHeaders()
             ->add(new TemplateUuidHeader($value));
 
-        $method = new \ReflectionMethod(Emails::class, 'getPayload');
+        $method = new \ReflectionMethod(SendingEmails::class, 'getPayload');
         $method->setAccessible(true);
-        $payload = $method->invoke(new Emails($this->getConfigMock()), $email);
+        $payload = $method->invoke(new SendingEmails($this->getConfigMock()), $email);
 
         $this->assertArrayHasKey(TemplateUuidHeader::VAR_NAME, $payload);
         $this->assertEquals($value, $payload[TemplateUuidHeader::VAR_NAME]);
@@ -371,9 +318,9 @@ class EmailsTest extends MailtrapTestCase
             )
         );
 
-        $method = new \ReflectionMethod(Emails::class, 'getPayload');
+        $method = new \ReflectionMethod(SendingEmails::class, 'getPayload');
         $method->setAccessible(true);
-        $method->invoke(new Emails($this->getConfigMock()), $email);
+        $method->invoke(new SendingEmails($this->getConfigMock()), $email);
     }
 
     /**
@@ -385,9 +332,9 @@ class EmailsTest extends MailtrapTestCase
         $email->getHeaders()
             ->add(new TemplateVariableHeader($name, $value));
 
-        $method = new \ReflectionMethod(Emails::class, 'getPayload');
+        $method = new \ReflectionMethod(SendingEmails::class, 'getPayload');
         $method->setAccessible(true);
-        $payload = $method->invoke(new Emails($this->getConfigMock()), $email);
+        $payload = $method->invoke(new SendingEmails($this->getConfigMock()), $email);
 
         $this->assertArrayHasKey(TemplateVariableHeader::VAR_NAME, $payload);
         $this->assertArrayHasKey($name, $payload[TemplateVariableHeader::VAR_NAME]);

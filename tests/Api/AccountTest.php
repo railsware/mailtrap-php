@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Mailtrap\Tests\Api;
 
 use Mailtrap\Api\AbstractApi;
-use Mailtrap\Api\Account;
+use Mailtrap\Api\AbstractAccount;
 use Mailtrap\Exception\HttpClientException;
 use Mailtrap\Helper\ResponseHelper;
 use Mailtrap\Tests\MailtrapTestCase;
 use Nyholm\Psr7\Response;
 
 /**
- * @covers Account
+ * @covers AbstractAccount
  *
  * Class AccountTest
  */
@@ -27,7 +27,7 @@ class AccountTest extends MailtrapTestCase
     {
         parent::setUp();
 
-        $this->account = $this->getMockBuilder(Account::class)
+        $this->account = $this->getMockBuilder(AbstractAccount::class)
             ->onlyMethods(['get'])
             ->setConstructorArgs([$this->getConfigMock()])
             ->getMock()
@@ -65,7 +65,7 @@ class AccountTest extends MailtrapTestCase
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts')
             ->willReturn(new Response(200, [], json_encode($expectedData)));
 
-        $response = $this->account->getAll();
+        $response = $this->account->getList();
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -87,6 +87,6 @@ class AccountTest extends MailtrapTestCase
             'Unauthorized. Make sure you are sending correct credentials with the request before retrying. Errors: Incorrect API token'
         );
 
-        $this->account->getAll();
+        $this->account->getList();
     }
 }

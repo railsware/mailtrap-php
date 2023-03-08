@@ -33,66 +33,76 @@ Here's how to send a message using the SDK:
 <?php
 
 use Mailtrap\Config;
-use Mailtrap\Header\CategoryHeader;
-use Mailtrap\Header\CustomVariableHeader;
+use Mailtrap\EmailHeader\CategoryHeader;
+use Mailtrap\EmailHeader\CustomVariableHeader;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailTrapClient;
+use Mailtrap\MailTrapSendingClient;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Header\UnstructuredHeader;
 
 require __DIR__ . 'vendor/autoload.php';
 
-$mailTrap = new MailTrapClient(
-    new Config('23...YOUR_API_KEY_HERE...4c') // your API toke from here https://mailtrap.io/api-tokens
-);
-
-try {
-    $email = (new Email())
-        ->from(new Address('mailtrap@example.com', 'Mailtrap Test'))
-        ->to(new Address('email@example.com', 'Jon'))
-        ->cc('mailtrapqa@example.com')
-        ->addCc('staging@example.com')
-        ->bcc('mailtrapdev@example.com')
-        ->subject('Best practices of building HTML emails')
-        ->text('Hey! Learn the best practices of building HTML emails and play with ready-to-go templates. Mailtrap’s Guide on How to Build HTML Email is live on our blog')
-        ->html(
-            '<html>
-            <body>
-            <p><br>Hey</br>
-            Learn the best practices of building HTML emails and play with ready-to-go templates.</p>
-            <p><a href="https://mailtrap.io/blog/build-html-email/">Mailtrap’s Guide on How to Build HTML Email</a> is live on our blog</p>
-            <img src="cid:logo">
-            </body>
-        </html>'
-        )
-        ->embed(fopen('https://mailtrap.io/wp-content/uploads/2021/04/mailtrap-new-logo.svg', 'r'), 'logo', 'image/svg+xml')
-        ->attachFromPath('README.md')
+$email = (new Email())
+    ->from(new Address('example@you-domain-here.com', 'Mailtrap Test'))
+    ->to(new Address('email@example.com', 'Jon'))
+    ->cc('mailtrapqa@example.com')
+    ->addCc('staging@example.com')
+    ->bcc('mailtrapdev@example.com')
+    ->subject('Best practices of building HTML emails')
+    ->text('Hey! Learn the best practices of building HTML emails and play with ready-to-go templates. Mailtrap’s Guide on How to Build HTML Email is live on our blog')
+    ->html(
+        '<html>
+        <body>
+        <p><br>Hey</br>
+        Learn the best practices of building HTML emails and play with ready-to-go templates.</p>
+        <p><a href="https://mailtrap.io/blog/build-html-email/">Mailtrap’s Guide on How to Build HTML Email</a> is live on our blog</p>
+        <img src="cid:logo">
+        </body>
+    </html>'
+    )
+    ->embed(fopen('https://mailtrap.io/wp-content/uploads/2021/04/mailtrap-new-logo.svg', 'r'), 'logo', 'image/svg+xml')
+    ->attachFromPath('README.md')
     ;
-
+    
     // Headers
     $email->getHeaders()
-        ->addTextHeader('X-Message-Source', '1alf.com')
-        ->add(new UnstructuredHeader('X-Mailer', 'Mailtrap PHP Client')) // the same as addTextHeader
+    ->addTextHeader('X-Message-Source', 'domain.com')
+    ->add(new UnstructuredHeader('X-Mailer', 'Mailtrap PHP Client')) // the same as addTextHeader
     ;
-
+    
     // Custom Variables
     $email->getHeaders()
-        ->add(new CustomVariableHeader('user_id', '45982'))
-        ->add(new CustomVariableHeader('batch_id', 'PSJ-12'))
+    ->add(new CustomVariableHeader('user_id', '45982'))
+    ->add(new CustomVariableHeader('batch_id', 'PSJ-12'))
     ;
-
+    
     // Category (should be only one)
     $email->getHeaders()
-        ->add(new CategoryHeader('Integration Test'))
+    ->add(new CategoryHeader('Integration Test'))
     ;
-
+    
+try {
+    $mailTrap = new MailTrapSendingClient(
+        new Config('23...YOUR_API_KEY_HERE...4c') // your API toke from here https://mailtrap.io/api-tokens
+    );
+   
     $response = $mailTrap->emails()->send($email); // Email sending API (real)
-    // OR
-    $response = $mailTrap->emails()->sendToSandbox($email, 1000001); // Email Testing API (sandbox). Required second param -> inbox_id
+    
+    var_dump(ResponseHelper::toArray($response)); // body (array)
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), "\n";
+}
 
-    var_dump($response->getHeaders()); //headers (array)
-    var_dump($response->getStatusCode()); //status code (int)
+// OR send to the MailTrap SANDBOX
+
+try {
+    $mailTrap = new MailTrapSandboxClient(
+        new Config('23...YOUR_API_KEY_HERE...4c') // your API toke from here https://mailtrap.io/api-tokens
+    );
+   
+    $response = $mailTrap->emails()->send($email, 1000001); // Required second param -> inbox_id
+
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {
     echo 'Caught exception: ',  $e->getMessage(), "\n";
