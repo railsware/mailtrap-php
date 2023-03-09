@@ -7,13 +7,21 @@
          bootstrap="vendor/autoload.php"
          failOnRisky="true"
          failOnWarning="true"
+         executionOrder="depends,defects"
+         forceCoversAnnotation="true"
+         beStrictAboutCoversAnnotation="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutTodoAnnotatedTests="true"
+         convertDeprecationsToExceptions="true"
+         beStrictAboutChangesToGlobalState="true"
+         verbose="true"
 >
     <php>
         <ini name="error_reporting" value="-1" />
     </php>
 
     <testsuites>
-        <testsuite name="Mailtrap SDK tests">
+        <testsuite name="mailTrap-library-tests">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>

@@ -1,6 +1,5 @@
 Official MailTrap PHP client
 ===============
-![GitHub Actions](https://github.com/railsware/mailtrap-php/actions/workflows/ci.yml/badge.svg) 
 ![GitHub Actions](https://github.com/railsware/mailtrap-php/actions/workflows/ci-phpunit.yml/badge.svg)
 ![GitHub Actions](https://github.com/railsware/mailtrap-php/actions/workflows/ci-psalm.yaml/badge.svg)
 
@@ -37,6 +36,7 @@ use Mailtrap\EmailHeader\CategoryHeader;
 use Mailtrap\EmailHeader\CustomVariableHeader;
 use Mailtrap\Helper\ResponseHelper;
 use Mailtrap\MailTrapSendingClient;
+use Mailtrap\MailTrapSandboxClient;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Header\UnstructuredHeader;
@@ -44,7 +44,7 @@ use Symfony\Component\Mime\Header\UnstructuredHeader;
 require __DIR__ . 'vendor/autoload.php';
 
 $email = (new Email())
-    ->from(new Address('example@you-domain-here.com', 'MailTrap Test'))
+    ->from(new Address('example@your-domain-here.com', 'MailTrap Test'))
     ->to(new Address('email@example.com', 'Jon'))
     ->cc('mailtrapqa@example.com')
     ->addCc('staging@example.com')
@@ -94,7 +94,7 @@ try {
     echo 'Caught exception: ',  $e->getMessage(), "\n";
 }
 
-// OR send to the MailTrap SANDBOX
+// OR send email to the MailTrap SANDBOX
 
 try {
     $mailTrap = new MailTrapSandboxClient(
