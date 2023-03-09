@@ -111,7 +111,7 @@ try {
 
 ### All usage examples
 
-You can find more examples at [examples](examples) folder.
+You can find more examples [here](examples).
 * [Sending examples](examples/sending)
 * [Sandbox examples](examples/sandbox)
 
