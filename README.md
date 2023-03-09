@@ -112,6 +112,8 @@ try {
 ### All usage examples
 
 You can find more examples at [examples](examples) folder.
+* [Sending examples](examples/sending)
+* [Sandbox examples](examples/sandbox)
 
 
 ## Framework integration
