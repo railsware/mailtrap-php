@@ -1,4 +1,4 @@
-Official Mailtrap PHP client
+Official MailTrap PHP client
 ===============
 ![GitHub Actions](https://github.com/railsware/mailtrap-php/actions/workflows/ci.yml/badge.svg) 
 ![GitHub Actions](https://github.com/railsware/mailtrap-php/actions/workflows/ci-phpunit.yml/badge.svg)
@@ -12,7 +12,7 @@ Official Mailtrap PHP client
 ## Installation
 You can install the package via [composer](http://getcomposer.org/)
 
-The Mailtrap API Client is not hard coupled to Guzzle, React, Zend, Symfony HTTP or any other library that sends
+The MailTrap API Client is not hard coupled to Guzzle, React, Zend, Symfony HTTP or any other library that sends
 HTTP messages. Instead, it uses the [PSR-18](https://www.php-fig.org/psr/psr-18/) client abstraction.
 
 This will give you the flexibility to choose what [HTTP client](https://docs.php-http.org/en/latest/clients.html) you want to use.
@@ -44,19 +44,19 @@ use Symfony\Component\Mime\Header\UnstructuredHeader;
 require __DIR__ . 'vendor/autoload.php';
 
 $email = (new Email())
-    ->from(new Address('example@you-domain-here.com', 'Mailtrap Test'))
+    ->from(new Address('example@you-domain-here.com', 'MailTrap Test'))
     ->to(new Address('email@example.com', 'Jon'))
     ->cc('mailtrapqa@example.com')
     ->addCc('staging@example.com')
     ->bcc('mailtrapdev@example.com')
     ->subject('Best practices of building HTML emails')
-    ->text('Hey! Learn the best practices of building HTML emails and play with ready-to-go templates. Mailtrap’s Guide on How to Build HTML Email is live on our blog')
+    ->text('Hey! Learn the best practices of building HTML emails and play with ready-to-go templates. MailTrap’s Guide on How to Build HTML Email is live on our blog')
     ->html(
         '<html>
         <body>
         <p><br>Hey</br>
         Learn the best practices of building HTML emails and play with ready-to-go templates.</p>
-        <p><a href="https://mailtrap.io/blog/build-html-email/">Mailtrap’s Guide on How to Build HTML Email</a> is live on our blog</p>
+        <p><a href="https://mailtrap.io/blog/build-html-email/">MailTrap’s Guide on How to Build HTML Email</a> is live on our blog</p>
         <img src="cid:logo">
         </body>
     </html>'
@@ -68,7 +68,7 @@ $email = (new Email())
     // Headers
     $email->getHeaders()
     ->addTextHeader('X-Message-Source', 'domain.com')
-    ->add(new UnstructuredHeader('X-Mailer', 'Mailtrap PHP Client')) // the same as addTextHeader
+    ->add(new UnstructuredHeader('X-Mailer', 'MailTrap PHP Client')) // the same as addTextHeader
     ;
     
     // Custom Variables
@@ -131,4 +131,4 @@ The package is available as open source under the terms of the [MIT License](htt
 
 ## Code of Conduct
 
-Everyone interacting in the Mailtrap project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](CODE_OF_CONDUCT.md).
+Everyone interacting in the MailTrap project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](CODE_OF_CONDUCT.md).
