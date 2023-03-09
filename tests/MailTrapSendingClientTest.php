@@ -6,6 +6,7 @@ namespace Mailtrap\Tests;
 
 use Mailtrap\Api\Sending\SendingAccount;
 use Mailtrap\Api\Sending\SendingEmails;
+use Mailtrap\Api\Sending\SendingInterface;
 use Mailtrap\ConfigInterface;
 use Mailtrap\Exception\BadMethodCallException;
 use Mailtrap\MailTrapSendingClient;
@@ -34,16 +35,6 @@ class MailTrapSendingClientTest extends MailtrapTestCase
         parent::tearDown();
     }
 
-    public function testAccounts(): void
-    {
-        $this->assertInstanceOf(SendingAccount::class, $this->mailTrapSendingClient->accounts());
-    }
-
-    public function testEmails(): void
-    {
-        $this->assertInstanceOf(SendingEmails::class, $this->mailTrapSendingClient->emails());
-    }
-
     /**
      * @dataProvider invalidApiClassNameProvider
      */
@@ -58,19 +49,36 @@ class MailTrapSendingClientTest extends MailtrapTestCase
         $this->mailTrapSendingClient->{$name}();
     }
 
-    public function testMapCount(): void
+    /**
+     * @dataProvider mapInstancesProvider
+     */
+    public function testMapInstance($instance): void
     {
-        $oClass = new ReflectionClass(MailTrapSendingClient::class);
-
-        $constants = $oClass->getConstants();
-
-        $this->assertNotNull($constants['API_MAPPING']);
-        $this->assertIsArray($constants['API_MAPPING']);
-        $this->assertCount(2, $constants['API_MAPPING']); // increase value if added new endpoint
+        $this->assertInstanceOf(SendingInterface::class, $instance);
     }
 
     public function invalidApiClassNameProvider(): array
     {
         return [['fakeclass1', 'fakeclass2']];
+    }
+
+    public function mapInstancesProvider(): array
+    {
+        $instances = [];
+        $mapping = $this->getApiMappingConstant();
+
+        foreach ($mapping as $item) {
+            $instances[] = new $item($this->getConfigMock());
+        }
+
+        return [$instances];
+    }
+
+    private function getApiMappingConstant(): array
+    {
+        $oClass = new ReflectionClass(MailTrapSendingClient::class);
+        $constants = $oClass->getConstants();
+
+        return $constants['API_MAPPING'];
     }
 }

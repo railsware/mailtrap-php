@@ -11,7 +11,7 @@ use Symfony\Component\Mime\Email;
 /**
  * Class SendingEmails
  */
-class SendingEmails extends AbstractEmails
+class SendingEmails extends AbstractEmails implements SendingInterface
 {
     public function send(Email $email): ResponseInterface
     {

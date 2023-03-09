@@ -11,7 +11,7 @@ use Symfony\Component\Mime\Email;
 /**
  * Class SandboxEmails
  */
-class SandboxEmails extends AbstractEmails
+class SandboxEmails extends AbstractEmails implements SandboxInterface
 {
     public function send(Email $email, int $inboxId): ResponseInterface
     {

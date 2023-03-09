@@ -9,6 +9,6 @@ use Mailtrap\Api\AbstractAccount;
 /**
  * Class SandboxAccount
  */
-class SandboxAccount extends AbstractAccount
+class SandboxAccount extends AbstractAccount implements SandboxInterface
 {
 }

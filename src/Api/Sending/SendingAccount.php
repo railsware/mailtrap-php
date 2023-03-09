@@ -9,6 +9,6 @@ use Mailtrap\Api\AbstractAccount;
 /**
  * Class SendingAccount
  */
-class SendingAccount extends AbstractAccount
+class SendingAccount extends AbstractAccount implements SendingInterface
 {
 }
