@@ -18,6 +18,7 @@
   },
   "require-dev": {
     "symfony/http-client": "^5.4|^6.0",
+    "symfony/mailer": "^5.4|^6.0",
     "phpunit/phpunit": "^9",
     "nyholm/psr7": "^1.5",
     "vimeo/psalm": "^5.0"

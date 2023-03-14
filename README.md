@@ -120,8 +120,8 @@ You can find more examples [here](examples).
 
 If you are using a framework you might consider these composer packages to make the framework integration easier.
 
-* [Symfony](src/integration/symfony) (coming soon)
-* [Laravel](src/integration/symfony) (coming soon)
+* [Symfony](src/Integration/Symfony)
+* [Laravel](src/Integration/Laravel) (coming soon)
 
 ## Contributing
 

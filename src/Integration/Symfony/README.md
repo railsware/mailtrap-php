@@ -1,0 +1,80 @@
+MailTrap Bridge [API]
+===============
+
+Provides MailTrap.io integration for Symfony Mailer.
+
+## Installation
+You can install the package via composer:
+```bash
+composer require railsware/mailtrap-php nyholm/psr7
+```
+
+## Usage
+Add or change MAILER_DSN variable inside your `.env` file. Also, you need to change the `YOUR_API_KEY_HERE` placeholder and put correct `inboxId` if you want to use sandbox.
+```bash
+MAILER_DSN=mailtrap+api://YOUR_API_KEY_HERE@default
+or
+MAILER_DSN=mailtrap+api://YOUR_API_KEY_HERE@sandbox.api.mailtrap.io?inboxId=1234
+```
+
+Add MailTrapTransport into your `config/services.yaml` file
+```yaml
+...
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    Mailtrap\Integration\Symfony\Transport\MailTrapTransportFactory:
+        tags:
+            - { name: 'mailer.transport_factory' }
+```
+
+### Send you first email
+
+#### CLI command (the mailer:test command was introduced only in Symfony 6.2.)
+```bash
+php bin/console mailer:test to@example.com
+```
+
+#### Controller (base example)
+```php
+<?php
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Mailer\Transport\TransportInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Mime\Email;
+
+
+final class SomeController extends AbstractController
+{
+    private TransportInterface $transport;
+
+    public function __construct(TransportInterface $transport)
+    {
+        $this->transport = $transport;
+    }
+
+    /**
+     * @Route(name="send-test-email", path="/test", methods={"GET"})
+     *
+     * @return JsonResponse
+     */
+    public function sendTestEmail(): JsonResponse
+    {
+        $message = (new Email())
+            ->to('to@xample.com')
+            ->from('from@xample.com')
+            ->subject('Test email')
+            ->text('text')
+        ;
+
+        $response = $this->transport->send($message);
+
+        return JsonResponse::create(['messageId' => $response->getMessageId()]);
+    }
+}
+```
+
+## Resources
+
+* [Symfony mailer documentation](https://symfony.com/mailer)

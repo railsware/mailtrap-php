@@ -17,9 +17,9 @@ use Psr\Http\Message\ResponseInterface;
  */
 abstract class AbstractApi
 {
-    public const DEFAULT_HOST = 'https://mailtrap.io';
-    public const SENDMAIL_HOST = 'https://send.api.mailtrap.io';
-    public const SENDMAIL_SANDBOX_HOST = 'https://sandbox.api.mailtrap.io';
+    public const DEFAULT_HOST = 'mailtrap.io';
+    public const SENDMAIL_HOST = 'send.api.mailtrap.io';
+    public const SENDMAIL_SANDBOX_HOST = 'sandbox.api.mailtrap.io';
 
     protected ConfigInterface $config;
     protected ClientInterface $httpClient;
@@ -32,13 +32,13 @@ abstract class AbstractApi
 
     protected function get(string $path, array $requestHeaders = []): ResponseInterface
     {
-        return $this->httpClient->get($path, $requestHeaders);
+        return $this->httpClient->get($this->addDefaultScheme($path), $requestHeaders);
     }
 
     protected function post(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
     {
         return $this->httpClient->post(
-            $path,
+            $this->addDefaultScheme($path),
             $requestHeaders,
             !empty($body) ? $this->jsonEncode($body) : null
         );
@@ -47,7 +47,7 @@ abstract class AbstractApi
     protected function put(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
     {
         return $this->httpClient->put(
-            $path,
+            $this->addDefaultScheme($path),
             $requestHeaders,
             !empty($body) ? $this->jsonEncode($body) : null
         );
@@ -56,7 +56,7 @@ abstract class AbstractApi
     protected function patch(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
     {
         return $this->httpClient->patch(
-            $path,
+            $this->addDefaultScheme($path),
             $requestHeaders,
             !empty($body) ? $this->jsonEncode($body) : null
         );
@@ -65,7 +65,7 @@ abstract class AbstractApi
     protected function delete(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
     {
         return $this->httpClient->delete(
-            $path,
+            $this->addDefaultScheme($path),
             $requestHeaders,
             !empty($body) ? $this->jsonEncode($body) : null
         );
@@ -119,5 +119,10 @@ abstract class AbstractApi
         }
 
         return $value;
+    }
+
+    private function addDefaultScheme(string $path): string
+    {
+        return empty(parse_url($path, PHP_URL_SCHEME)) ? 'https://' . $path : $path;
     }
 }
