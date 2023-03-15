@@ -77,4 +77,4 @@ final class SomeController extends AbstractController
 
 ## Resources
 
-* [Symfony mailer documentation](https://symfony.com/mailer)
+* [Symfony mailer documentation](https://symfony.com/doc/current/mailer.html)
