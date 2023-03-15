@@ -58,28 +58,28 @@ class Config implements ConfigInterface
         return $this->httpClientBuilder;
     }
 
-    public function setHttpClientBuilder(HttpClientBuilderInterface $httpClientBuilder): self
+    public function setHttpClientBuilder(?HttpClientBuilderInterface $httpClientBuilder): self
     {
         $this->httpClientBuilder = $httpClientBuilder;
 
         return $this;
     }
 
-    public function setHttpClient(ClientInterface $httpClient): self
+    public function setHttpClient(?ClientInterface $httpClient): self
     {
         $this->httpClient = $httpClient;
 
         return $this;
     }
 
-    public function setRequestFactory(RequestFactoryInterface $requestFactory): self
+    public function setRequestFactory(?RequestFactoryInterface $requestFactory): self
     {
         $this->requestFactory = $requestFactory;
 
         return $this;
     }
 
-    public function setStreamFactory(StreamFactoryInterface $streamFactory): self
+    public function setStreamFactory(?StreamFactoryInterface $streamFactory): self
     {
         $this->streamFactory = $streamFactory;
 

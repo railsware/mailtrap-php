@@ -16,10 +16,11 @@ HTTP messages. Instead, it uses the [PSR-18](https://www.php-fig.org/psr/psr-18/
 
 This will give you the flexibility to choose what [HTTP client](https://docs.php-http.org/en/latest/clients.html) you want to use.
 
-If you just want to get started quickly you should run the following command:
-
+If you just want to get started quickly you should run one of the following command (depends on what http client you want to use):
 ```bash
 composer require railsware/mailtrap-php symfony/http-client nyholm/psr7
+# OR
+composer require railsware/mailtrap-php guzzlehttp/guzzle php-http/guzzle7-adapter
 ```
 
 ## Usage

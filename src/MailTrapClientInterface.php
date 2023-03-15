@@ -11,5 +11,7 @@ interface MailTrapClientInterface
 {
     public function __construct(ConfigInterface $config);
 
+    public function getConfig(): ConfigInterface;
+
     public function getApiClassByName(string $name): ?string;
 }

@@ -6,13 +6,14 @@ namespace Mailtrap\Tests;
 
 use Mailtrap\ConfigInterface;
 use Mailtrap\HttpClient\HttpClientBuilderInterface;
+use Mailtrap\MailTrapClientInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
 
 /**
  * Class MailtrapTestCase
  */
-abstract class MailtrapTestCase extends TestCase
+abstract class MailTrapTestCase extends TestCase
 {
     public const DEFAULT_API_KEY = 'some_api_key';
 

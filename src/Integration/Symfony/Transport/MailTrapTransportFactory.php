@@ -35,20 +35,13 @@ final class MailTrapTransportFactory extends AbstractTransportFactory
             ? new MailTrapSendingClient($config)
             : new MailTrapSandboxClient($config);
 
-
         if ($mailTrapClient instanceof MailTrapSandboxClient && null === $inboxId) {
             throw new RuntimeException(
-                'You cannot send email to the SanBox without "inboxId" param. Example -> "MAILER_DSN=mailtrap://APIKEY@sandbox.api.mailtrap.io?inboxId=1234"'
+                'You cannot send email to the SanBox without "inboxId" param. Example -> "MAILER_DSN=mailtrap+api://APIKEY@sandbox.api.mailtrap.io?inboxId=1234"'
             );
         }
 
-        return new MailTrapApiTransport(
-            $mailTrapClient,
-            $config,
-            $inboxId,
-            $this->dispatcher,
-            $this->logger
-        );
+        return new MailTrapApiTransport($mailTrapClient, $inboxId, $this->dispatcher, $this->logger);
     }
 
     protected function getSupportedSchemes(): array

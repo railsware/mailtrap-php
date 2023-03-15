@@ -4,9 +4,9 @@ MailTrap Bridge [API]
 Provides MailTrap.io integration for Symfony Mailer.
 
 ## Installation
-You can install the package via composer:
+If you just want to get started quickly you should run the following command:
 ```bash
-composer require railsware/mailtrap-php nyholm/psr7
+composer require railsware/mailtrap-php symfony/http-client nyholm/psr7
 ```
 
 ## Usage

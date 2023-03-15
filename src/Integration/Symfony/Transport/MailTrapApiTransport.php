@@ -18,17 +18,15 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\MessageConverter;
 
 /**
- * Class MailtrapApiTransport
+ * Class MailTrapApiTransport
  */
 class MailTrapApiTransport extends AbstractTransport
 {
     private MailTrapClientInterface $mailTrapClient;
-    private ConfigInterface $config;
     private ?int $inboxId;
 
     public function __construct(
         MailTrapClientInterface $mailTrapClient,
-        ConfigInterface $config,
         int $inboxId = null,
         EventDispatcherInterface $dispatcher = null,
         LoggerInterface $logger = null
@@ -36,7 +34,6 @@ class MailTrapApiTransport extends AbstractTransport
         parent::__construct($dispatcher, $logger);
 
         $this->mailTrapClient = $mailTrapClient;
-        $this->config = $config;
         $this->inboxId = $inboxId;
     }
 
@@ -73,7 +70,7 @@ class MailTrapApiTransport extends AbstractTransport
 
     private function getEndpoint(): string
     {
-        return $this->config->getHost() . (null === $this->inboxId ? '' : '?inboxId=' . $this->inboxId);
+        return $this->mailTrapClient->getConfig()->getHost() . (null === $this->inboxId ? '' : '?inboxId=' . $this->inboxId);
     }
 
     private function getEnvelopeRecipients(Email $email, Envelope $envelope): array

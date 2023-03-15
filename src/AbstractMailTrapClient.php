@@ -29,6 +29,11 @@ abstract class AbstractMailTrapClient implements MailTrapClientInterface
         }
     }
 
+    public function getConfig(): ConfigInterface
+    {
+        return $this->config;
+    }
+
     private function initByName(string $name): AbstractApi
     {
         $className = $this->getApiClassByName($name);
@@ -37,6 +42,6 @@ abstract class AbstractMailTrapClient implements MailTrapClientInterface
         }
 
         /** @psalm-suppress LessSpecificReturnStatement */
-        return new $className($this->config);
+        return new $className($this->getConfig());
     }
 }

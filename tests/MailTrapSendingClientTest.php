@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Mailtrap\Tests;
 
-use Mailtrap\Api\Sending\SendingAccount;
-use Mailtrap\Api\Sending\SendingEmails;
 use Mailtrap\Api\Sending\SendingInterface;
 use Mailtrap\ConfigInterface;
 use Mailtrap\Exception\BadMethodCallException;
@@ -17,7 +15,7 @@ use ReflectionClass;
  *
  * Class MailTrapSendingClientTest
  */
-class MailTrapSendingClientTest extends MailtrapTestCase
+class MailTrapSendingClientTest extends MailTrapTestCase
 {
     private ?MailTrapSendingClient $mailTrapSendingClient;
 

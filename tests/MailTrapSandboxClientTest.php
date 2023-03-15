@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Mailtrap\Tests;
 
-use Mailtrap\Api\Sandbox\SandboxAccount;
-use Mailtrap\Api\Sandbox\SandboxEmails;
 use Mailtrap\Api\Sandbox\SandboxInterface;
 use Mailtrap\ConfigInterface;
 use Mailtrap\Exception\BadMethodCallException;
@@ -17,7 +15,7 @@ use ReflectionClass;
  *
  * Class MailTrapSandboxClientTest
  */
-class MailTrapSandboxClientTest extends MailtrapTestCase
+class MailTrapSandboxClientTest extends MailTrapTestCase
 {
     private ?MailTrapSandboxClient $mailTrapSandboxClient;
 
