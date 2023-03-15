@@ -15,7 +15,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 
-abstract class AbstractTransportFactoryTestCase extends MailTrapTestCase
+abstract class TransportFactoryTestCase extends MailTrapTestCase
 {
     protected const USER = 'u$er';
     protected const PASSWORD = 'pa$s';

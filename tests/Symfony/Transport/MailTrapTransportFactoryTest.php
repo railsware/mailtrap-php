@@ -17,9 +17,9 @@ use Symfony\Component\Mailer\Transport\TransportFactoryInterface;
 /**
  * @covers MailTrapTransportFactory
  *
- * Class MailtrapTransportFactoryTest
+ * Class MailTrapTransportFactoryTest
  */
-class MailTrapTransportFactoryTest extends AbstractTransportFactoryTestCase
+class MailTrapTransportFactoryTest extends TransportFactoryTestCase
 {
     protected function setUp(): void
     {
