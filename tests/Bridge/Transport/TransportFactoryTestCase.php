@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mailtrap\Tests\Symfony\Transport;
+namespace Mailtrap\Tests\Bridge\Transport;
 
 use Mailtrap\Tests\MailTrapTestCase;
 use Psr\Log\LoggerInterface;

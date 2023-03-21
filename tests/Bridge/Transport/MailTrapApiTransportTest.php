@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Mailtrap\Tests\Symfony\Transport;
+namespace Mailtrap\Tests\Bridge\Transport;
 
 use Mailtrap\Api\AbstractApi;
+use Mailtrap\Bridge\Transport\MailTrapApiTransport;
 use Mailtrap\Config;
-use Mailtrap\Integration\Symfony\Transport\MailTrapApiTransport;
 use Mailtrap\MailTrapSendingClient;
 use Mailtrap\Tests\MailTrapTestCase;
 use Symfony\Component\Mailer\Envelope;

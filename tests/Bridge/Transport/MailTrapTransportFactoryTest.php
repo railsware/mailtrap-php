@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Mailtrap\Tests\Symfony\Transport;
+namespace Mailtrap\Tests\Bridge\Transport;
 
 use Mailtrap\Api\AbstractApi;
+use Mailtrap\Bridge\Transport\MailTrapApiTransport;
+use Mailtrap\Bridge\Transport\MailTrapTransportFactory;
 use Mailtrap\Config;
-use Mailtrap\Integration\Symfony\Transport\MailTrapApiTransport;
-use Mailtrap\Integration\Symfony\Transport\MailTrapTransportFactory;
 use Mailtrap\MailTrapSandboxClient;
 use Mailtrap\MailTrapSendingClient;
 use Symfony\Component\HttpClient\Psr18Client;

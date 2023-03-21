@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Mailtrap\Integration\Symfony\Transport;
+namespace Mailtrap\Bridge\Transport;
 
-use Mailtrap\ConfigInterface;
 use Mailtrap\Helper\ResponseHelper;
 use Mailtrap\MailTrapClientInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;

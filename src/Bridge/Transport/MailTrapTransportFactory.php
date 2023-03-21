@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mailtrap\Integration\Symfony\Transport;
+namespace Mailtrap\Bridge\Transport;
 
 use Mailtrap\Api\AbstractApi;
 use Mailtrap\Config;
@@ -31,13 +31,13 @@ final class MailTrapTransportFactory extends AbstractTransportFactory
             ->setHost('default' === $dsn->getHost() ? AbstractApi::SENDMAIL_HOST : $dsn->getHost())
             ->setHttpClient(null === $this->client ? null : new Psr18Client($this->client))
         ;
-        $mailTrapClient = str_contains($config->getHost(), AbstractApi::SENDMAIL_HOST)
+        $mailTrapClient = stripos($config->getHost(), AbstractApi::SENDMAIL_HOST) !== false
             ? new MailTrapSendingClient($config)
             : new MailTrapSandboxClient($config);
 
         if ($mailTrapClient instanceof MailTrapSandboxClient && null === $inboxId) {
             throw new RuntimeException(
-                'You cannot send email to the SanBox without "inboxId" param. Example -> "MAILER_DSN=mailtrap+api://APIKEY@sandbox.api.mailtrap.io?inboxId=1234"'
+                'You cannot send email to the SanBox with empty "inboxId" param. Example -> "MAILER_DSN=mailtrap+api://APIKEY@sandbox.api.mailtrap.io?inboxId=1234"'
             );
         }
 
