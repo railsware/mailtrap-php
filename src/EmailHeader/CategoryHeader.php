@@ -33,7 +33,7 @@ class CategoryHeader extends AbstractHeader
     }
 
     /**
-     * @return string
+     * @psalm-suppress MethodSignatureMismatch
      */
     public function getBody(): string
     {
