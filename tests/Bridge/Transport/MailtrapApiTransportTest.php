@@ -5,22 +5,22 @@ declare(strict_types=1);
 namespace Mailtrap\Tests\Bridge\Transport;
 
 use Mailtrap\Api\AbstractApi;
-use Mailtrap\Bridge\Transport\MailTrapApiTransport;
+use Mailtrap\Bridge\Transport\MailtrapApiTransport;
 use Mailtrap\Config;
-use Mailtrap\MailTrapSendingClient;
-use Mailtrap\Tests\MailTrapTestCase;
+use Mailtrap\MailtrapSendingClient;
+use Mailtrap\Tests\MailtrapTestCase;
 use Symfony\Component\Mailer\Envelope;
 
 /**
- * @covers MailTrapApiTransport
+ * @covers MailtrapApiTransport
  */
-class MailTrapApiTransportTest extends MailTrapTestCase
+class MailtrapApiTransportTest extends MailtrapTestCase
 {
     protected function setUp(): void
     {
         if (!class_exists(Envelope::class)) {
             $this->markTestSkipped(
-                'The "MailTrapApiTransportTest" tests skipped, because "symfony/mailer" package is not installed.'
+                'The "MailtrapApiTransportTest" tests skipped, because "symfony/mailer" package is not installed.'
             );
         }
 
@@ -30,7 +30,7 @@ class MailTrapApiTransportTest extends MailTrapTestCase
     /**
      * @dataProvider getTransportData
      */
-    public function testToString(MailTrapApiTransport $transport, string $expected): void
+    public function testToString(MailtrapApiTransport $transport, string $expected): void
     {
         $this->assertSame($expected, (string) $transport);
     }
@@ -39,16 +39,16 @@ class MailTrapApiTransportTest extends MailTrapTestCase
     {
         return [
             [
-                new MailTrapApiTransport(
-                    new MailTrapSendingClient(
+                new MailtrapApiTransport(
+                    new MailtrapSendingClient(
                         (new Config('key'))->setHost(AbstractApi::SENDMAIL_HOST)
                     )
                 ),
                 'mailtrap+api://send.api.mailtrap.io',
             ],
             [
-                new MailTrapApiTransport(
-                    new MailTrapSendingClient(
+                new MailtrapApiTransport(
+                    new MailtrapSendingClient(
                         (new Config('key'))->setHost(AbstractApi::SENDMAIL_SANDBOX_HOST)
                     )
                 ),

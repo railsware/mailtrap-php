@@ -38,8 +38,8 @@ use Mailtrap\Config;
 use Mailtrap\EmailHeader\CategoryHeader;
 use Mailtrap\EmailHeader\CustomVariableHeader;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailTrapSendingClient;
-use Mailtrap\MailTrapSandboxClient;
+use Mailtrap\MailtrapSendingClient;
+use Mailtrap\MailtrapSandboxClient;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Header\UnstructuredHeader;
@@ -86,7 +86,7 @@ $email = (new Email())
     ;
     
 try {
-    $mailTrap = new MailTrapSendingClient(
+    $mailTrap = new MailtrapSendingClient(
         new Config('23...YOUR_API_KEY_HERE...4c') // your API toke from here https://mailtrap.io/api-tokens
     );
    
@@ -100,7 +100,7 @@ try {
 // OR send email to the Mailtrap SANDBOX
 
 try {
-    $mailTrap = new MailTrapSandboxClient(
+    $mailTrap = new MailtrapSandboxClient(
         new Config('23...YOUR_API_KEY_HERE...4c') // your API toke from here https://mailtrap.io/api-tokens
     );
    

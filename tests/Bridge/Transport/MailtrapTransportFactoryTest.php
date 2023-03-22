@@ -5,27 +5,27 @@ declare(strict_types=1);
 namespace Mailtrap\Tests\Bridge\Transport;
 
 use Mailtrap\Api\AbstractApi;
-use Mailtrap\Bridge\Transport\MailTrapApiTransport;
-use Mailtrap\Bridge\Transport\MailTrapTransportFactory;
+use Mailtrap\Bridge\Transport\MailtrapApiTransport;
+use Mailtrap\Bridge\Transport\MailtrapTransportFactory;
 use Mailtrap\Config;
-use Mailtrap\MailTrapSandboxClient;
-use Mailtrap\MailTrapSendingClient;
+use Mailtrap\MailtrapSandboxClient;
+use Mailtrap\MailtrapSendingClient;
 use Symfony\Component\HttpClient\Psr18Client;
 use Symfony\Component\Mailer\Transport\Dsn;
 use Symfony\Component\Mailer\Transport\TransportFactoryInterface;
 
 /**
- * @covers MailTrapTransportFactory
+ * @covers MailtrapTransportFactory
  *
- * Class MailTrapTransportFactoryTest
+ * Class MailtrapTransportFactoryTest
  */
-class MailTrapTransportFactoryTest extends TransportFactoryTestCase
+class MailtrapTransportFactoryTest extends TransportFactoryTestCase
 {
     protected function setUp(): void
     {
         if (!class_exists(Dsn::class)) {
             $this->markTestSkipped(
-                'The "MailTrapTransportFactoryTest" tests skipped, because "symfony/mailer" package is not installed.'
+                'The "MailtrapTransportFactoryTest" tests skipped, because "symfony/mailer" package is not installed.'
             );
         }
 
@@ -34,7 +34,7 @@ class MailTrapTransportFactoryTest extends TransportFactoryTestCase
 
     public function getFactory(): TransportFactoryInterface
     {
-        return new MailTrapTransportFactory($this->getDispatcher(), $this->getClient(), $this->getLogger());
+        return new MailtrapTransportFactory($this->getDispatcher(), $this->getClient(), $this->getLogger());
     }
 
     public function supportsProvider(): iterable
@@ -57,8 +57,8 @@ class MailTrapTransportFactoryTest extends TransportFactoryTestCase
 
         yield [
             new Dsn('mailtrap+api', 'default', self::USER),
-            new MailTrapApiTransport(
-                new MailTrapSendingClient(
+            new MailtrapApiTransport(
+                new MailtrapSendingClient(
                     (new Config(self::USER))
                         ->setHttpClient(new Psr18Client($this->getClient()))
                         ->setHost(AbstractApi::SENDMAIL_HOST)
@@ -71,8 +71,8 @@ class MailTrapTransportFactoryTest extends TransportFactoryTestCase
 
         yield [
             new Dsn('mailtrap', AbstractApi::SENDMAIL_HOST, self::USER),
-            new MailTrapApiTransport(
-                new MailTrapSendingClient(
+            new MailtrapApiTransport(
+                new MailtrapSendingClient(
                     (new Config(self::USER))
                         ->setHttpClient(new Psr18Client($this->getClient()))
                         ->setHost(AbstractApi::SENDMAIL_HOST)
@@ -86,8 +86,8 @@ class MailTrapTransportFactoryTest extends TransportFactoryTestCase
         // sandbox
         yield [
             new Dsn('mailtrap', AbstractApi::SENDMAIL_SANDBOX_HOST, self::USER, null, null, ['inboxId' => 1234]),
-            new MailTrapApiTransport(
-                new MailTrapSandboxClient(
+            new MailtrapApiTransport(
+                new MailtrapSandboxClient(
                     (new Config(self::USER))
                         ->setHttpClient(new Psr18Client($this->getClient()))
                         ->setHost(AbstractApi::SENDMAIL_SANDBOX_HOST)

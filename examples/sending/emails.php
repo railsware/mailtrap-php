@@ -6,7 +6,7 @@ use Mailtrap\EmailHeader\CustomVariableHeader;
 use Mailtrap\EmailHeader\Template\TemplateUuidHeader;
 use Mailtrap\EmailHeader\Template\TemplateVariableHeader;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailTrapSendingClient;
+use Mailtrap\MailtrapSendingClient;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Header\UnstructuredHeader;
@@ -25,7 +25,7 @@ require __DIR__ . '/../vendor/autoload.php';
  * POST https://send.api.mailtrap.io/api/send
  */
 try {
-    $mailTrap = new MailTrapSendingClient(
+    $mailTrap = new MailtrapSendingClient(
         new Config('23...YOUR_API_KEY_HERE...4c')
     );
 
@@ -88,7 +88,7 @@ try {
  * Optional template variables that will be used to generate actual subject, text and html from email template
  */
 try {
-    $mailTrap = new MailTrapSendingClient(
+    $mailTrap = new MailtrapSendingClient(
         new Config('23...YOUR_API_KEY_HERE...4c')
     );
 

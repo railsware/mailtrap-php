@@ -24,13 +24,13 @@ Add or change MAILER_DSN variable inside your `.env` file. Also, you need to cha
 MAILER_DSN=mailtrap+api://YOUR_API_KEY_HERE@sandbox.api.mailtrap.io?inboxId=1234
 ```
 
-Add MailTrapTransport into your `config/services.yaml` file
+Add MailtrapTransport into your `config/services.yaml` file
 ```yaml
 ...
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    Mailtrap\Bridge\Transport\MailTrapTransportFactory:
+    Mailtrap\Bridge\Transport\MailtrapTransportFactory:
         tags:
             - { name: 'mailer.transport_factory' }
 ```

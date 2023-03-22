@@ -8,7 +8,7 @@ use Mailtrap\Api\AbstractApi;
 use Mailtrap\Api\AbstractAccount;
 use Mailtrap\Exception\HttpClientException;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\Tests\MailTrapTestCase;
+use Mailtrap\Tests\MailtrapTestCase;
 use Nyholm\Psr7\Response;
 
 /**
@@ -16,7 +16,7 @@ use Nyholm\Psr7\Response;
  *
  * Class AccountTest
  */
-class AccountTest extends MailTrapTestCase
+class AccountTest extends MailtrapTestCase
 {
     /**
      * @var AccountTest

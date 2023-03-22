@@ -13,7 +13,7 @@ use Mailtrap\EmailHeader\Template\TemplateVariableHeader;
 use Mailtrap\Exception\HttpClientException;
 use Mailtrap\Exception\RuntimeException;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\Tests\MailTrapTestCase;
+use Mailtrap\Tests\MailtrapTestCase;
 use Nyholm\Psr7\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
@@ -23,7 +23,7 @@ use Symfony\Component\Mime\Email;
  *
  * Class SendingEmailsTest
  */
-final class SendingEmailsTest extends MailTrapTestCase
+final class SendingEmailsTest extends MailtrapTestCase
 {
     /**
      * @var SendingEmails

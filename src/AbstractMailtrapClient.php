@@ -9,9 +9,9 @@ use Mailtrap\Exception\BadMethodCallException;
 use Mailtrap\Exception\InvalidArgumentException;
 
 /**
- * Class AbstractMailTrapClient
+ * Class AbstractMailtrapClient
  */
-abstract class AbstractMailTrapClient implements MailTrapClientInterface
+abstract class AbstractMailtrapClient implements MailtrapClientInterface
 {
     protected ConfigInterface $config;
 

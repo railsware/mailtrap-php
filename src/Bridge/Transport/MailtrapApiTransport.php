@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Mailtrap\Bridge\Transport;
 
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailTrapClientInterface;
+use Mailtrap\MailtrapClientInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Envelope;
@@ -17,15 +17,15 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\MessageConverter;
 
 /**
- * Class MailTrapApiTransport
+ * Class MailtrapApiTransport
  */
-class MailTrapApiTransport extends AbstractTransport
+class MailtrapApiTransport extends AbstractTransport
 {
-    private MailTrapClientInterface $mailTrapClient;
+    private MailtrapClientInterface $mailTrapClient;
     private ?int $inboxId;
 
     public function __construct(
-        MailTrapClientInterface $mailTrapClient,
+        MailtrapClientInterface $mailTrapClient,
         int $inboxId = null,
         EventDispatcherInterface $dispatcher = null,
         LoggerInterface $logger = null
@@ -76,7 +76,7 @@ class MailTrapApiTransport extends AbstractTransport
     {
         return array_filter(
             $envelope->getRecipients(),
-            static fn (Address $address) => false === \in_array($address, array_merge($email->getTo(), $email->getCc(), $email->getBcc()), true)
+            static fn (Address $address) => false === in_array($address, array_merge($email->getTo(), $email->getCc(), $email->getBcc()), true)
         );
     }
 }

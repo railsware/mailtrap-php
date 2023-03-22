@@ -7,7 +7,7 @@ namespace Mailtrap\Tests\Api\Sandbox;
 use Mailtrap\Api\AbstractApi;
 use Mailtrap\Api\Sandbox\SandboxEmails;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\Tests\MailTrapTestCase;
+use Mailtrap\Tests\MailtrapTestCase;
 use Nyholm\Psr7\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
@@ -17,7 +17,7 @@ use Symfony\Component\Mime\Email;
  *
  * Class SandboxEmailsTest
  */
-final class SandboxEmailsTest extends MailTrapTestCase
+final class SandboxEmailsTest extends MailtrapTestCase
 {
     /**
      * @var SandboxEmails

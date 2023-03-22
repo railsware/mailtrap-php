@@ -4,31 +4,31 @@ declare(strict_types=1);
 
 namespace Mailtrap\Tests;
 
-use Mailtrap\Api\Sending\SendingInterface;
+use Mailtrap\Api\Sandbox\SandboxInterface;
 use Mailtrap\ConfigInterface;
 use Mailtrap\Exception\BadMethodCallException;
-use Mailtrap\MailTrapSendingClient;
+use Mailtrap\MailtrapSandboxClient;
 use ReflectionClass;
 
 /**
- * @covers MailTrapSendingClient
+ * @covers MailtrapSandboxClient
  *
- * Class MailTrapSendingClientTest
+ * Class MailtrapSandboxClientTest
  */
-class MailTrapSendingClientTest extends MailTrapTestCase
+class MailtrapSandboxClientTest extends MailtrapTestCase
 {
-    private ?MailTrapSendingClient $mailTrapSendingClient;
+    private ?MailtrapSandboxClient $mailTrapSandboxClient;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->mailTrapSendingClient = new MailTrapSendingClient($this->createMock(ConfigInterface::class));
+        $this->mailTrapSandboxClient = new MailtrapSandboxClient($this->createMock(ConfigInterface::class));
     }
 
     protected function tearDown(): void
     {
-        $this->mailTrapSendingClient = null;
+        $this->mailTrapSandboxClient = null;
 
         parent::tearDown();
     }
@@ -40,11 +40,11 @@ class MailTrapSendingClientTest extends MailTrapTestCase
     {
         $this->expectExceptionObject(
             new BadMethodCallException(
-                sprintf('%s -> undefined method called: "%s"', MailTrapSendingClient::class, $name)
+                sprintf('%s -> undefined method called: "%s"', MailtrapSandboxClient::class, $name)
             )
         );
 
-        $this->mailTrapSendingClient->{$name}();
+        $this->mailTrapSandboxClient->{$name}();
     }
 
     /**
@@ -52,7 +52,7 @@ class MailTrapSendingClientTest extends MailTrapTestCase
      */
     public function testMapInstance($instance): void
     {
-        $this->assertInstanceOf(SendingInterface::class, $instance);
+        $this->assertInstanceOf(SandboxInterface::class, $instance);
     }
 
     public function invalidApiClassNameProvider(): array
@@ -74,7 +74,7 @@ class MailTrapSendingClientTest extends MailTrapTestCase
 
     private function getApiMappingConstant(): array
     {
-        $oClass = new ReflectionClass(MailTrapSendingClient::class);
+        $oClass = new ReflectionClass(MailtrapSandboxClient::class);
         $constants = $oClass->getConstants();
 
         return $constants['API_MAPPING'];

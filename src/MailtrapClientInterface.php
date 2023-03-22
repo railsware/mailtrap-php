@@ -7,7 +7,7 @@ namespace Mailtrap;
 /**
  * @method  Api\Sandbox\SandboxEmails|Api\Sending\SendingEmails  emails
  */
-interface MailTrapClientInterface
+interface MailtrapClientInterface
 {
     public function __construct(ConfigInterface $config);
 

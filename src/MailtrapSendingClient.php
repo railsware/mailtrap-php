@@ -10,9 +10,9 @@ use Mailtrap\Api;
  * @method  Api\Sending\SendingAccount  accounts
  * @method  Api\Sending\SendingEmails   emails
  *
- * Class MailTrapClient
+ * Class MailtrapClient
  */
-class MailTrapSendingClient extends AbstractMailTrapClient
+class MailtrapSendingClient extends AbstractMailtrapClient
 {
     private const API_MAPPING = [
         'accounts' => Api\Sending\SendingAccount::class,

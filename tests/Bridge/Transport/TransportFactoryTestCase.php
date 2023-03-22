@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mailtrap\Tests\Bridge\Transport;
 
-use Mailtrap\Tests\MailTrapTestCase;
+use Mailtrap\Tests\MailtrapTestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Exception\IncompleteDsnException;
 use Symfony\Component\Mailer\Exception\UnsupportedSchemeException;
@@ -15,7 +15,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 
-abstract class TransportFactoryTestCase extends MailTrapTestCase
+abstract class TransportFactoryTestCase extends MailtrapTestCase
 {
     protected const USER = 'u$er';
     protected const PASSWORD = 'pa$s';
