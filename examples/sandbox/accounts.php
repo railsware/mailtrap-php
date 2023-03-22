@@ -2,11 +2,11 @@
 
 use Mailtrap\Config;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailTrapSandboxClient;
+use Mailtrap\MailtrapSandboxClient;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$mailTrap = new MailTrapSandboxClient(
+$mailTrap = new MailtrapSandboxClient(
     new Config('23...YOUR_API_KEY_HERE...4c')
 );
 

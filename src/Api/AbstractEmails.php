@@ -52,7 +52,7 @@ abstract class AbstractEmails extends AbstractApi
 
         $headersToBypass = ['received', 'from', 'to', 'cc', 'bcc', 'subject', 'content-type', 'reply-to'];
         foreach ($email->getHeaders()->all() as $name => $header) {
-            if (\in_array($name, $headersToBypass, true)) {
+            if (in_array($name, $headersToBypass, true)) {
                 continue;
             }
 
@@ -159,7 +159,7 @@ abstract class AbstractEmails extends AbstractApi
 
         return array_filter(
             $recipients,
-            static fn (Address $address) => false === \in_array($address, array_merge($email->getCc(), $email->getBcc()), true)
+            static fn (Address $address) => false === in_array($address, array_merge($email->getCc(), $email->getBcc()), true)
         );
     }
 }

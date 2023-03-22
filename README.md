@@ -1,4 +1,4 @@
-Official MailTrap PHP client
+Official Mailtrap PHP client
 ===============
 ![GitHub Actions](https://github.com/railsware/mailtrap-php/actions/workflows/ci-phpunit.yml/badge.svg)
 ![GitHub Actions](https://github.com/railsware/mailtrap-php/actions/workflows/ci-psalm.yaml/badge.svg)
@@ -11,15 +11,18 @@ Official MailTrap PHP client
 ## Installation
 You can install the package via [composer](http://getcomposer.org/)
 
-The MailTrap API Client is not hard coupled to Guzzle, React, Zend, Symfony HTTP or any other library that sends
+The Mailtrap API Client is not hard coupled to Guzzle, React, Zend, Symfony HTTP or any other library that sends
 HTTP messages. Instead, it uses the [PSR-18](https://www.php-fig.org/psr/psr-18/) client abstraction.
 
 This will give you the flexibility to choose what [HTTP client](https://docs.php-http.org/en/latest/clients.html) you want to use.
 
-If you just want to get started quickly you should run the following command:
-
+If you just want to get started quickly you should run one of the following command (depends on what http client you want to use):
 ```bash
+# With symfony http client (recommend)
 composer require railsware/mailtrap-php symfony/http-client nyholm/psr7
+
+# Or with guzzle http client
+composer require railsware/mailtrap-php guzzlehttp/guzzle php-http/guzzle7-adapter
 ```
 
 ## Usage
@@ -35,8 +38,8 @@ use Mailtrap\Config;
 use Mailtrap\EmailHeader\CategoryHeader;
 use Mailtrap\EmailHeader\CustomVariableHeader;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailTrapSendingClient;
-use Mailtrap\MailTrapSandboxClient;
+use Mailtrap\MailtrapSendingClient;
+use Mailtrap\MailtrapSandboxClient;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Header\UnstructuredHeader;
@@ -44,19 +47,19 @@ use Symfony\Component\Mime\Header\UnstructuredHeader;
 require __DIR__ . 'vendor/autoload.php';
 
 $email = (new Email())
-    ->from(new Address('example@your-domain-here.com', 'MailTrap Test'))
+    ->from(new Address('example@your-domain-here.com', 'Mailtrap Test'))
     ->to(new Address('email@example.com', 'Jon'))
     ->cc('mailtrapqa@example.com')
     ->addCc('staging@example.com')
     ->bcc('mailtrapdev@example.com')
     ->subject('Best practices of building HTML emails')
-    ->text('Hey! Learn the best practices of building HTML emails and play with ready-to-go templates. MailTrap’s Guide on How to Build HTML Email is live on our blog')
+    ->text('Hey! Learn the best practices of building HTML emails and play with ready-to-go templates. Mailtrap’s Guide on How to Build HTML Email is live on our blog')
     ->html(
         '<html>
         <body>
         <p><br>Hey</br>
         Learn the best practices of building HTML emails and play with ready-to-go templates.</p>
-        <p><a href="https://mailtrap.io/blog/build-html-email/">MailTrap’s Guide on How to Build HTML Email</a> is live on our blog</p>
+        <p><a href="https://mailtrap.io/blog/build-html-email/">Mailtrap’s Guide on How to Build HTML Email</a> is live on our blog</p>
         <img src="cid:logo">
         </body>
     </html>'
@@ -68,7 +71,7 @@ $email = (new Email())
     // Headers
     $email->getHeaders()
     ->addTextHeader('X-Message-Source', 'domain.com')
-    ->add(new UnstructuredHeader('X-Mailer', 'MailTrap PHP Client')) // the same as addTextHeader
+    ->add(new UnstructuredHeader('X-Mailer', 'Mailtrap PHP Client')) // the same as addTextHeader
     ;
     
     // Custom Variables
@@ -83,7 +86,7 @@ $email = (new Email())
     ;
     
 try {
-    $mailTrap = new MailTrapSendingClient(
+    $mailTrap = new MailtrapSendingClient(
         new Config('23...YOUR_API_KEY_HERE...4c') // your API toke from here https://mailtrap.io/api-tokens
     );
    
@@ -94,10 +97,10 @@ try {
     echo 'Caught exception: ',  $e->getMessage(), "\n";
 }
 
-// OR send email to the MailTrap SANDBOX
+// OR send email to the Mailtrap SANDBOX
 
 try {
-    $mailTrap = new MailTrapSandboxClient(
+    $mailTrap = new MailtrapSandboxClient(
         new Config('23...YOUR_API_KEY_HERE...4c') // your API toke from here https://mailtrap.io/api-tokens
     );
    
@@ -120,8 +123,8 @@ You can find more examples [here](examples).
 
 If you are using a framework you might consider these composer packages to make the framework integration easier.
 
-* [Symfony](src/integration/symfony) (coming soon)
-* [Laravel](src/integration/symfony) (coming soon)
+* [Symfony](src/Bridge/Symfony)
+* [Laravel](src/Bridge/Laravel) (coming soon)
 
 ## Contributing
 
@@ -133,4 +136,4 @@ The package is available as open source under the terms of the [MIT License](htt
 
 ## Code of Conduct
 
-Everyone interacting in the MailTrap project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](CODE_OF_CONDUCT.md).
+Everyone interacting in the Mailtrap project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](CODE_OF_CONDUCT.md).

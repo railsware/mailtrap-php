@@ -10,9 +10,9 @@ use Mailtrap\Api;
  * @method  Api\Sandbox\SandboxAccount  accounts
  * @method  Api\Sandbox\SandboxEmails   emails
  *
- * Class MailTrapSandboxClient
+ * Class MailtrapSandboxClient
  */
-class MailTrapSandboxClient extends AbstractMailTrapClient
+class MailtrapSandboxClient extends AbstractMailtrapClient
 {
     private const API_MAPPING = [
         'accounts' => Api\Sandbox\SandboxAccount::class,

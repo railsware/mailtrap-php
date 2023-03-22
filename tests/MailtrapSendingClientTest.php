@@ -4,28 +4,26 @@ declare(strict_types=1);
 
 namespace Mailtrap\Tests;
 
-use Mailtrap\Api\Sending\SendingAccount;
-use Mailtrap\Api\Sending\SendingEmails;
 use Mailtrap\Api\Sending\SendingInterface;
 use Mailtrap\ConfigInterface;
 use Mailtrap\Exception\BadMethodCallException;
-use Mailtrap\MailTrapSendingClient;
+use Mailtrap\MailtrapSendingClient;
 use ReflectionClass;
 
 /**
- * @covers MailTrapSendingClient
+ * @covers MailtrapSendingClient
  *
- * Class MailTrapSendingClientTest
+ * Class MailtrapSendingClientTest
  */
-class MailTrapSendingClientTest extends MailtrapTestCase
+class MailtrapSendingClientTest extends MailtrapTestCase
 {
-    private ?MailTrapSendingClient $mailTrapSendingClient;
+    private ?MailtrapSendingClient $mailTrapSendingClient;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->mailTrapSendingClient = new MailTrapSendingClient($this->createMock(ConfigInterface::class));
+        $this->mailTrapSendingClient = new MailtrapSendingClient($this->createMock(ConfigInterface::class));
     }
 
     protected function tearDown(): void
@@ -42,7 +40,7 @@ class MailTrapSendingClientTest extends MailtrapTestCase
     {
         $this->expectExceptionObject(
             new BadMethodCallException(
-                sprintf('%s -> undefined method called: "%s"', MailTrapSendingClient::class, $name)
+                sprintf('%s -> undefined method called: "%s"', MailtrapSendingClient::class, $name)
             )
         );
 
@@ -76,7 +74,7 @@ class MailTrapSendingClientTest extends MailtrapTestCase
 
     private function getApiMappingConstant(): array
     {
-        $oClass = new ReflectionClass(MailTrapSendingClient::class);
+        $oClass = new ReflectionClass(MailtrapSendingClient::class);
         $constants = $oClass->getConstants();
 
         return $constants['API_MAPPING'];

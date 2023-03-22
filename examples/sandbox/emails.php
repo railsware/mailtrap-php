@@ -4,7 +4,7 @@ use Mailtrap\Config;
 use Mailtrap\EmailHeader\CategoryHeader;
 use Mailtrap\EmailHeader\CustomVariableHeader;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailTrapSandboxClient;
+use Mailtrap\MailtrapSandboxClient;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Header\UnstructuredHeader;
@@ -23,7 +23,7 @@ require __DIR__ . '/../vendor/autoload.php';
  * POST https://sandbox.api.mailtrap.io/api/send/{inbox_id}
  */
 try {
-    $mailTrap = new MailTrapSandboxClient(
+    $mailTrap = new MailtrapSandboxClient(
         new Config('23...YOUR_API_KEY_HERE...4c')
     );
 

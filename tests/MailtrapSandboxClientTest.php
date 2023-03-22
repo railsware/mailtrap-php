@@ -4,28 +4,26 @@ declare(strict_types=1);
 
 namespace Mailtrap\Tests;
 
-use Mailtrap\Api\Sandbox\SandboxAccount;
-use Mailtrap\Api\Sandbox\SandboxEmails;
 use Mailtrap\Api\Sandbox\SandboxInterface;
 use Mailtrap\ConfigInterface;
 use Mailtrap\Exception\BadMethodCallException;
-use Mailtrap\MailTrapSandboxClient;
+use Mailtrap\MailtrapSandboxClient;
 use ReflectionClass;
 
 /**
- * @covers MailTrapSandboxClient
+ * @covers MailtrapSandboxClient
  *
- * Class MailTrapSandboxClientTest
+ * Class MailtrapSandboxClientTest
  */
-class MailTrapSandboxClientTest extends MailtrapTestCase
+class MailtrapSandboxClientTest extends MailtrapTestCase
 {
-    private ?MailTrapSandboxClient $mailTrapSandboxClient;
+    private ?MailtrapSandboxClient $mailTrapSandboxClient;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->mailTrapSandboxClient = new MailTrapSandboxClient($this->createMock(ConfigInterface::class));
+        $this->mailTrapSandboxClient = new MailtrapSandboxClient($this->createMock(ConfigInterface::class));
     }
 
     protected function tearDown(): void
@@ -42,7 +40,7 @@ class MailTrapSandboxClientTest extends MailtrapTestCase
     {
         $this->expectExceptionObject(
             new BadMethodCallException(
-                sprintf('%s -> undefined method called: "%s"', MailTrapSandboxClient::class, $name)
+                sprintf('%s -> undefined method called: "%s"', MailtrapSandboxClient::class, $name)
             )
         );
 
@@ -76,7 +74,7 @@ class MailTrapSandboxClientTest extends MailtrapTestCase
 
     private function getApiMappingConstant(): array
     {
-        $oClass = new ReflectionClass(MailTrapSandboxClient::class);
+        $oClass = new ReflectionClass(MailtrapSandboxClient::class);
         $constants = $oClass->getConstants();
 
         return $constants['API_MAPPING'];
