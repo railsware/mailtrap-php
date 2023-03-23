@@ -19,7 +19,7 @@ class MailtrapApiProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->mergeConfigFrom(__DIR__ . '/config/mailtrap.php', 'services');
     }
 
     /**
@@ -27,8 +27,19 @@ class MailtrapApiProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Mail::extend('mailtrap', function ($config) {
-            // TODO
-        });
+        if ((int) $this->app->version() >= 9) {
+            Mail::extend('mailtrap', function () {
+                return (new MailTrapTransportFactory)->create(
+                    new Dsn(
+                        'mailtrap+api',
+                        config('services.mailtrap.host', 'default'),
+                        config('services.mailtrap.apiKey'),
+                        null,
+                        null,
+                        config('services.mailtrap', [])
+                    )
+                );
+            });
+        }
     }
 }
