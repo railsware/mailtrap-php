@@ -27,6 +27,7 @@ class MailtrapApiProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // https://laravel.com/docs/9.x/upgrade#symfony-mailer
         if ((int) $this->app->version() >= 9) {
             Mail::extend('mailtrap', function () {
                 return (new MailTrapTransportFactory)->create(

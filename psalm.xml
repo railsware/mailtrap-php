@@ -14,6 +14,7 @@
         <directory name="src" />
         <ignoreFiles>
             <directory name="vendor" />
+            <directory name="src/Bridge/Laravel" />
         </ignoreFiles>
     </projectFiles>
 </psalm>
