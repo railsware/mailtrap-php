@@ -1,4 +1,4 @@
-Mailtrap Bridge [API]
+Symfony Mailtrap Bridge [API]
 ===============
 
 Provides mailtrap.io integration for Symfony Mailer.
@@ -43,6 +43,7 @@ php bin/console mailer:test to@example.com
 ```
 
 #### Controller (base example)
+
 ```php
 <?php
 
@@ -50,6 +51,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\Transport\TransportInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Routing\Annotation\Route;
 
 
 final class SomeController extends AbstractController
