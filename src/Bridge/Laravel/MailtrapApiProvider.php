@@ -33,7 +33,7 @@ class MailtrapApiProvider extends ServiceProvider
                 return (new MailTrapTransportFactory)->create(
                     new Dsn(
                         'mailtrap+api',
-                        config('services.mailtrap.host', 'default'),
+                        config('services.mailtrap.host'),
                         config('services.mailtrap.apiKey'),
                         null,
                         null,
