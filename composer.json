@@ -40,6 +40,13 @@
       "Mailtrap\\Tests\\": "tests/"
     }
   },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Mailtrap\\Bridge\\Laravel\\MailtrapApiProvider"
+      ]
+    }
+  },
   "minimum-stability": "dev",
   "config": {
     "allow-plugins": {
