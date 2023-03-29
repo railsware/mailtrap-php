@@ -1,3 +1,3 @@
-## [0.0.1] - 2023-03-13
+## [1.0.0] - 2023-03-28
 
-- The initial release of the official mailtrap.io API client
+- The initial release of the official mailtrap.io PHP client
