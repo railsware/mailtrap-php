@@ -44,7 +44,7 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Header\UnstructuredHeader;
 
-require __DIR__ . 'vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 $email = (new Email())
     ->from(new Address('example@your-domain-here.com', 'Mailtrap Test'))
@@ -65,7 +65,6 @@ $email = (new Email())
     </html>'
     )
     ->embed(fopen('https://mailtrap.io/wp-content/uploads/2021/04/mailtrap-new-logo.svg', 'r'), 'logo', 'image/svg+xml')
-    ->attachFromPath('README.md')
     ;
     
     // Headers
@@ -124,7 +123,7 @@ You can find more examples [here](examples).
 If you are using a framework you might consider these composer packages to make the framework integration easier.
 
 * [Symfony](src/Bridge/Symfony)
-* [Laravel](src/Bridge/Laravel) (coming soon)
+* [Laravel](src/Bridge/Laravel)
 
 ## Contributing
 
