@@ -9,6 +9,7 @@ use Mailtrap\Api;
 /**
  * @method  Api\Sandbox\SandboxAccount  accounts
  * @method  Api\Sandbox\SandboxEmails   emails
+ * @method  Api\Sandbox\SandboxUser     users
  *
  * Class MailtrapSandboxClient
  */
@@ -17,6 +18,7 @@ class MailtrapSandboxClient extends AbstractMailtrapClient
     private const API_MAPPING = [
         'accounts' => Api\Sandbox\SandboxAccount::class,
         'emails' => Api\Sandbox\SandboxEmails::class,
+        'users' => Api\Sandbox\SandboxUser::class,
     ];
 
     public function getApiClassByName(string $name): ?string

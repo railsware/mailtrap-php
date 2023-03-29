@@ -30,8 +30,12 @@ abstract class AbstractApi
         $this->httpClient = $this->config->getHttpClientBuilder()->getHttpClient();
     }
 
-    protected function get(string $path, array $requestHeaders = []): ResponseInterface
+    protected function get(string $path, array $parameters = [], array $requestHeaders = []): ResponseInterface
     {
+        if (count($parameters) > 0) {
+            $path .= '?' . preg_replace('/%5B[0-9]+%5D/simU', '%5B%5D', http_build_query($parameters, '', '&'));
+        }
+
         return $this->httpClient->get($this->addDefaultScheme($path), $requestHeaders);
     }
 

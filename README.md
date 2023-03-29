@@ -27,7 +27,6 @@ composer require railsware/mailtrap-php guzzlehttp/guzzle php-http/guzzle7-adapt
 
 ## Usage
 You should use Composer autoloader in your application to automatically load your dependencies. 
-All the examples below assume you've already included this in your file:
 
 Here's how to send a message using the SDK:
 
