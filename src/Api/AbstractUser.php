@@ -11,11 +11,6 @@ use Psr\Http\Message\ResponseInterface;
  */
 abstract class AbstractUser extends AbstractApi
 {
-    /**
-     * Currently the same endpoint and result for Sandbox and Sanding environments
-     *
-     * @return ResponseInterface
-     */
     public function getList(int $accountId, array $inboxIds = [], array $projectIds = []): ResponseInterface
     {
         $parameters = [];
@@ -30,6 +25,13 @@ abstract class AbstractUser extends AbstractApi
         return $this->handleResponse($this->get(
             sprintf('%s/api/accounts/%s/account_accesses', $this->getHost(), $accountId),
             $parameters
+        ));
+    }
+
+    public function remove(int $accountId, int $accountAccessId): ResponseInterface
+    {
+        return $this->handleResponse($this->delete(
+            sprintf('%s/api/accounts/%s/account_accesses/%s', $this->getHost(), $accountId, $accountAccessId)
         ));
     }
 }
