@@ -33,7 +33,7 @@ abstract class AbstractApi
     protected function get(string $path, array $parameters = [], array $requestHeaders = []): ResponseInterface
     {
         if (count($parameters) > 0) {
-            $path .= '?' . preg_replace('/%5B\d+%5D/imU', '%5B%5D', http_build_query($parameters, '', '&'));
+            $path .= '?' . $this->normalizeArrayParams($parameters);
         }
 
         return $this->httpClient->get($this->addDefaultScheme($path), $requestHeaders);
@@ -128,5 +128,18 @@ abstract class AbstractApi
     private function addDefaultScheme(string $path): string
     {
         return empty(parse_url($path, PHP_URL_SCHEME)) ? 'https://' . $path : $path;
+    }
+
+    /**
+     * Mailtrap API doesn't support array numeric values in GET params like that - inbox_ids[0]=1001&inbox_ids[1]=2002
+     * that's why we need to do some normalization to use without numbers inbox_ids[]=1001&inbox_ids[]=2002
+     *
+     * @param array $parameters
+     *
+     * @return string
+     */
+    private function normalizeArrayParams(array $parameters): string
+    {
+        return preg_replace('/%5B\d+%5D/imU', '%5B%5D', http_build_query($parameters, '', '&'));
     }
 }

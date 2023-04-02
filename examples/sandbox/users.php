@@ -37,9 +37,9 @@ try {
  */
 try {
     $accountId = 1000001;
-    $accountAccessId = 10000009;
+    $userId = 10000009;
 
-    $response = $mailTrap->users()->remove($accountId, $accountAccessId);
+    $response = $mailTrap->users()->remove($accountId, $userId);
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));

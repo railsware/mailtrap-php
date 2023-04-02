@@ -20,7 +20,7 @@ use Nyholm\Psr7\Response;
 class UserTest extends MailtrapTestCase
 {
     private const FAKE_ACCOUNT_ID = 10001;
-    private const FAKE_ACCOUNT_ACCESS_ID = 1000001;
+    private const FAKE_ACCOUNT_USER_ID = 1000001;
 
     /**
      * @var AbstractUser
@@ -116,22 +116,22 @@ class UserTest extends MailtrapTestCase
     {
         $this->user->expects($this->once())
             ->method('delete')
-            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses/' . self::FAKE_ACCOUNT_ACCESS_ID)
-            ->willReturn(new Response(200, [], json_encode(['id' => self::FAKE_ACCOUNT_ACCESS_ID])));
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses/' . self::FAKE_ACCOUNT_USER_ID)
+            ->willReturn(new Response(200, [], json_encode(['id' => self::FAKE_ACCOUNT_USER_ID])));
 
-        $response = $this->user->remove(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
+        $response = $this->user->remove(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_USER_ID);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
         $this->assertArrayHasKey('id', $responseData);
-        $this->assertEquals(self::FAKE_ACCOUNT_ACCESS_ID, $responseData['id']);
+        $this->assertEquals(self::FAKE_ACCOUNT_USER_ID, $responseData['id']);
     }
 
     public function test401InvalidRemove(): void
     {
         $this->user->expects($this->once())
             ->method('delete')
-            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses/' . self::FAKE_ACCOUNT_ACCESS_ID)
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses/' . self::FAKE_ACCOUNT_USER_ID)
             ->willReturn(new Response(401, [], json_encode(['error' => 'Incorrect API token'])));
 
         $this->expectException(HttpClientException::class);
@@ -139,14 +139,14 @@ class UserTest extends MailtrapTestCase
             'Unauthorized. Make sure you are sending correct credentials with the request before retrying. Errors: Incorrect API token'
         );
 
-        $this->user->remove(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
+        $this->user->remove(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_USER_ID);
     }
 
     public function test403InvalidRemove(): void
     {
         $this->user->expects($this->once())
             ->method('delete')
-            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses/' . self::FAKE_ACCOUNT_ACCESS_ID)
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses/' . self::FAKE_ACCOUNT_USER_ID)
             ->willReturn(new Response(403, [], json_encode(['error' => 'Access forbidden'])));
 
         $this->expectException(HttpClientException::class);
@@ -154,14 +154,14 @@ class UserTest extends MailtrapTestCase
             'Forbidden. Make sure domain verification process is completed or check your permissions. Errors: Access forbidden'
         );
 
-        $this->user->remove(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
+        $this->user->remove(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_USER_ID);
     }
 
     public function test404InvalidRemove(): void
     {
         $this->user->expects($this->once())
             ->method('delete')
-            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses/' . self::FAKE_ACCOUNT_ACCESS_ID)
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses/' . self::FAKE_ACCOUNT_USER_ID)
             ->willReturn(new Response(404, [], json_encode(['error' => 'Not Found'])));
 
         $this->expectException(HttpClientException::class);
@@ -169,7 +169,7 @@ class UserTest extends MailtrapTestCase
             'Not found. Errors: Not Found'
         );
 
-        $this->user->remove(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
+        $this->user->remove(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_USER_ID);
     }
 
     private function getExpectedData(): array
