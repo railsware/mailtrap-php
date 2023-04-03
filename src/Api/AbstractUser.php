@@ -28,10 +28,10 @@ abstract class AbstractUser extends AbstractApi
         ));
     }
 
-    public function remove(int $accountId, int $userId): ResponseInterface
+    public function remove(int $accountId, int $accountAccessId): ResponseInterface
     {
         return $this->handleResponse($this->delete(
-            sprintf('%s/api/accounts/%s/account_accesses/%s', $this->getHost(), $accountId, $userId)
+            sprintf('%s/api/accounts/%s/account_accesses/%s', $this->getHost(), $accountId, $accountAccessId)
         ));
     }
 }
