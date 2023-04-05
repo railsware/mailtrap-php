@@ -19,7 +19,7 @@ abstract class AbstractAccount extends AbstractApi
     public function getList(): ResponseInterface
     {
         return $this->handleResponse(
-            $this->get($this->getHost() . '/api/accounts')
+            $this->httpGet($this->getHost() . '/api/accounts')
         );
     }
 }

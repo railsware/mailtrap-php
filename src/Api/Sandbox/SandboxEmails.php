@@ -16,7 +16,7 @@ class SandboxEmails extends AbstractEmails implements SandboxInterface
     public function send(Email $email, int $inboxId): ResponseInterface
     {
         return $this->handleResponse(
-            $this->post(sprintf('%s/api/send/%s', $this->getHost(), $inboxId), [], $this->getPayload($email))
+            $this->httpPost(sprintf('%s/api/send/%s', $this->getHost(), $inboxId), [], $this->getPayload($email))
         );
     }
 

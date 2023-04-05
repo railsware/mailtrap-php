@@ -30,12 +30,12 @@ abstract class AbstractApi
         $this->httpClient = $this->config->getHttpClientBuilder()->getHttpClient();
     }
 
-    protected function get(string $path, array $requestHeaders = []): ResponseInterface
+    protected function httpGet(string $path, array $requestHeaders = []): ResponseInterface
     {
         return $this->httpClient->get($this->addDefaultScheme($path), $requestHeaders);
     }
 
-    protected function post(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
+    protected function httpPost(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
     {
         return $this->httpClient->post(
             $this->addDefaultScheme($path),
@@ -44,7 +44,7 @@ abstract class AbstractApi
         );
     }
 
-    protected function put(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
+    protected function httpPut(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
     {
         return $this->httpClient->put(
             $this->addDefaultScheme($path),
@@ -53,7 +53,7 @@ abstract class AbstractApi
         );
     }
 
-    protected function patch(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
+    protected function httpPatch(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
     {
         return $this->httpClient->patch(
             $this->addDefaultScheme($path),
@@ -62,7 +62,7 @@ abstract class AbstractApi
         );
     }
 
-    protected function delete(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
+    protected function httpDelete(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
     {
         return $this->httpClient->delete(
             $this->addDefaultScheme($path),

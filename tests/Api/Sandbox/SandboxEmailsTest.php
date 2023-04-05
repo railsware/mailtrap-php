@@ -29,7 +29,7 @@ final class SandboxEmailsTest extends MailtrapTestCase
         parent::setUp();
 
         $this->email = $this->getMockBuilder(SandboxEmails::class)
-            ->onlyMethods(['post'])
+            ->onlyMethods(['httpPost'])
             ->setConstructorArgs([$this->getConfigMock()])
             ->getMock()
         ;
@@ -65,7 +65,7 @@ final class SandboxEmailsTest extends MailtrapTestCase
 
         $this->email
             ->expects($this->once())
-            ->method('post')
+            ->method('httpPost')
             ->with(AbstractApi::SENDMAIL_SANDBOX_HOST . '/api/send/' . $inboxId, [], [
                 'from' => [
                     'email' => 'foo@example.com',
@@ -85,7 +85,7 @@ final class SandboxEmailsTest extends MailtrapTestCase
                     'X-Message-Source' => 'dev.mydomain.com'
                 ]
             ])
-            ->willReturn(new Response(200, [], json_encode($expectedData)));
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));
 
         $response = $this->email->send($email, $inboxId);
         $responseData = ResponseHelper::toArray($response);
