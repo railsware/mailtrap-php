@@ -6,7 +6,7 @@ use Mailtrap\EmailHeader\CustomVariableHeader;
 use Mailtrap\EmailHeader\Template\TemplateUuidHeader;
 use Mailtrap\EmailHeader\Template\TemplateVariableHeader;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailtrapSendingClient;
+use Mailtrap\MailtrapClient;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Header\UnstructuredHeader;
@@ -25,7 +25,7 @@ require __DIR__ . '/../vendor/autoload.php';
  * POST https://send.api.mailtrap.io/api/send
  */
 try {
-    $mailTrap = new MailtrapSendingClient(
+    $mailTrap = new MailtrapClient(
         new Config('23...YOUR_API_KEY_HERE...4c')
     );
 
@@ -68,11 +68,8 @@ try {
         ->add(new CategoryHeader('Integration Test'))
     ;
 
-    $response = $mailTrap->emails()->send($email);
+    $response = $mailTrap->sending()->emails()->send($email);
 
-    // print all possible information from the response
-    var_dump($response->getHeaders()); //headers (array)
-    var_dump($response->getStatusCode()); //status code (int)
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {
     echo 'Caught exception: ',  $e->getMessage(), "\n";
@@ -88,7 +85,7 @@ try {
  * Optional template variables that will be used to generate actual subject, text and html from email template
  */
 try {
-    $mailTrap = new MailtrapSendingClient(
+    $mailTrap = new MailtrapClient(
         new Config('23...YOUR_API_KEY_HERE...4c')
     );
 
@@ -106,11 +103,8 @@ try {
         ->add(new TemplateVariableHeader('onboarding_video_link', 'some_video_link'))
     ;
 
-    $response = $mailTrap->emails()->send($email);
+    $response = $mailTrap->sending()->emails()->send($email);
 
-    // print all possible information from the response
-    var_dump($response->getHeaders()); //headers (array)
-    var_dump($response->getStatusCode()); //status code (int)
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {
     echo 'Caught exception: ',  $e->getMessage(), "\n";

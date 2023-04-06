@@ -7,20 +7,13 @@ namespace Mailtrap;
 use Mailtrap\Api;
 
 /**
- * @method  Api\Sandbox\SandboxAccount  accounts
  * @method  Api\Sandbox\SandboxEmails   emails
  *
  * Class MailtrapSandboxClient
  */
-class MailtrapSandboxClient extends AbstractMailtrapClient
+final class MailtrapSandboxClient extends AbstractMailtrapClient
 {
-    private const API_MAPPING = [
-        'accounts' => Api\Sandbox\SandboxAccount::class,
+    public const API_MAPPING = [
         'emails' => Api\Sandbox\SandboxEmails::class,
     ];
-
-    public function getApiClassByName(string $name): ?string
-    {
-        return !empty(self::API_MAPPING[$name]) ? self::API_MAPPING[$name] : null;
-    }
 }

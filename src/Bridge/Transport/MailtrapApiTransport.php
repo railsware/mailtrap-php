@@ -6,6 +6,8 @@ namespace Mailtrap\Bridge\Transport;
 
 use Mailtrap\Helper\ResponseHelper;
 use Mailtrap\MailtrapClientInterface;
+use Mailtrap\MailtrapSandboxClient;
+use Mailtrap\MailtrapSendingClient;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Envelope;
@@ -21,6 +23,9 @@ use Symfony\Component\Mime\MessageConverter;
  */
 class MailtrapApiTransport extends AbstractTransport
 {
+    /**
+     * @var MailtrapSendingClient|MailtrapSandboxClient
+     */
     private MailtrapClientInterface $mailTrapClient;
     private ?int $inboxId;
 

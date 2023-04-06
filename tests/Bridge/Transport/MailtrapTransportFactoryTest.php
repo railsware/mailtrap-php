@@ -8,8 +8,7 @@ use Mailtrap\Api\AbstractApi;
 use Mailtrap\Bridge\Transport\MailtrapApiTransport;
 use Mailtrap\Bridge\Transport\MailtrapTransportFactory;
 use Mailtrap\Config;
-use Mailtrap\MailtrapSandboxClient;
-use Mailtrap\MailtrapSendingClient;
+use Mailtrap\MailtrapClient;
 use Symfony\Component\HttpClient\Psr18Client;
 use Symfony\Component\Mailer\Transport\Dsn;
 use Symfony\Component\Mailer\Transport\TransportFactoryInterface;
@@ -58,11 +57,11 @@ class MailtrapTransportFactoryTest extends TransportFactoryTestCase
         yield [
             new Dsn('mailtrap+api', 'default', self::USER),
             new MailtrapApiTransport(
-                new MailtrapSendingClient(
+                (new MailtrapClient(
                     (new Config(self::USER))
                         ->setHttpClient(new Psr18Client($this->getClient()))
                         ->setHost(AbstractApi::SENDMAIL_HOST)
-                ),
+                ))->sending(),
                 null,
                 $dispatcher,
                 $logger
@@ -72,11 +71,11 @@ class MailtrapTransportFactoryTest extends TransportFactoryTestCase
         yield [
             new Dsn('mailtrap', AbstractApi::SENDMAIL_HOST, self::USER),
             new MailtrapApiTransport(
-                new MailtrapSendingClient(
+                (new MailtrapClient(
                     (new Config(self::USER))
                         ->setHttpClient(new Psr18Client($this->getClient()))
                         ->setHost(AbstractApi::SENDMAIL_HOST)
-                ),
+                ))->sending(),
                 null,
                 $dispatcher,
                 $logger
@@ -87,11 +86,11 @@ class MailtrapTransportFactoryTest extends TransportFactoryTestCase
         yield [
             new Dsn('mailtrap', AbstractApi::SENDMAIL_SANDBOX_HOST, self::USER, null, null, ['inboxId' => 1234]),
             new MailtrapApiTransport(
-                new MailtrapSandboxClient(
+                (new MailtrapClient(
                     (new Config(self::USER))
                         ->setHttpClient(new Psr18Client($this->getClient()))
                         ->setHost(AbstractApi::SENDMAIL_SANDBOX_HOST)
-                ),
+                ))->sandbox(),
                 1234,
                 $dispatcher,
                 $logger

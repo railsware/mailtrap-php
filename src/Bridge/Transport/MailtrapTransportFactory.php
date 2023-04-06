@@ -7,6 +7,7 @@ namespace Mailtrap\Bridge\Transport;
 use Mailtrap\Api\AbstractApi;
 use Mailtrap\Config;
 use Mailtrap\Exception\RuntimeException;
+use Mailtrap\MailtrapClient;
 use Mailtrap\MailtrapSandboxClient;
 use Mailtrap\MailtrapSendingClient;
 use Symfony\Component\HttpClient\Psr18Client;
@@ -32,8 +33,8 @@ final class MailtrapTransportFactory extends AbstractTransportFactory
             ->setHttpClient(null === $this->client ? null : new Psr18Client($this->client))
         ;
         $mailTrapClient = stripos($config->getHost(), AbstractApi::SENDMAIL_HOST) !== false
-            ? new MailtrapSendingClient($config)
-            : new MailtrapSandboxClient($config);
+            ? (new MailtrapClient($config))->sending()
+            : (new MailtrapClient($config))->sandbox();
 
         if ($mailTrapClient instanceof MailtrapSandboxClient && null === $inboxId) {
             throw new RuntimeException(
