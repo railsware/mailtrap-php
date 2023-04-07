@@ -34,9 +34,15 @@ abstract class AbstractMailtrapClient implements MailtrapClientInterface
         return $this->config;
     }
 
-    private function initByName(string $name): AbstractApi
+    private function getClassByName(string $name): ?string
     {
-        $className = $this->getApiClassByName($name);
+        /** @psalm-suppress UndefinedConstant */
+        return !empty(static::API_MAPPING[$name]) ? static::API_MAPPING[$name] : null;
+    }
+
+    private function initByName(string $name)
+    {
+        $className = $this->getClassByName($name);
         if (null === $className) {
             throw new InvalidArgumentException(sprintf('%s -> undefined api instance called: "%s"', static::class, $name));
         }

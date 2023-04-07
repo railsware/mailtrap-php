@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Mailtrap\Api;
+namespace Mailtrap\Api\General;
 
+use Mailtrap\Api\AbstractApi;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class AbstractAccount
+ * Class Account
  */
-abstract class AbstractAccount extends AbstractApi
+class Account extends AbstractApi implements GeneralInterface
 {
     /**
-     * Currently the same endpoint and result for Sandbox and Sanding environments
+     * Get a list of your Mailtrap accounts.
      *
      * @return ResponseInterface
      */
