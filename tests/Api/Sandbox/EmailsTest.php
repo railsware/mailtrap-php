@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Mailtrap\Tests\Api\Sandbox;
 
 use Mailtrap\Api\AbstractApi;
-use Mailtrap\Api\Sandbox\SandboxEmails;
+use Mailtrap\Api\Sandbox\Emails;
 use Mailtrap\Helper\ResponseHelper;
 use Mailtrap\Tests\MailtrapTestCase;
 use Nyholm\Psr7\Response;
@@ -13,14 +13,14 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
 /**
- * @covers SandboxEmails
+ * @covers Emails
  *
- * Class SandboxEmailsTest
+ * Class EmailsTest
  */
-final class SandboxEmailsTest extends MailtrapTestCase
+final class EmailsTest extends MailtrapTestCase
 {
     /**
-     * @var SandboxEmails
+     * @var Emails
      */
     private $email;
 
@@ -28,7 +28,7 @@ final class SandboxEmailsTest extends MailtrapTestCase
     {
         parent::setUp();
 
-        $this->email = $this->getMockBuilder(SandboxEmails::class)
+        $this->email = $this->getMockBuilder(Emails::class)
             ->onlyMethods(['post'])
             ->setConstructorArgs([$this->getConfigMock()])
             ->getMock()

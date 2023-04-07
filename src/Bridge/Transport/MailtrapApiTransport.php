@@ -6,6 +6,8 @@ namespace Mailtrap\Bridge\Transport;
 
 use Mailtrap\Helper\ResponseHelper;
 use Mailtrap\MailtrapClientInterface;
+use Mailtrap\MailtrapSandboxClient;
+use Mailtrap\MailtrapSendingClient;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Envelope;
@@ -21,18 +23,21 @@ use Symfony\Component\Mime\MessageConverter;
  */
 class MailtrapApiTransport extends AbstractTransport
 {
-    private MailtrapClientInterface $mailTrapClient;
+    /**
+     * @var MailtrapSendingClient|MailtrapSandboxClient
+     */
+    private MailtrapClientInterface $mailtrapClient;
     private ?int $inboxId;
 
     public function __construct(
-        MailtrapClientInterface $mailTrapClient,
+        MailtrapClientInterface $mailtrapClient,
         int $inboxId = null,
         EventDispatcherInterface $dispatcher = null,
         LoggerInterface $logger = null
     ) {
         parent::__construct($dispatcher, $logger);
 
-        $this->mailTrapClient = $mailTrapClient;
+        $this->mailtrapClient = $mailtrapClient;
         $this->inboxId = $inboxId;
     }
 
@@ -56,7 +61,7 @@ class MailtrapApiTransport extends AbstractTransport
                 }
             }
 
-            $response = $this->mailTrapClient->emails()->send($email, $this->inboxId);
+            $response = $this->mailtrapClient->emails()->send($email, $this->inboxId);
 
             $body = ResponseHelper::toArray($response);
             $message->setMessageId(implode(',', $body['message_ids']));
@@ -69,7 +74,7 @@ class MailtrapApiTransport extends AbstractTransport
 
     private function getEndpoint(): string
     {
-        return $this->mailTrapClient->getConfig()->getHost() . (null === $this->inboxId ? '' : '?inboxId=' . $this->inboxId);
+        return $this->mailtrapClient->getConfig()->getHost() . (null === $this->inboxId ? '' : '?inboxId=' . $this->inboxId);
     }
 
     private function getEnvelopeRecipients(Email $email, Envelope $envelope): array

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Mailtrap\Tests\Api;
 
-use Mailtrap\Api\AbstractApi;
 use Mailtrap\Api\AbstractAccount;
-use Mailtrap\Api\AbstractUser;
+use Mailtrap\Api\AbstractApi;
+use Mailtrap\Api\General\User;
 use Mailtrap\Exception\HttpClientException;
 use Mailtrap\Helper\ResponseHelper;
 use Mailtrap\Tests\MailtrapTestCase;
@@ -23,7 +23,7 @@ class UserTest extends MailtrapTestCase
     private const FAKE_ACCOUNT_ACCESS_ID = 1000001;
 
     /**
-     * @var AbstractUser
+     * @var User
      */
     private $user;
 
@@ -31,8 +31,8 @@ class UserTest extends MailtrapTestCase
     {
         parent::setUp();
 
-        $this->user = $this->getMockBuilder(AbstractUser::class)
-            ->onlyMethods(['get', 'delete'])
+        $this->user = $this->getMockBuilder(User::class)
+            ->onlyMethods(['httpGet', 'httpDelete'])
             ->setConstructorArgs([$this->getConfigMock()])
             ->getMock()
         ;
@@ -48,7 +48,7 @@ class UserTest extends MailtrapTestCase
     public function testValidGetListWithoutFilters(): void
     {
         $this->user->expects($this->once())
-            ->method('get')
+            ->method('httpGet')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses')
             ->willReturn(new Response(200, [], json_encode($this->getExpectedData())));
 
@@ -67,7 +67,7 @@ class UserTest extends MailtrapTestCase
         $expectedResult = $this->getExpectedData();
 
         $this->user->expects($this->once())
-            ->method('get')
+            ->method('httpGet')
             ->with(
                 AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses',
                 ['inbox_ids' => $inboxIds, 'project_ids' => $projectIds]
@@ -85,7 +85,7 @@ class UserTest extends MailtrapTestCase
     public function test401InvalidGetList(): void
     {
         $this->user->expects($this->once())
-            ->method('get')
+            ->method('httpGet')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses')
             ->willReturn(new Response(401, [], json_encode(['error' => 'Incorrect API token'])));
 
@@ -100,7 +100,7 @@ class UserTest extends MailtrapTestCase
     public function test403InvalidGetList(): void
     {
         $this->user->expects($this->once())
-            ->method('get')
+            ->method('httpGet')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses')
             ->willReturn(new Response(403, [], json_encode(['errors' => 'Access forbidden'])));
 
@@ -115,11 +115,11 @@ class UserTest extends MailtrapTestCase
     public function testValidRemove()
     {
         $this->user->expects($this->once())
-            ->method('delete')
+            ->method('httpDelete')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses/' . self::FAKE_ACCOUNT_ACCESS_ID)
             ->willReturn(new Response(200, [], json_encode(['id' => self::FAKE_ACCOUNT_ACCESS_ID])));
 
-        $response = $this->user->remove(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
+        $response = $this->user->delete(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -130,7 +130,7 @@ class UserTest extends MailtrapTestCase
     public function test401InvalidRemove(): void
     {
         $this->user->expects($this->once())
-            ->method('delete')
+            ->method('httpDelete')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses/' . self::FAKE_ACCOUNT_ACCESS_ID)
             ->willReturn(new Response(401, [], json_encode(['error' => 'Incorrect API token'])));
 
@@ -139,13 +139,13 @@ class UserTest extends MailtrapTestCase
             'Unauthorized. Make sure you are sending correct credentials with the request before retrying. Errors: Incorrect API token'
         );
 
-        $this->user->remove(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
+        $this->user->delete(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
     }
 
     public function test403InvalidRemove(): void
     {
         $this->user->expects($this->once())
-            ->method('delete')
+            ->method('httpDelete')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses/' . self::FAKE_ACCOUNT_ACCESS_ID)
             ->willReturn(new Response(403, [], json_encode(['error' => 'Access forbidden'])));
 
@@ -154,13 +154,13 @@ class UserTest extends MailtrapTestCase
             'Forbidden. Make sure domain verification process is completed or check your permissions. Errors: Access forbidden'
         );
 
-        $this->user->remove(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
+        $this->user->delete(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
     }
 
     public function test404InvalidRemove(): void
     {
         $this->user->expects($this->once())
-            ->method('delete')
+            ->method('httpDelete')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses/' . self::FAKE_ACCOUNT_ACCESS_ID)
             ->willReturn(new Response(404, [], json_encode(['error' => 'Not Found'])));
 
@@ -169,7 +169,7 @@ class UserTest extends MailtrapTestCase
             'Not found. Errors: Not Found'
         );
 
-        $this->user->remove(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
+        $this->user->delete(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
     }
 
     private function getExpectedData(): array

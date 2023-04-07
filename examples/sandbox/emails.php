@@ -4,7 +4,7 @@ use Mailtrap\Config;
 use Mailtrap\EmailHeader\CategoryHeader;
 use Mailtrap\EmailHeader\CustomVariableHeader;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailtrapSandboxClient;
+use Mailtrap\MailtrapClient;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Header\UnstructuredHeader;
@@ -23,9 +23,9 @@ require __DIR__ . '/../vendor/autoload.php';
  * POST https://sandbox.api.mailtrap.io/api/send/{inbox_id}
  */
 try {
-    $mailTrap = new MailtrapSandboxClient(
-        new Config('23...YOUR_API_KEY_HERE...4c')
-    );
+    // your API token from here https://mailtrap.io/api-tokens
+    $apiKey = getenv('MAILTRAP_API_KEY');
+    $mailtrap = new MailtrapClient(new Config($apiKey));
 
     $email = (new Email())
         ->from(new Address('mailtrap@example.com', 'Mailtrap Test'))
@@ -67,7 +67,7 @@ try {
     ;
 
     // Required param -> inbox_id
-    $response = $mailTrap->emails()->send($email, 1000001); // <--- you should use your inbox_id here (otherwise you will get 401)
+    $response = $mailtrap->sandbox()->emails()->send($email, 1000001); // <--- you should use your inbox_id here (otherwise you will get 401)
 
     // print all possible information from the response
     var_dump($response->getHeaders()); //headers (array)
