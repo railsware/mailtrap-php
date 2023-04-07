@@ -1,4 +1,4 @@
-## [1.1.0] - 2023-04-10
+## [1.1.0] - 2023-04-07
 
 - Breaking changes:
     - move `accounts()` functions from the `sandbox & sending` layers to the `general`
