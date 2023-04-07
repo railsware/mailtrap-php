@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Mailtrap\Tests\Api\Sending;
 
 use Mailtrap\Api\AbstractApi;
-use Mailtrap\Api\Sending\SendingEmails;
+use Mailtrap\Api\Sending\Emails;
 use Mailtrap\EmailHeader\CategoryHeader;
 use Mailtrap\EmailHeader\CustomVariableHeader;
 use Mailtrap\EmailHeader\Template\TemplateUuidHeader;
@@ -19,14 +19,14 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
 /**
- * @covers SendingEmails
+ * @covers Emails
  *
- * Class SendingEmailsTest
+ * Class EmailsTest
  */
-final class SendingEmailsTest extends MailtrapTestCase
+final class EmailsTest extends MailtrapTestCase
 {
     /**
-     * @var SendingEmails
+     * @var Emails
      */
     private $email;
 
@@ -34,7 +34,7 @@ final class SendingEmailsTest extends MailtrapTestCase
     {
         parent::setUp();
 
-        $this->email = $this->getMockBuilder(SendingEmails::class)
+        $this->email = $this->getMockBuilder(Emails::class)
             ->onlyMethods(['post'])
             ->setConstructorArgs([$this->getConfigMock()])
             ->getMock()
@@ -203,9 +203,9 @@ final class SendingEmailsTest extends MailtrapTestCase
             ->attach('fake_body', 'fakeFile.jpg', 'image/jpg')
         ;
 
-        $method = new \ReflectionMethod(SendingEmails::class, 'getPayload');
+        $method = new \ReflectionMethod(Emails::class, 'getPayload');
         $method->setAccessible(true);
-        $payload = $method->invoke(new SendingEmails($this->getConfigMock()), $email);
+        $payload = $method->invoke(new Emails($this->getConfigMock()), $email);
 
         $this->assertArrayHasKey('attachments', $payload);
         $this->assertArrayHasKey('content', $payload['attachments'][0]);
@@ -224,9 +224,9 @@ final class SendingEmailsTest extends MailtrapTestCase
         $email = (new Email())->from(new Address('foo@example.com', 'Ms. Foo Bar'));
         $email->getHeaders()->addTextHeader($name, $value);
 
-        $method = new \ReflectionMethod(SendingEmails::class, 'getPayload');
+        $method = new \ReflectionMethod(Emails::class, 'getPayload');
         $method->setAccessible(true);
-        $payload = $method->invoke(new SendingEmails($this->getConfigMock()), $email);
+        $payload = $method->invoke(new Emails($this->getConfigMock()), $email);
 
         $this->assertArrayHasKey('headers', $payload);
         $this->assertArrayHasKey($name, $payload['headers']);
@@ -242,9 +242,9 @@ final class SendingEmailsTest extends MailtrapTestCase
         $email->getHeaders()
             ->add(new CustomVariableHeader($name, $value));
 
-        $method = new \ReflectionMethod(SendingEmails::class, 'getPayload');
+        $method = new \ReflectionMethod(Emails::class, 'getPayload');
         $method->setAccessible(true);
-        $payload = $method->invoke(new SendingEmails($this->getConfigMock()), $email);
+        $payload = $method->invoke(new Emails($this->getConfigMock()), $email);
 
         $this->assertArrayHasKey(CustomVariableHeader::VAR_NAME, $payload);
         $this->assertArrayHasKey($name, $payload[CustomVariableHeader::VAR_NAME]);
@@ -260,9 +260,9 @@ final class SendingEmailsTest extends MailtrapTestCase
         $email->getHeaders()
             ->add(new CategoryHeader($value));
 
-        $method = new \ReflectionMethod(SendingEmails::class, 'getPayload');
+        $method = new \ReflectionMethod(Emails::class, 'getPayload');
         $method->setAccessible(true);
-        $payload = $method->invoke(new SendingEmails($this->getConfigMock()), $email);
+        $payload = $method->invoke(new Emails($this->getConfigMock()), $email);
 
         $this->assertArrayHasKey(CategoryHeader::VAR_NAME, $payload);
         $this->assertEquals($value, $payload[CategoryHeader::VAR_NAME]);
@@ -282,9 +282,9 @@ final class SendingEmailsTest extends MailtrapTestCase
             )
         );
 
-        $method = new \ReflectionMethod(SendingEmails::class, 'getPayload');
+        $method = new \ReflectionMethod(Emails::class, 'getPayload');
         $method->setAccessible(true);
-        $method->invoke(new SendingEmails($this->getConfigMock()), $email);
+        $method->invoke(new Emails($this->getConfigMock()), $email);
     }
 
     /**
@@ -296,9 +296,9 @@ final class SendingEmailsTest extends MailtrapTestCase
         $email->getHeaders()
             ->add(new TemplateUuidHeader($value));
 
-        $method = new \ReflectionMethod(SendingEmails::class, 'getPayload');
+        $method = new \ReflectionMethod(Emails::class, 'getPayload');
         $method->setAccessible(true);
-        $payload = $method->invoke(new SendingEmails($this->getConfigMock()), $email);
+        $payload = $method->invoke(new Emails($this->getConfigMock()), $email);
 
         $this->assertArrayHasKey(TemplateUuidHeader::VAR_NAME, $payload);
         $this->assertEquals($value, $payload[TemplateUuidHeader::VAR_NAME]);
@@ -318,9 +318,9 @@ final class SendingEmailsTest extends MailtrapTestCase
             )
         );
 
-        $method = new \ReflectionMethod(SendingEmails::class, 'getPayload');
+        $method = new \ReflectionMethod(Emails::class, 'getPayload');
         $method->setAccessible(true);
-        $method->invoke(new SendingEmails($this->getConfigMock()), $email);
+        $method->invoke(new Emails($this->getConfigMock()), $email);
     }
 
     /**
@@ -332,9 +332,9 @@ final class SendingEmailsTest extends MailtrapTestCase
         $email->getHeaders()
             ->add(new TemplateVariableHeader($name, $value));
 
-        $method = new \ReflectionMethod(SendingEmails::class, 'getPayload');
+        $method = new \ReflectionMethod(Emails::class, 'getPayload');
         $method->setAccessible(true);
-        $payload = $method->invoke(new SendingEmails($this->getConfigMock()), $email);
+        $payload = $method->invoke(new Emails($this->getConfigMock()), $email);
 
         $this->assertArrayHasKey(TemplateVariableHeader::VAR_NAME, $payload);
         $this->assertArrayHasKey($name, $payload[TemplateVariableHeader::VAR_NAME]);

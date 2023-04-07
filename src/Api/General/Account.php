@@ -8,9 +8,9 @@ use Mailtrap\Api\AbstractApi;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class GeneralAccount
+ * Class Account
  */
-class GeneralAccount extends AbstractApi implements GeneralInterface
+class Account extends AbstractApi implements GeneralInterface
 {
     /**
      * Get a list of your Mailtrap accounts.

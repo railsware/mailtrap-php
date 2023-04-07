@@ -9,9 +9,9 @@ use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Mime\Email;
 
 /**
- * Class SendingEmails
+ * Class Emails
  */
-class SendingEmails extends AbstractEmails implements SendingInterface
+class Emails extends AbstractEmails implements SendingInterface
 {
     public function send(Email $email): ResponseInterface
     {

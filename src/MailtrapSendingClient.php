@@ -7,13 +7,13 @@ namespace Mailtrap;
 use Mailtrap\Api;
 
 /**
- * @method  Api\Sending\SendingEmails   emails
+ * @method  Api\Sending\Emails   emails
  *
  * Class MailtrapSendingClient
  */
 final class MailtrapSendingClient extends AbstractMailtrapClient
 {
     public const API_MAPPING = [
-        'emails' => Api\Sending\SendingEmails::class,
+        'emails' => Api\Sending\Emails::class,
     ];
 }

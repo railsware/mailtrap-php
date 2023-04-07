@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace Mailtrap\Tests\Api\General;
 
 use Mailtrap\Api\AbstractApi;
-use Mailtrap\Api\General\GeneralAccount;
+use Mailtrap\Api\General\Account;
 use Mailtrap\Exception\HttpClientException;
 use Mailtrap\Helper\ResponseHelper;
 use Mailtrap\Tests\MailtrapTestCase;
 use Nyholm\Psr7\Response;
 
 /**
- * @covers GeneralAccount
+ * @covers Account
  *
  * Class AccountTest
  */
-class GeneralAccountTest extends MailtrapTestCase
+class AccountTest extends MailtrapTestCase
 {
     /**
-     * @var GeneralAccountTest
+     * @var AccountTest
      */
     private $account;
 
@@ -27,7 +27,7 @@ class GeneralAccountTest extends MailtrapTestCase
     {
         parent::setUp();
 
-        $this->account = $this->getMockBuilder(GeneralAccount::class)
+        $this->account = $this->getMockBuilder(Account::class)
             ->onlyMethods(['get'])
             ->setConstructorArgs([$this->getConfigMock()])
             ->getMock()

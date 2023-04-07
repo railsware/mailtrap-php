@@ -7,13 +7,13 @@ namespace Mailtrap;
 use Mailtrap\Api;
 
 /**
- * @method Api\General\GeneralAccount accounts
+ * @method Api\General\Account accounts
  *
  * Class MailtrapGeneralClient
  */
 final class MailtrapGeneralClient extends AbstractMailtrapClient
 {
     public const API_MAPPING = [
-        'accounts' => Api\General\GeneralAccount::class,
+        'accounts' => Api\General\Account::class,
     ];
 }
