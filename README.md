@@ -45,9 +45,9 @@ use Symfony\Component\Mime\Header\UnstructuredHeader;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$mailTrap = new MailtrapClient(
-    new Config('23...YOUR_API_KEY_HERE...4c') // your API toke from here https://mailtrap.io/api-tokens
-);
+// your API token from here https://mailtrap.io/api-tokens
+$apiKey = getenv('MAILTRAP_API_KEY');
+$mailtrap = new MailtrapClient(new Config($apiKey));
 
 $email = (new Email())
     ->from(new Address('example@your-domain-here.com', 'Mailtrap Test'))
@@ -88,7 +88,7 @@ $email = (new Email())
     ;
     
 try {
-    $response = $mailTrap->sending()->emails()->send($email); // Email sending API (real)
+    $response = $mailtrap->sending()->emails()->send($email); // Email sending API (real)
     
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {
@@ -98,7 +98,7 @@ try {
 // OR send email to the Mailtrap SANDBOX
 
 try {
-    $response = $mailTrap->sandbox()->emails()->send($email, 1000001); // Required second param -> inbox_id
+    $response = $mailtrap->sandbox()->emails()->send($email, 1000001); // Required second param -> inbox_id
 
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {

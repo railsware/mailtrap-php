@@ -23,9 +23,9 @@ require __DIR__ . '/../vendor/autoload.php';
  * POST https://sandbox.api.mailtrap.io/api/send/{inbox_id}
  */
 try {
-    $mailTrap = new MailtrapClient(
-        new Config('23...YOUR_API_KEY_HERE...4c')
-    );
+    // your API token from here https://mailtrap.io/api-tokens
+    $apiKey = getenv('MAILTRAP_API_KEY');
+    $mailtrap = new MailtrapClient(new Config($apiKey));
 
     $email = (new Email())
         ->from(new Address('mailtrap@example.com', 'Mailtrap Test'))
@@ -67,7 +67,7 @@ try {
     ;
 
     // Required param -> inbox_id
-    $response = $mailTrap->sandbox()->emails()->send($email, 1000001); // <--- you should use your inbox_id here (otherwise you will get 401)
+    $response = $mailtrap->sandbox()->emails()->send($email, 1000001); // <--- you should use your inbox_id here (otherwise you will get 401)
 
     // print all possible information from the response
     var_dump($response->getHeaders()); //headers (array)

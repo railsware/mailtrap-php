@@ -6,9 +6,9 @@ use Mailtrap\MailtrapClient;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$mailTrap = new MailtrapClient(
-    new Config('23...YOUR_API_KEY_HERE...4c')
-);
+// your API token from here https://mailtrap.io/api-tokens
+$apiKey = getenv('MAILTRAP_API_KEY');
+$mailtrap = new MailtrapClient(new Config($apiKey));
 
 /**
  * Get a list of your Mailtrap accounts.
@@ -16,7 +16,7 @@ $mailTrap = new MailtrapClient(
  * GET https://mailtrap.io/api/accounts
  */
 try {
-    $response = $mailTrap->general()->accounts()->getList();
+    $response = $mailtrap->general()->accounts()->getList();
 
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {
