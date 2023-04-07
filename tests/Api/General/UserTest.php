@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Mailtrap\Tests\Api;
+namespace Mailtrap\Tests\Api\General;
 
-use Mailtrap\Api\AbstractAccount;
 use Mailtrap\Api\AbstractApi;
+use Mailtrap\Api\General\Account;
 use Mailtrap\Api\General\User;
 use Mailtrap\Exception\HttpClientException;
 use Mailtrap\Helper\ResponseHelper;
@@ -13,7 +13,7 @@ use Mailtrap\Tests\MailtrapTestCase;
 use Nyholm\Psr7\Response;
 
 /**
- * @covers AbstractAccount
+ * @covers Account
  *
  * Class UserTest
  */

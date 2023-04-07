@@ -20,7 +20,7 @@ class Account extends AbstractApi implements GeneralInterface
     public function getList(): ResponseInterface
     {
         return $this->handleResponse(
-            $this->get($this->getHost() . '/api/accounts')
+            $this->httpGet($this->getHost() . '/api/accounts')
         );
     }
 }

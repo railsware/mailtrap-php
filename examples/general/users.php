@@ -2,13 +2,13 @@
 
 use Mailtrap\Config;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailtrapSandboxClient;
+use Mailtrap\MailtrapClient;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$mailTrap = new MailtrapSandboxClient(
-    new Config('23...YOUR_API_KEY_HERE...4c')
-);
+// your API token from here https://mailtrap.io/api-tokens
+$apiKey = getenv('MAILTRAP_API_KEY');
+$mailtrap = new MailtrapClient(new Config($apiKey));
 
 /**
  * List all users in account
@@ -17,12 +17,12 @@ $mailTrap = new MailtrapSandboxClient(
  */
 try {
     $accountId = 1000001;
-    $response = $mailTrap->users()->getList($accountId);
+    $response = $mailtrap->general()->users()->getList($accountId);
 
     // OR with query parameters (not required)
     $inboxIds = [2000005, 2000006];
     $projectIds = [1005001];
-    $response = $mailTrap->users()->getList($accountId, $inboxIds, $projectIds);
+    $response = $mailtrap->general()->users()->getList($accountId, $inboxIds, $projectIds);
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));
@@ -39,7 +39,7 @@ try {
     $accountId = 1000001;
     $accountAccessId = 10000009;
 
-    $response = $mailTrap->users()->remove($accountId, $accountAccessId);
+    $response = $mailtrap->general()->users()->delete($accountId, $accountAccessId);
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));

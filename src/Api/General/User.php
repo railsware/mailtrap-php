@@ -2,15 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Mailtrap\Api;
+namespace Mailtrap\Api\General;
 
+use Mailtrap\Api\AbstractApi;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class AbstractUser
+ * Class User
  */
-abstract class AbstractUser extends AbstractApi
+class User extends AbstractApi implements GeneralInterface
 {
+    /**
+     * Get list of all account users. You need to have account admin or owner permissions for this endpoint to work.
+     * If you specify project_ids, inbox_ids, the endpoint returns users filtered by these resources.
+     *
+     * @param int   $accountId
+     * @param array $inboxIds
+     * @param array $projectIds
+     *
+     * @return ResponseInterface
+     */
     public function getList(int $accountId, array $inboxIds = [], array $projectIds = []): ResponseInterface
     {
         $parameters = [];
@@ -22,15 +33,23 @@ abstract class AbstractUser extends AbstractApi
             $parameters['project_ids'] = $projectIds;
         }
 
-        return $this->handleResponse($this->get(
+        return $this->handleResponse($this->httpGet(
             sprintf('%s/api/accounts/%s/account_accesses', $this->getHost(), $accountId),
             $parameters
         ));
     }
 
-    public function remove(int $accountId, int $accountAccessId): ResponseInterface
+    /**
+     * Remove user by their ID. You need to be an account admin/owner for this endpoint to work.
+     *
+     * @param int $accountId
+     * @param int $accountAccessId
+     *
+     * @return ResponseInterface
+     */
+    public function delete(int $accountId, int $accountAccessId): ResponseInterface
     {
-        return $this->handleResponse($this->delete(
+        return $this->handleResponse($this->httpDelete(
             sprintf('%s/api/accounts/%s/account_accesses/%s', $this->getHost(), $accountId, $accountAccessId)
         ));
     }

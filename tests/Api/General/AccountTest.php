@@ -28,7 +28,7 @@ class AccountTest extends MailtrapTestCase
         parent::setUp();
 
         $this->account = $this->getMockBuilder(Account::class)
-            ->onlyMethods(['get'])
+            ->onlyMethods(['httpGet'])
             ->setConstructorArgs([$this->getConfigMock()])
             ->getMock()
         ;
@@ -61,7 +61,7 @@ class AccountTest extends MailtrapTestCase
         ];
 
         $this->account->expects($this->once())
-            ->method('get')
+            ->method('httpGet')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts')
             ->willReturn(new Response(200, [], json_encode($expectedData)));
 
@@ -78,7 +78,7 @@ class AccountTest extends MailtrapTestCase
         $expectedData = ['error' => 'Incorrect API token'];
 
         $this->account->expects($this->once())
-            ->method('get')
+            ->method('httpGet')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts')
             ->willReturn(new Response(401, [], json_encode($expectedData)));
 
