@@ -30,12 +30,16 @@ abstract class AbstractApi
         $this->httpClient = $this->config->getHttpClientBuilder()->getHttpClient();
     }
 
-    protected function get(string $path, array $requestHeaders = []): ResponseInterface
+    protected function httpGet(string $path, array $parameters = [], array $requestHeaders = []): ResponseInterface
     {
+        if (count($parameters) > 0) {
+            $path .= '?' . $this->normalizeArrayParams($parameters);
+        }
+
         return $this->httpClient->get($this->addDefaultScheme($path), $requestHeaders);
     }
 
-    protected function post(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
+    protected function httpPost(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
     {
         return $this->httpClient->post(
             $this->addDefaultScheme($path),
@@ -44,7 +48,7 @@ abstract class AbstractApi
         );
     }
 
-    protected function put(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
+    protected function httpPut(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
     {
         return $this->httpClient->put(
             $this->addDefaultScheme($path),
@@ -53,7 +57,7 @@ abstract class AbstractApi
         );
     }
 
-    protected function patch(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
+    protected function httpPatch(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
     {
         return $this->httpClient->patch(
             $this->addDefaultScheme($path),
@@ -62,7 +66,7 @@ abstract class AbstractApi
         );
     }
 
-    protected function delete(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
+    protected function httpDelete(string $path, array $requestHeaders = [], ?array $body = null): ResponseInterface
     {
         return $this->httpClient->delete(
             $this->addDefaultScheme($path),
@@ -124,5 +128,18 @@ abstract class AbstractApi
     private function addDefaultScheme(string $path): string
     {
         return empty(parse_url($path, PHP_URL_SCHEME)) ? 'https://' . $path : $path;
+    }
+
+    /**
+     * Mailtrap API doesn't support array numeric values in GET params like that - inbox_ids[0]=1001&inbox_ids[1]=2002
+     * that's why we need to do some normalization to use without numbers inbox_ids[]=1001&inbox_ids[]=2002
+     *
+     * @param array $parameters
+     *
+     * @return string
+     */
+    private function normalizeArrayParams(array $parameters): string
+    {
+        return preg_replace('/%5B\d+%5D/imU', '%5B%5D', http_build_query($parameters, '', '&'));
     }
 }

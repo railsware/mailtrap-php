@@ -16,7 +16,7 @@ class Emails extends AbstractEmails implements SendingInterface
     public function send(Email $email): ResponseInterface
     {
         return $this->handleResponse(
-            $this->post($this->getHost() . '/api/send', [], $this->getPayload($email))
+            $this->httpPost($this->getHost() . '/api/send', [], $this->getPayload($email))
         );
     }
 

@@ -29,7 +29,7 @@ final class EmailsTest extends MailtrapTestCase
         parent::setUp();
 
         $this->email = $this->getMockBuilder(Emails::class)
-            ->onlyMethods(['post'])
+            ->onlyMethods(['httpPost'])
             ->setConstructorArgs([$this->getConfigMock()])
             ->getMock()
         ;
@@ -65,7 +65,7 @@ final class EmailsTest extends MailtrapTestCase
 
         $this->email
             ->expects($this->once())
-            ->method('post')
+            ->method('httpPost')
             ->with(AbstractApi::SENDMAIL_SANDBOX_HOST . '/api/send/' . $inboxId, [], [
                 'from' => [
                     'email' => 'foo@example.com',

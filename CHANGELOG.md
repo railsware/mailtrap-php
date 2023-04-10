@@ -1,3 +1,7 @@
+## [1.2.0] - 2023-04-12
+
+- Support general account users endpoints, like `$mailtrap->general()->users()`
+
 ## [1.1.0] - 2023-04-07
 
 - Breaking changes:
