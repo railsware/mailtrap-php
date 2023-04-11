@@ -21,6 +21,7 @@ class Config implements ConfigInterface
     private ?RequestFactoryInterface $requestFactory = null;
     private ?StreamFactoryInterface $streamFactory = null;
     private ?string $host = null;
+    private bool $responseThrowOnError = true;
 
     public function __construct(string $apiToken)
     {
@@ -82,6 +83,26 @@ class Config implements ConfigInterface
     public function setStreamFactory(?StreamFactoryInterface $streamFactory): self
     {
         $this->streamFactory = $streamFactory;
+
+        return $this;
+    }
+
+    public function isResponseThrowOnError(): bool
+    {
+        return $this->responseThrowOnError;
+    }
+
+    /**
+     * Throw an HttpException if the response returns a status other than 20x (default: true)
+     * otherwise a response will be returned
+     * 
+     * @param bool $responseThrowOnError
+     *
+     * @return $this
+     */
+    public function setResponseThrowOnError(bool $responseThrowOnError): self
+    {
+        $this->responseThrowOnError = $responseThrowOnError;
 
         return $this;
     }

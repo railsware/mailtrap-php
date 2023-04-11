@@ -82,6 +82,10 @@ abstract class AbstractApi
 
     protected function handleResponse(ResponseInterface $response): ResponseInterface
     {
+        if (!$this->config->isResponseThrowOnError()) {
+            return $response;
+        }
+
         $statusCode = $response->getStatusCode();
         switch (true) {
             case $statusCode >= 200 && $statusCode < 300:
