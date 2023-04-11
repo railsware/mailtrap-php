@@ -33,7 +33,7 @@ abstract class MailtrapTestCase extends TestCase
     protected function getConfigMock(): ConfigInterface
     {
         $config = $this->getMockBuilder(ConfigInterface::class)
-            ->onlyMethods(['getHttpClientBuilder', 'getApiToken', 'getHost'])
+            ->onlyMethods(['getHttpClientBuilder', 'getApiToken', 'getHost', 'isResponseThrowOnError'])
             ->getMock();
 
         $config
@@ -43,6 +43,10 @@ abstract class MailtrapTestCase extends TestCase
         $config
             ->method('getApiToken')
             ->willReturn(self::DEFAULT_API_KEY);
+
+        $config
+            ->method('isResponseThrowOnError')
+            ->willReturn(true);
 
         return $config;
     }
