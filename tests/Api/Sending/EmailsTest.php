@@ -90,7 +90,7 @@ final class EmailsTest extends MailtrapTestCase
                     'X-Message-Source' => 'dev.mydomain.com'
                 ]
             ])
-            ->willReturn(new Response(200, [], json_encode($expectedData)));
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));
 
         $response = $this->email->send($email);
         $responseData = ResponseHelper::toArray($response);
@@ -138,7 +138,7 @@ final class EmailsTest extends MailtrapTestCase
                     'X-Message-Source' => 'dev.mydomain.com'
                 ]
             ])
-            ->willReturn(new Response(400, [], json_encode($expectedData)));
+            ->willReturn(new Response(400, ['Content-Type' => 'application/json'], json_encode($expectedData)));
 
         $this->email->send($email);
     }
@@ -185,7 +185,7 @@ final class EmailsTest extends MailtrapTestCase
                     'onboarding_video_link' => 'some_video_link',
                 ]
             ])
-            ->willReturn(new Response(200, [], json_encode($expectedData)));
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));
 
         $response = $this->email->send($email);
         $responseData = ResponseHelper::toArray($response);

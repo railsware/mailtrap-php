@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mailtrap\Exception;
 
+use JsonException;
 use Mailtrap\Helper\ResponseHelper;
 use Psr\Http\Message\ResponseInterface;
 
@@ -23,7 +24,11 @@ class HttpClientException extends HttpException
     {
         $errorMsg = '';
         $statusCode = $response->getStatusCode();
-        $body = ResponseHelper::toArray($response);
+        try {
+            $body = ResponseHelper::toArray($response);
+        } catch (JsonException|InvalidTypeException $e) {
+            $body['error'] = $response->getBody()->__toString();
+        }
 
         if (isset(self::ERROR_PREFIXES[$statusCode])) {
             $errorMsg .= self::ERROR_PREFIXES[$statusCode] . ' Errors: ';
