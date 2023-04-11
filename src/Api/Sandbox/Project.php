@@ -8,9 +8,9 @@ use Mailtrap\Api\AbstractEmails;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Projects
+ * Class Project
  */
-class Projects extends AbstractEmails implements SandboxInterface
+class Project extends AbstractEmails implements SandboxInterface
 {
     /**
      * List projects and their inboxes to which the API token has access.

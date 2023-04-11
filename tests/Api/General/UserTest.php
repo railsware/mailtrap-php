@@ -19,9 +19,6 @@ use Nyholm\Psr7\Response;
  */
 class UserTest extends MailtrapTestCase
 {
-    private const FAKE_ACCOUNT_ID = 10001;
-    private const FAKE_ACCOUNT_ACCESS_ID = 1000001;
-
     /**
      * @var User
      */

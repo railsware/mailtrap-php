@@ -16,6 +16,9 @@ use Psr\Http\Client\ClientInterface;
 abstract class MailtrapTestCase extends TestCase
 {
     public const DEFAULT_API_KEY = 'some_api_key';
+    public const FAKE_ACCOUNT_ID = 10001;
+    public const FAKE_ACCOUNT_ACCESS_ID = 1000001;
+    public const FAKE_PROJECT_ID = 2436;
 
     protected function getHttpClientMock(): ClientInterface
     {
