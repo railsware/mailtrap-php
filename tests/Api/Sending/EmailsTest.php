@@ -112,7 +112,7 @@ final class EmailsTest extends MailtrapTestCase
 
         $this->expectException(HttpClientException::class);
         $this->expectExceptionMessage(
-            "Bad request. Fix errors listed in response before retrying. Errors: 'to' address is required & 'subject' is required"
+            "Bad request. Fix errors listed in response before retrying. Errors: 'to' address is required. 'subject' is required."
         );
 
         $email = new Email();

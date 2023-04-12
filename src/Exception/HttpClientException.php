@@ -24,6 +24,7 @@ class HttpClientException extends HttpException
     {
         $errorMsg = '';
         $statusCode = $response->getStatusCode();
+
         try {
             $body = ResponseHelper::toArray($response);
         } catch (JsonException|InvalidTypeException $e) {
@@ -31,12 +32,10 @@ class HttpClientException extends HttpException
         }
 
         if (isset(self::ERROR_PREFIXES[$statusCode])) {
-            $errorMsg .= self::ERROR_PREFIXES[$statusCode] . ' Errors: ';
+            $errorMsg .= self::ERROR_PREFIXES[$statusCode] . ' ';
         }
 
-        $errorMsg .= !empty($body['errors'])
-            ? (is_array($body['errors']) ? implode(' & ', $body['errors']) : $body['errors'])
-            : $body['error'];
+        $errorMsg .= trim('Errors: ' . self::getErrorMsg(!empty($body['errors']) ? $body['errors'] : $body['error']));
 
         return new self (
             !empty($errorMsg)
@@ -44,5 +43,39 @@ class HttpClientException extends HttpException
                 : sprintf('HTTP response code ("%d") received from the API server (no error info)', $statusCode),
             $statusCode
         );
+    }
+
+    /**
+     * It can be different structure of errors in the response...
+     *
+     * Examples:
+     * {"errors": ["'to' address is required", "'subject' is required"]}    400 errorS (array)
+     * {"error": "Incorrect API token"}                                     401 error  (string)
+     * {"errors": "Access forbidden"}                                       403 errorS (string)
+     * {"error": "Not found"}                                               404 error  (string)
+     * {"errors": {"name":["is too short (minimum is 2 characters)"]}}      422 errorS (array with key name)
+     *
+     *
+     * @param string|array $errors
+     *
+     * @return string
+     */
+    public static function getErrorMsg($errors): string
+    {
+        $errorMsg = '';
+        if (is_array($errors)) {
+            foreach ($errors as $key => $value) {
+                if (is_string($key)) {
+                    // add name of field
+                    $errorMsg .= $key . ' -> ';
+                }
+
+                $errorMsg .= self::getErrorMsg($value);
+            }
+        } else {
+            $errorMsg .= $errors . '. ';
+        }
+
+        return $errorMsg;
     }
 }

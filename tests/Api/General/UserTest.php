@@ -88,7 +88,7 @@ class UserTest extends MailtrapTestCase
 
         $this->expectException(HttpClientException::class);
         $this->expectExceptionMessage(
-            'Unauthorized. Make sure you are sending correct credentials with the request before retrying. Errors: Incorrect API token'
+            'Unauthorized. Make sure you are sending correct credentials with the request before retrying. Errors: Incorrect API token.'
         );
 
         $this->user->getList(self::FAKE_ACCOUNT_ID);
@@ -103,7 +103,7 @@ class UserTest extends MailtrapTestCase
 
         $this->expectException(HttpClientException::class);
         $this->expectExceptionMessage(
-            'Forbidden. Make sure domain verification process is completed or check your permissions. Errors: Access forbidden'
+            'Forbidden. Make sure domain verification process is completed or check your permissions. Errors: Access forbidden.'
         );
 
         $this->user->getList(self::FAKE_ACCOUNT_ID);
@@ -133,7 +133,7 @@ class UserTest extends MailtrapTestCase
 
         $this->expectException(HttpClientException::class);
         $this->expectExceptionMessage(
-            'Unauthorized. Make sure you are sending correct credentials with the request before retrying. Errors: Incorrect API token'
+            'Unauthorized. Make sure you are sending correct credentials with the request before retrying. Errors: Incorrect API token.'
         );
 
         $this->user->delete(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
@@ -148,7 +148,7 @@ class UserTest extends MailtrapTestCase
 
         $this->expectException(HttpClientException::class);
         $this->expectExceptionMessage(
-            'Forbidden. Make sure domain verification process is completed or check your permissions. Errors: Access forbidden'
+            'Forbidden. Make sure domain verification process is completed or check your permissions. Errors: Access forbidden.'
         );
 
         $this->user->delete(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
@@ -163,7 +163,7 @@ class UserTest extends MailtrapTestCase
 
         $this->expectException(HttpClientException::class);
         $this->expectExceptionMessage(
-            'Not found. Errors: Not Found'
+            'Not found. Errors: Not Found.'
         );
 
         $this->user->delete(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
