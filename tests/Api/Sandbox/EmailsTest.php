@@ -85,7 +85,7 @@ final class EmailsTest extends MailtrapTestCase
                     'X-Message-Source' => 'dev.mydomain.com'
                 ]
             ])
-            ->willReturn(new Response(200, [], json_encode($expectedData)));
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));
 
         $response = $this->email->send($email, $inboxId);
         $responseData = ResponseHelper::toArray($response);

@@ -19,9 +19,6 @@ use Nyholm\Psr7\Response;
  */
 class UserTest extends MailtrapTestCase
 {
-    private const FAKE_ACCOUNT_ID = 10001;
-    private const FAKE_ACCOUNT_ACCESS_ID = 1000001;
-
     /**
      * @var User
      */
@@ -50,7 +47,7 @@ class UserTest extends MailtrapTestCase
         $this->user->expects($this->once())
             ->method('httpGet')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses')
-            ->willReturn(new Response(200, [], json_encode($this->getExpectedData())));
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedData())));
 
         $response = $this->user->getList(self::FAKE_ACCOUNT_ID);
         $responseData = ResponseHelper::toArray($response);
@@ -72,7 +69,7 @@ class UserTest extends MailtrapTestCase
                 AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses',
                 ['inbox_ids' => $inboxIds, 'project_ids' => $projectIds]
             )
-            ->willReturn(new Response(200, [], json_encode(array_slice($expectedResult, 1))));
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode(array_slice($expectedResult, 1))));
 
         $response = $this->user->getList(self::FAKE_ACCOUNT_ID, $inboxIds, $projectIds);
         $responseData = ResponseHelper::toArray($response);
@@ -87,11 +84,11 @@ class UserTest extends MailtrapTestCase
         $this->user->expects($this->once())
             ->method('httpGet')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses')
-            ->willReturn(new Response(401, [], json_encode(['error' => 'Incorrect API token'])));
+            ->willReturn(new Response(401, ['Content-Type' => 'application/json'], json_encode(['error' => 'Incorrect API token'])));
 
         $this->expectException(HttpClientException::class);
         $this->expectExceptionMessage(
-            'Unauthorized. Make sure you are sending correct credentials with the request before retrying. Errors: Incorrect API token'
+            'Unauthorized. Make sure you are sending correct credentials with the request before retrying. Errors: Incorrect API token.'
         );
 
         $this->user->getList(self::FAKE_ACCOUNT_ID);
@@ -102,11 +99,11 @@ class UserTest extends MailtrapTestCase
         $this->user->expects($this->once())
             ->method('httpGet')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses')
-            ->willReturn(new Response(403, [], json_encode(['errors' => 'Access forbidden'])));
+            ->willReturn(new Response(403, ['Content-Type' => 'application/json'], json_encode(['errors' => 'Access forbidden'])));
 
         $this->expectException(HttpClientException::class);
         $this->expectExceptionMessage(
-            'Forbidden. Make sure domain verification process is completed or check your permissions. Errors: Access forbidden'
+            'Forbidden. Make sure domain verification process is completed or check your permissions. Errors: Access forbidden.'
         );
 
         $this->user->getList(self::FAKE_ACCOUNT_ID);
@@ -117,7 +114,7 @@ class UserTest extends MailtrapTestCase
         $this->user->expects($this->once())
             ->method('httpDelete')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses/' . self::FAKE_ACCOUNT_ACCESS_ID)
-            ->willReturn(new Response(200, [], json_encode(['id' => self::FAKE_ACCOUNT_ACCESS_ID])));
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode(['id' => self::FAKE_ACCOUNT_ACCESS_ID])));
 
         $response = $this->user->delete(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
         $responseData = ResponseHelper::toArray($response);
@@ -132,11 +129,11 @@ class UserTest extends MailtrapTestCase
         $this->user->expects($this->once())
             ->method('httpDelete')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses/' . self::FAKE_ACCOUNT_ACCESS_ID)
-            ->willReturn(new Response(401, [], json_encode(['error' => 'Incorrect API token'])));
+            ->willReturn(new Response(401, ['Content-Type' => 'application/json'], json_encode(['error' => 'Incorrect API token'])));
 
         $this->expectException(HttpClientException::class);
         $this->expectExceptionMessage(
-            'Unauthorized. Make sure you are sending correct credentials with the request before retrying. Errors: Incorrect API token'
+            'Unauthorized. Make sure you are sending correct credentials with the request before retrying. Errors: Incorrect API token.'
         );
 
         $this->user->delete(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
@@ -147,11 +144,11 @@ class UserTest extends MailtrapTestCase
         $this->user->expects($this->once())
             ->method('httpDelete')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses/' . self::FAKE_ACCOUNT_ACCESS_ID)
-            ->willReturn(new Response(403, [], json_encode(['error' => 'Access forbidden'])));
+            ->willReturn(new Response(403, ['Content-Type' => 'application/json'], json_encode(['error' => 'Access forbidden'])));
 
         $this->expectException(HttpClientException::class);
         $this->expectExceptionMessage(
-            'Forbidden. Make sure domain verification process is completed or check your permissions. Errors: Access forbidden'
+            'Forbidden. Make sure domain verification process is completed or check your permissions. Errors: Access forbidden.'
         );
 
         $this->user->delete(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
@@ -162,11 +159,11 @@ class UserTest extends MailtrapTestCase
         $this->user->expects($this->once())
             ->method('httpDelete')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses/' . self::FAKE_ACCOUNT_ACCESS_ID)
-            ->willReturn(new Response(404, [], json_encode(['error' => 'Not Found'])));
+            ->willReturn(new Response(404, ['Content-Type' => 'application/json'], json_encode(['error' => 'Not Found'])));
 
         $this->expectException(HttpClientException::class);
         $this->expectExceptionMessage(
-            'Not found. Errors: Not Found'
+            'Not found. Errors: Not Found.'
         );
 
         $this->user->delete(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);

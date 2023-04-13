@@ -11,4 +11,6 @@ interface ConfigInterface
     public function getHost(): ?string;
 
     public function getHttpClientBuilder(): HttpClientBuilderInterface;
+
+    public function isResponseThrowOnError(): bool;
 }

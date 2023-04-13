@@ -63,7 +63,7 @@ class AccountTest extends MailtrapTestCase
         $this->account->expects($this->once())
             ->method('httpGet')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts')
-            ->willReturn(new Response(200, [], json_encode($expectedData)));
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));
 
         $response = $this->account->getList();
         $responseData = ResponseHelper::toArray($response);
@@ -80,11 +80,11 @@ class AccountTest extends MailtrapTestCase
         $this->account->expects($this->once())
             ->method('httpGet')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts')
-            ->willReturn(new Response(401, [], json_encode($expectedData)));
+            ->willReturn(new Response(401, ['Content-Type' => 'application/json'], json_encode($expectedData)));
 
         $this->expectException(HttpClientException::class);
         $this->expectExceptionMessage(
-            'Unauthorized. Make sure you are sending correct credentials with the request before retrying. Errors: Incorrect API token'
+            'Unauthorized. Make sure you are sending correct credentials with the request before retrying. Errors: Incorrect API token.'
         );
 
         $this->account->getList();

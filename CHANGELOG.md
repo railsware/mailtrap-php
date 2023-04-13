@@ -1,6 +1,10 @@
-## [1.2.0] - 2023-04-12
+## [1.3.0] - 2023-04-13
 
-- Support general account users endpoints, like `$mailtrap->general()->users()`
+- Support sandbox project endpoints. Examples [here](examples/sandbox/projects.php) 
+
+## [1.2.0] - 2023-04-10
+
+- Support general account users endpoints. Examples [here](examples/general/users.php)
 
 ## [1.1.0] - 2023-04-07
 
