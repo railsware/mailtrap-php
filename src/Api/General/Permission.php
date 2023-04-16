@@ -39,12 +39,12 @@ class Permission extends AbstractApi implements GeneralInterface
      *
      * @return ResponseInterface
      */
-    public function manage(int $accountId, int $accountAccessId, Permissions $permissions): ResponseInterface
+    public function update(int $accountId, int $accountAccessId, Permissions $permissions): ResponseInterface
     {
         return $this->handleResponse($this->httpPut(
-            sprintf('%s/api/accounts/%s/account_accesses/%s', $this->getHost(), $accountId, $accountAccessId),
+            sprintf('%s/api/accounts/%s/account_accesses/%s/permissions/bulk', $this->getHost(), $accountId, $accountAccessId),
             [],
-            $this->getPayload($permissions)
+            ['permissions' => $this->getPayload($permissions)]
         ));
     }
 
@@ -56,7 +56,7 @@ class Permission extends AbstractApi implements GeneralInterface
         }
 
         if (count($payload) === 0) {
-            throw new RuntimeException('At least one "permission" object should be added to manage user or token permissions');
+            throw new RuntimeException('At least one "permission" object should be added to manage user or token');
         }
 
         return $payload;

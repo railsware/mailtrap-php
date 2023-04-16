@@ -4,6 +4,12 @@ namespace Mailtrap\DTO\Request\Permission;
 
 interface PermissionInterface
 {
+    public const TYPE_ACCOUNT = 'account';
+    public const TYPE_BILLING = 'billing';
+    public const TYPE_PROJECT = 'project';
+    public const TYPE_INBOX = 'inbox';
+    public const TYPE_MAILSEND_DOMAIN = 'mailsend_domain';
+
     /**
      * The ID of the resource
      *

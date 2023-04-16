@@ -9,12 +9,6 @@ namespace Mailtrap\DTO\Request\Permission;
  */
 final class CreateOrUpdatePermission implements PermissionInterface
 {
-    public const TYPE_ACCOUNT = 'account';
-    public const TYPE_BILLING = 'billing';
-    public const TYPE_PROJECT = 'project';
-    public const TYPE_INBOX = 'inbox';
-    public const TYPE_MAILSEND_DOMAIN = 'mailsend_domain';
-
     private string $resourceId;
     private string $resourceType;
     private string $accessLevel;

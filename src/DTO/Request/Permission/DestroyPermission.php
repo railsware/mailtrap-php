@@ -12,9 +12,13 @@ final class DestroyPermission implements PermissionInterface
     private string $resourceId;
     private string $resourceType;
 
-    public function __construct(string $resourceId, string $resourceType)
+    /**
+     * @param string|int $resourceId
+     * @param string     $resourceType
+     */
+    public function __construct($resourceId, string $resourceType)
     {
-        $this->resourceId = $resourceId;
+        $this->resourceId = (string) $resourceId;
         $this->resourceType = $resourceType;
     }
 
