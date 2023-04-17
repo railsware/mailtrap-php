@@ -59,7 +59,7 @@ class PermissionTest extends MailtrapTestCase
         $this->assertArrayHasKey('resources', array_shift($responseData));
     }
 
-    public function test401InvalidGetList(): void
+    public function test401InvalidGetResources(): void
     {
         $this->permission->expects($this->once())
             ->method('httpGet')
@@ -74,7 +74,7 @@ class PermissionTest extends MailtrapTestCase
         $this->permission->getResources(self::FAKE_ACCOUNT_ID);
     }
 
-    public function test403InvalidGetList(): void
+    public function test403InvalidGetResources(): void
     {
         $this->permission->expects($this->once())
             ->method('httpGet')
