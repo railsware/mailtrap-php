@@ -1,3 +1,7 @@
+## [1.4.0] - 2023-04-20
+
+- Support general permission endpoints. Examples [here](examples/general/permissions.php)
+
 ## [1.3.0] - 2023-04-13
 
 - Support sandbox project endpoints. Examples [here](examples/sandbox/projects.php) 
