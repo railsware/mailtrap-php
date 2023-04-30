@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Mailtrap\Api\Sandbox;
 
-use Mailtrap\Api\AbstractEmails;
+use Mailtrap\Api\AbstractApi;
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Project
  */
-class Project extends AbstractEmails implements SandboxInterface
+class Project extends AbstractApi implements SandboxInterface
 {
     /**
      * List projects and their inboxes to which the API token has access.

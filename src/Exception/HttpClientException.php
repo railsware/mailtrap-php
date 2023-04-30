@@ -17,7 +17,7 @@ class HttpClientException extends HttpException
         400 => 'Bad request. Fix errors listed in response before retrying.',
         401 => 'Unauthorized. Make sure you are sending correct credentials with the request before retrying.',
         403 => 'Forbidden. Make sure domain verification process is completed or check your permissions.',
-        404 => 'Not found.',
+        404 => 'The requested entity does not found.',
     ];
 
     public static function createFromResponse(ResponseInterface $response): HttpClientException

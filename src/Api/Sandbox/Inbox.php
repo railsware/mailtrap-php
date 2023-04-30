@@ -2,13 +2,15 @@
 
 namespace Mailtrap\Api\Sandbox;
 
-use Mailtrap\Api\AbstractEmails;
+use Mailtrap\Api\AbstractApi;
+use Mailtrap\DTO\Request\Inbox as InboxRequest;
+use Mailtrap\Exception\RuntimeException;
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Inbox
  */
-class Inbox extends AbstractEmails implements SandboxInterface
+class Inbox extends AbstractApi implements SandboxInterface
 {
     /**
      * Get a list of inboxes.
@@ -72,5 +74,33 @@ class Inbox extends AbstractEmails implements SandboxInterface
         return $this->handleResponse($this->httpDelete(
             sprintf('%s/api/accounts/%s/inboxes/%s', $this->getHost(), $accountId, $inboxId)
         ));
+    }
+
+    /**
+     * Update inbox name and/or inbox email username.
+     *
+     * @param int          $accountId
+     * @param int          $inboxId
+     * @param InboxRequest $updateInbox
+     *
+     * @return ResponseInterface
+     */
+    public function update(int $accountId, int $inboxId, InboxRequest $updateInbox): ResponseInterface
+    {
+        return $this->handleResponse($this->httpPatch(
+            sprintf('%s/api/accounts/%s/inboxes/%s', $this->getHost(), $accountId, $inboxId),
+            [],
+            ['inbox' => $this->getUpdatePayload($updateInbox)]
+        ));
+    }
+
+    private function getUpdatePayload(InboxRequest $updateInbox): array
+    {
+        $result = $updateInbox->toArray();
+        if (empty($result)) {
+            throw new RuntimeException('At least one inbox parameter should be populated ("name" or "email_username")');
+        }
+
+        return $result;
     }
 }
