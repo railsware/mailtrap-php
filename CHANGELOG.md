@@ -1,3 +1,8 @@
+## [1.5.0] - 2023-05-03
+
+- Support sandbox inbox endpoints. Examples [here](examples/sandbox/inboxes.php)
+
+
 ## [1.4.0] - 2023-04-20
 
 - Support general permission endpoints. Examples [here](examples/general/permissions.php)
