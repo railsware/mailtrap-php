@@ -1,4 +1,4 @@
-## [1.5.0] - 2023-05-03
+## [1.5.0] - 2023-05-04
 
 - Support sandbox inbox endpoints. Examples [here](examples/sandbox/inboxes.php)
 
