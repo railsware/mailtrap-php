@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Class Attachment
  */
-class Attachment extends AbstractApi
+class Attachment extends AbstractApi implements SandboxInterface
 {
     /**
      * Get message attachments by inboxId and messageId.
