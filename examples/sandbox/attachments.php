@@ -19,8 +19,10 @@ try {
     $accountId = getenv('MAILTRAP_ACCOUNT_ID');
     $inboxId = getenv('MAILTRAP_INBOX_ID');
     $messageId = getenv('MAILTRAP_MESSAGE_ID');
+    // optional (null|string)
+    $attachmentType = 'inline';
 
-    $response = $mailtrap->sandbox()->attachments()->getMessageAttachments($accountId, $inboxId, $messageId);
+    $response = $mailtrap->sandbox()->attachments()->getMessageAttachments($accountId, $inboxId, $messageId, $attachmentType);
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));

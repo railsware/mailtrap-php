@@ -13,21 +13,36 @@ class Attachment extends AbstractApi implements SandboxInterface
     /**
      * Get message attachments by inboxId and messageId.
      *
-     * @param int $accountId
-     * @param int $inboxId
-     * @param int $messageId
+     * @param int         $accountId
+     * @param int         $inboxId
+     * @param int         $messageId
+     * @param string|null $attachmentType
      *
      * @return ResponseInterface
      */
-    public function getMessageAttachments(int $accountId, int $inboxId, int $messageId): ResponseInterface
-    {
-        return $this->handleResponse($this->httpGet(sprintf(
-            '%s/api/accounts/%s/inboxes/%s/messages/%s/attachments',
-            $this->getHost(),
-            $accountId,
-            $inboxId,
-            $messageId
-        )));
+    public function getMessageAttachments(
+        int $accountId,
+        int $inboxId,
+        int $messageId,
+        string $attachmentType = null
+    ): ResponseInterface {
+        $parameters = [];
+        if (!empty($attachmentType)) {
+            $parameters = [
+                'attachment_type' => $attachmentType
+            ];
+        }
+
+        return $this->handleResponse($this->httpGet(
+            sprintf(
+                '%s/api/accounts/%s/inboxes/%s/messages/%s/attachments',
+                $this->getHost(),
+                $accountId,
+                $inboxId,
+                $messageId
+            ),
+            $parameters
+        ));
     }
 
     /**
