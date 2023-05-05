@@ -163,7 +163,7 @@ class UserTest extends MailtrapTestCase
 
         $this->expectException(HttpClientException::class);
         $this->expectExceptionMessage(
-            'Not found. Errors: Not Found.'
+            'The requested entity has not been found. Errors: Not Found.'
         );
 
         $this->user->delete(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);

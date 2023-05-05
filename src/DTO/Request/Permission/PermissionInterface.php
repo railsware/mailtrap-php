@@ -2,7 +2,9 @@
 
 namespace Mailtrap\DTO\Request\Permission;
 
-interface PermissionInterface
+use Mailtrap\DTO\Request\RequestInterface;
+
+interface PermissionInterface extends RequestInterface
 {
     public const TYPE_ACCOUNT = 'account';
     public const TYPE_BILLING = 'billing';
@@ -23,11 +25,4 @@ interface PermissionInterface
      * @return string
      */
     public function getResourceType(): string;
-
-    /**
-     * Get permission as array
-     *
-     * @return array
-     */
-    public function toArray(): array;
 }
