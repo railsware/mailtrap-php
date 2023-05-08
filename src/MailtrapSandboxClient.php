@@ -7,9 +7,10 @@ namespace Mailtrap;
 use Mailtrap\Api;
 
 /**
- * @method  Api\Sandbox\Emails     emails
- * @method  Api\Sandbox\Project    projects
- * @method  Api\Sandbox\Inbox      inboxes
+ * @method  Api\Sandbox\Emails      emails
+ * @method  Api\Sandbox\Project     projects
+ * @method  Api\Sandbox\Inbox       inboxes
+ * @method  Api\Sandbox\Attachment  attachments
  *
  * Class MailtrapSandboxClient
  */
@@ -19,5 +20,6 @@ final class MailtrapSandboxClient extends AbstractMailtrapClient
         'emails' => Api\Sandbox\Emails::class,
         'projects' => Api\Sandbox\Project::class,
         'inboxes' => Api\Sandbox\Inbox::class,
+        'attachments' => Api\Sandbox\Attachment::class
     ];
 }
