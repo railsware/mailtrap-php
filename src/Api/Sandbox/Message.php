@@ -208,4 +208,43 @@ class Message extends AbstractApi implements SandboxInterface
             $messageId
         )));
     }
+
+    /**
+     * Update message attributes (right now only the is_read attribute is available for modification).
+     *
+     * @param int  $accountId
+     * @param int  $inboxId
+     * @param int  $messageId
+     * @param bool $isRead
+     *
+     * @return ResponseInterface
+     */
+    public function markAsRead(int $accountId, int $inboxId, int $messageId, bool $isRead = true): ResponseInterface
+    {
+        return $this->handleResponse($this->httpPatch(
+            sprintf('%s/api/accounts/%s/inboxes/%s/messages/%s', $this->getHost(), $accountId, $inboxId, $messageId),
+            [],
+            [
+                'message' => [
+                    'is_read' => $isRead
+                ]
+            ]
+        ));
+    }
+
+    /**
+     * Delete message from inbox.
+     *
+     * @param int $accountId
+     * @param int $inboxId
+     * @param int $messageId
+     *
+     * @return ResponseInterface
+     */
+    public function delete(int $accountId, int $inboxId, int $messageId): ResponseInterface
+    {
+        return $this->handleResponse($this->httpDelete(
+            sprintf('%s/api/accounts/%s/inboxes/%s/messages/%s', $this->getHost(), $accountId, $inboxId, $messageId)
+        ));
+    }
 }
