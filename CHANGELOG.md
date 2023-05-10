@@ -1,4 +1,4 @@
-## [1.7.0] - 2023-05-16
+## [1.7.0] - 2023-05-17
 
 - Support sandbox message endpoints. Examples [here](examples/sandbox/messages.php)
 
