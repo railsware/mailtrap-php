@@ -1,3 +1,8 @@
+## [1.7.0] - 2023-05-16
+
+- Support sandbox message endpoints. Examples [here](examples/sandbox/messages.php)
+
+
 ## [1.6.0] - 2023-05-05
 
 - Support sandbox attachment endpoints. Examples [here](examples/sandbox/attachments.php)

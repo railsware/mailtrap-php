@@ -29,4 +29,9 @@ final class ResponseHelper
 
         return json_decode($response->getBody()->__toString(), true, 512, JSON_THROW_ON_ERROR);
     }
+
+    public static function toString(ResponseInterface $response): string
+    {
+        return $response->getBody()->__toString();
+    }
 }
