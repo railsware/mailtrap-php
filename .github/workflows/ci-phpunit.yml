@@ -58,8 +58,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - symfony: '4'
-            php-version: '7.1'
           - symfony: '5'
             php-version: '7.4'
           - symfony: '6'
