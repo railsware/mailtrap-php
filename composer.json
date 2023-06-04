@@ -21,7 +21,7 @@
     "symfony/mailer": "^5.4|^6.0",
     "phpunit/phpunit": "^9",
     "nyholm/psr7": "^1.5",
-    "vimeo/psalm": "^5.0"
+    "vimeo/psalm": "^4.0 || ^5.0"
   },
   "suggest": {
     "nyholm/psr7": "PSR-7 message implementation",
