@@ -308,7 +308,7 @@ class InboxTest extends MailtrapTestCase
         $this->assertInstanceOf(Response::class, $response);
         $this->assertArrayHasKey('id', $responseData);
         $this->assertEquals(self::FAKE_INBOX_ID, $responseData['id']);
-        $this->assertEquals($expectedData['email_username_enabled'], $responseData['username']);
+        $this->assertEquals($expectedData['email_username_enabled'], $responseData['email_username_enabled']);
     }
 
     public function testResetEmailAddress(): void
