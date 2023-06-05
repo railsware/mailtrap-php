@@ -11,12 +11,12 @@ on:
 
 jobs:
   phpunit-tests:
-    name: PHP ${{ matrix.php }} Latest
+    name: PHP ${{ matrix.php-version }} Latest
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-        php: [ '7.4','8.0','8.1','8.2' ]
+        php-version: [ '7.4','8.0','8.1','8.2' ]
 
     steps:
       - name: Checkout
@@ -26,7 +26,7 @@ jobs:
         id: setup-php
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
+          php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl, curl
 
       - name: Print PHP version
