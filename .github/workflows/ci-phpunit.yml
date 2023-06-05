@@ -11,11 +11,12 @@ on:
 
 jobs:
   phpunit-tests:
+    name: PHP ${{ matrix.php-version }} Latest
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-        php-versions: [ '7.4','8.0','8.1','8.2' ]
+        php-version: [ '7.4','8.0','8.1','8.2' ]
 
     steps:
       - name: Checkout
@@ -25,7 +26,7 @@ jobs:
         id: setup-php
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl, curl
 
       - name: Print PHP version
@@ -49,4 +50,36 @@ jobs:
         run: composer install --prefer-dist --no-progress
 
       - name: Run phpunit tests
+        run: composer test
+
+  symfony:
+    name: Symfony ${{ matrix.symfony }} LTS
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - symfony: '5'
+            php-version: '7.4'
+          - symfony: '6'
+            php-version: '8.2'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        run: |
+          composer config --no-plugins allow-plugins.symfony/flex true
+          composer require --no-update --no-interaction --no-progress symfony/flex
+          composer config extra.symfony.require ${{ matrix.symfony}}
+          composer update --prefer-dist --no-interaction --prefer-stable --prefer-lowest --no-progress
+
+      - name: Execute tests
         run: composer test
