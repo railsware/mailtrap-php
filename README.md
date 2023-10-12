@@ -50,7 +50,9 @@ $mailtrap = new MailtrapClient(new Config($apiKey));
 
 $email = (new Email())
     ->from(new Address('example@your-domain-here.com', 'Mailtrap Test'))
+    ->replyTo(new Address('reply@your-domain-here.com'))
     ->to(new Address('email@example.com', 'Jon'))
+    ->priority(Email::PRIORITY_HIGH)
     ->cc('mailtrapqa@example.com')
     ->addCc('staging@example.com')
     ->bcc('mailtrapdev@example.com')

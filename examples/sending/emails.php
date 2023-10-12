@@ -31,7 +31,9 @@ try {
 
     $email = (new Email())
         ->from(new Address('example@YOUR-DOMAIN-HERE.com', 'Mailtrap Test')) // <--- you should use your domain here that you installed in the mailtrap.io admin area (otherwise you will get 401)
+        ->replyTo(new Address('reply@YOUR-DOMAIN-HERE.com'))
         ->to(new Address('email@example.com', 'Jon'))
+        ->priority(Email::PRIORITY_HIGH)
         ->cc('mailtrapqa@example.com')
         ->addCc('staging@example.com')
         ->bcc('mailtrapdev@example.com')
@@ -91,6 +93,7 @@ try {
 
     $email = (new Email())
         ->from(new Address('example@YOUR-DOMAIN-HERE.com', 'Mailtrap Test')) // <--- you should use your domain here that you installed in the mailtrap.io admin area (otherwise you will get 401)
+        ->replyTo(new Address('reply@YOUR-DOMAIN-HERE.com'))
         ->to(new Address('example@gmail.com', 'Jon'))
     ;
 
