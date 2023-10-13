@@ -59,7 +59,9 @@ final class EmailsTest extends MailtrapTestCase
 
         $email = new Email();
         $email->from(new Address('foo@example.com', 'Ms. Foo Bar'))
+            ->replyTo(new Address('reply@example.com'))
             ->to(new Address('bar@example.com', 'Mr. Recipient'))
+            ->priority(Email::PRIORITY_HIGH)
             ->bcc('baz@example.com')
             ->subject('Best practices of building HTML emails')
             ->text('Some text')
@@ -87,7 +89,9 @@ final class EmailsTest extends MailtrapTestCase
                 'text' => 'Some text',
                 'html' => '<p>Some text</p>',
                 'headers' => [
-                    'X-Message-Source' => 'dev.mydomain.com'
+                    'X-Message-Source' => 'dev.mydomain.com',
+                    'Reply-To' => 'reply@example.com',
+                    'X-Priority' => '2 (High)',
                 ]
             ])
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));

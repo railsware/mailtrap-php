@@ -50,7 +50,7 @@ abstract class AbstractEmails extends AbstractApi
             $payload['attachments'] = $this->getAttachments($email);
         }
 
-        $headersToBypass = ['received', 'from', 'to', 'cc', 'bcc', 'subject', 'content-type', 'reply-to'];
+        $headersToBypass = ['received', 'from', 'to', 'cc', 'bcc', 'subject', 'content-type'];
         foreach ($email->getHeaders()->all() as $name => $header) {
             if (in_array($name, $headersToBypass, true)) {
                 continue;

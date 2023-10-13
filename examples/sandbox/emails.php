@@ -29,6 +29,7 @@ try {
 
     $email = (new Email())
         ->from(new Address('mailtrap@example.com', 'Mailtrap Test'))
+        ->replyTo(new Address('reply@example.com'))
         ->to(new Address('email@example.com', 'Jon'))
         ->cc('mailtrapqa@example.com')
         ->addCc('staging@example.com')
