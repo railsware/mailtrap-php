@@ -38,7 +38,7 @@ final class MailtrapTransportFactory extends AbstractTransportFactory
 
         if ($mailtrapClient instanceof MailtrapSandboxClient && null === $inboxId) {
             throw new RuntimeException(
-                'You cannot send email to the SanBox with empty "inboxId" param. Example -> "MAILER_DSN=mailtrap+api://APIKEY@sandbox.api.mailtrap.io?inboxId=1234"'
+                'You cannot send email to the sandbox with empty "inboxId" param. Example -> "MAILER_DSN=mailtrap+api://APIKEY@sandbox.api.mailtrap.io?inboxId=1234"'
             );
         }
 
