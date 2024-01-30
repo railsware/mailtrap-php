@@ -1,3 +1,7 @@
+## [1.7.3] - 2024-01-30
+
+- Use Psr18ClientDiscovery instead of deprecated HttpClientDiscovery
+
 ## [1.7.0] - 2023-05-16
 
 - Support sandbox message endpoints. Examples [here](examples/sandbox/messages.php)
