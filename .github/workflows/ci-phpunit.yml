@@ -117,4 +117,4 @@ jobs:
           composer update --prefer-dist --no-interaction --prefer-stable --prefer-lowest --no-progress
 
       - name: Execute tests
-        run: php artisan test
+        run: composer test
