@@ -27,7 +27,7 @@ class CategoryHeader extends AbstractHeader
     /**
      * @param string $body
      */
-    public function setBody($body)
+    public function setBody($body): void
     {
         $this->setValue($body);
     }
@@ -51,7 +51,7 @@ class CategoryHeader extends AbstractHeader
     /**
      * Set the (unencoded) value of this header.
      */
-    public function setValue(string $value)
+    public function setValue(string $value): void
     {
         $this->value = $value;
     }

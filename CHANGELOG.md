@@ -1,3 +1,8 @@
+## [1.7.4] - 2024-03-20
+
+- Add PHP 8.3 support (GitHub Actions)
+- Support new Symfony packages v7 (mime, http-client, etc)
+
 ## [1.7.3] - 2024-01-30
 
 - Use Psr18ClientDiscovery instead of deprecated HttpClientDiscovery

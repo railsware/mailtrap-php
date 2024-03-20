@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-        php-version: [ '7.4','8.0','8.1','8.2' ]
+        php-version: [ '7.4','8.0','8.1','8.2','8.3' ]
 
     steps:
       - name: Checkout
@@ -62,6 +62,8 @@ jobs:
             php-version: '7.4'
           - symfony: '6'
             php-version: '8.2'
+          - symfony: '7'
+            php-version: '8.3'
 
     steps:
       - name: Checkout
@@ -79,6 +81,39 @@ jobs:
           composer config --no-plugins allow-plugins.symfony/flex true
           composer require --no-update --no-interaction --no-progress symfony/flex
           composer config extra.symfony.require ${{ matrix.symfony}}
+          composer update --prefer-dist --no-interaction --prefer-stable --prefer-lowest --no-progress
+
+      - name: Execute tests
+        run: composer test
+
+  laravel:
+    name: Laravel ${{ matrix.laravel }} LTS
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - laravel: '9'
+            php-version: '8.1'
+          - laravel: '10'
+            php-version: '8.2'
+          - laravel: '11'
+            php-version: '8.3'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        run: |
+          composer config --no-plugins allow-plugins.laravel/installer true
+          composer require --no-update --no-interaction --no-progress laravel/framework:${{ matrix.laravel }}
           composer update --prefer-dist --no-interaction --prefer-stable --prefer-lowest --no-progress
 
       - name: Execute tests
