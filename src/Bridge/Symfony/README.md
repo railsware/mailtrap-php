@@ -22,15 +22,26 @@ Add MailtrapTransport into your `config/services.yaml` file
             - { name: 'mailer.transport_factory' }
 ```
 
-### Sending
+### Sending (by default)
 Add or change MAILER_DSN variable inside your `.env` file. Also, you need to change the `YOUR_API_KEY_HERE` placeholder.
 ```bash
 MAILER_DSN=mailtrap+api://YOUR_API_KEY_HERE@default
 # or
 MAILER_DSN=mailtrap+api://YOUR_API_KEY_HERE@send.api.mailtrap.io
 ```
+
+### Bulk Sending
+Add or change MAILER_DSN variable inside your `.env` file. Also, you need to change the `YOUR_API_KEY_HERE` placeholder.
+
+More info about bulk sending -> https://help.mailtrap.io/article/113-sending-streams
+```bash
+MAILER_DSN=mailtrap+api://YOUR_API_KEY_HERE@bulk.api.mailtrap.io
+```
+
 ### Sandbox
 Add or change MAILER_DSN variable inside your `.env` file. Also, you need to change the `YOUR_API_KEY_HERE` placeholder and put correct `inboxId`.
+
+More info sandbox -> https://help.mailtrap.io/article/109-getting-started-with-mailtrap-email-testing
 ```bash
 MAILER_DSN=mailtrap+api://YOUR_API_KEY_HERE@sandbox.api.mailtrap.io?inboxId=1000001
 ```

@@ -20,6 +20,7 @@ abstract class AbstractApi
     public const DEFAULT_HOST = 'mailtrap.io';
     public const SENDMAIL_HOST = 'send.api.mailtrap.io';
     public const SENDMAIL_SANDBOX_HOST = 'sandbox.api.mailtrap.io';
+    public const SENDMAIL_BULK_HOST = 'bulk.api.mailtrap.io';
 
     protected ConfigInterface $config;
     protected ClientInterface $httpClient;
