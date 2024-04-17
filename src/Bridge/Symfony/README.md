@@ -22,7 +22,7 @@ Add MailtrapTransport into your `config/services.yaml` file
             - { name: 'mailer.transport_factory' }
 ```
 
-### Sending (by default)
+### Sending
 Add or change MAILER_DSN variable inside your `.env` file. Also, you need to change the `YOUR_API_KEY_HERE` placeholder.
 ```bash
 MAILER_DSN=mailtrap+api://YOUR_API_KEY_HERE@default

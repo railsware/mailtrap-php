@@ -112,6 +112,7 @@ try {
 You can find more examples [here](examples).
 * [General examples](examples/general)
 * [Sending examples](examples/sending)
+* [Bulk Sending examples](examples/bulkSending)
 * [Sandbox examples](examples/sandbox)
 
 
