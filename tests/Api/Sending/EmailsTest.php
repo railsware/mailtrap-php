@@ -35,6 +35,6 @@ final class EmailsTest extends AbstractEmailsTest
 
     protected function getHost(): string
     {
-        return AbstractApi::SENDMAIL_HOST;
+        return AbstractApi::SENDMAIL_TRANSACTIONAL_HOST;
     }
 }

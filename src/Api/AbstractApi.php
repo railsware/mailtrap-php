@@ -18,7 +18,7 @@ use Psr\Http\Message\ResponseInterface;
 abstract class AbstractApi
 {
     public const DEFAULT_HOST = 'mailtrap.io';
-    public const SENDMAIL_HOST = 'send.api.mailtrap.io';
+    public const SENDMAIL_TRANSACTIONAL_HOST = 'send.api.mailtrap.io';
     public const SENDMAIL_SANDBOX_HOST = 'sandbox.api.mailtrap.io';
     public const SENDMAIL_BULK_HOST = 'bulk.api.mailtrap.io';
 

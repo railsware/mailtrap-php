@@ -41,7 +41,7 @@ class MailtrapApiTransportTest extends MailtrapTestCase
             [
                 new MailtrapApiTransport(
                     new MailtrapSendingClient(
-                        (new Config('key'))->setHost(AbstractApi::SENDMAIL_HOST)
+                        (new Config('key'))->setHost(AbstractApi::SENDMAIL_TRANSACTIONAL_HOST)
                     )
                 ),
                 'mailtrap+api://send.api.mailtrap.io',

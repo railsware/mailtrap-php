@@ -22,6 +22,6 @@ class Emails extends AbstractEmails implements SendingInterface
 
     protected function getHost(): string
     {
-        return $this->config->getHost() ?: self::SENDMAIL_HOST;
+        return $this->config->getHost() ?: self::SENDMAIL_TRANSACTIONAL_HOST;
     }
 }

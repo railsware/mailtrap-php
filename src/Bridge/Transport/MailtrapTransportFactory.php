@@ -29,7 +29,7 @@ final class MailtrapTransportFactory extends AbstractTransportFactory
 
         $inboxId = !empty($dsn->getOption('inboxId')) ? (int) $dsn->getOption('inboxId') : null;
         $config = (new Config($this->getUser($dsn)))
-            ->setHost('default' === $dsn->getHost() ? AbstractApi::SENDMAIL_HOST : $dsn->getHost())
+            ->setHost('default' === $dsn->getHost() ? AbstractApi::SENDMAIL_TRANSACTIONAL_HOST : $dsn->getHost())
             ->setHttpClient(null === $this->client ? null : new Psr18Client($this->client))
         ;
 
@@ -57,8 +57,8 @@ final class MailtrapTransportFactory extends AbstractTransportFactory
 
     private function determineLayerByHost(string $host): string
     {
-        if (stripos($host, AbstractApi::SENDMAIL_HOST) !== false) {
-            return MailtrapClient::LAYER_SENDING;
+        if (stripos($host, AbstractApi::SENDMAIL_TRANSACTIONAL_HOST) !== false) {
+            return MailtrapClient::LAYER_TRANSACTIONAL_SENDING;
         }
 
         if (stripos($host, AbstractApi::SENDMAIL_BULK_HOST) !== false) {

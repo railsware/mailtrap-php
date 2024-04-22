@@ -60,7 +60,7 @@ class MailtrapTransportFactoryTest extends TransportFactoryTestCase
                 (new MailtrapClient(
                     (new Config(self::USER))
                         ->setHttpClient(new Psr18Client($this->getClient()))
-                        ->setHost(AbstractApi::SENDMAIL_HOST)
+                        ->setHost(AbstractApi::SENDMAIL_TRANSACTIONAL_HOST)
                 ))->sending(),
                 null,
                 $dispatcher,
@@ -69,12 +69,12 @@ class MailtrapTransportFactoryTest extends TransportFactoryTestCase
         ];
 
         yield [
-            new Dsn('mailtrap', AbstractApi::SENDMAIL_HOST, self::USER),
+            new Dsn('mailtrap', AbstractApi::SENDMAIL_TRANSACTIONAL_HOST, self::USER),
             new MailtrapApiTransport(
                 (new MailtrapClient(
                     (new Config(self::USER))
                         ->setHttpClient(new Psr18Client($this->getClient()))
-                        ->setHost(AbstractApi::SENDMAIL_HOST)
+                        ->setHost(AbstractApi::SENDMAIL_TRANSACTIONAL_HOST)
                 ))->sending(),
                 null,
                 $dispatcher,
