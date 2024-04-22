@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Mailtrap\Tests\Api\Sending;
+namespace Mailtrap\Tests\Api\BulkSending;
 
 use Mailtrap\Api\AbstractApi;
-use Mailtrap\Api\Sending\Emails;
+use Mailtrap\Api\BulkSending\Emails;
 use Mailtrap\Tests\Api\AbstractEmailsTest;
 
 /**
  * @covers Emails
  *
- * Class EmailsTest
+ * Class BulkEmailsTest
  */
-final class EmailsTest extends AbstractEmailsTest
+final class BulkEmailsTest extends AbstractEmailsTest
 {
     protected function setUp(): void
     {
@@ -35,6 +35,6 @@ final class EmailsTest extends AbstractEmailsTest
 
     protected function getHost(): string
     {
-        return AbstractApi::SENDMAIL_TRANSACTIONAL_HOST;
+        return AbstractApi::SENDMAIL_BULK_HOST;
     }
 }

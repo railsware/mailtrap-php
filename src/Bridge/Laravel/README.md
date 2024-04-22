@@ -48,8 +48,20 @@ MAIL_MAILER="mailtrap"
 MAILTRAP_HOST="send.api.mailtrap.io"
 MAILTRAP_API_KEY="YOUR_API_KEY_HERE"
 ```
+### Bulk Sending
+You need to set the API key to the `MAILTRAP_API_KEY` variable.
+
+More info about bulk sending -> https://help.mailtrap.io/article/113-sending-streams
+```bash
+MAIL_MAILER="mailtrap"
+
+MAILTRAP_HOST="bulk.api.mailtrap.io"
+MAILTRAP_API_KEY="YOUR_API_KEY_HERE"
+```
 ### Sandbox
 You need to set the API key to the `MAILTRAP_API_KEY` variable and set your inboxId to the `MAILTRAP_INBOX_ID`.
+
+More info sandbox -> https://help.mailtrap.io/article/109-getting-started-with-mailtrap-email-testing
 ```bash
 MAIL_MAILER="mailtrap"
 

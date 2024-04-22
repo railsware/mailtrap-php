@@ -1,3 +1,7 @@
+## [1.8.0] - 2024-04-19
+
+- Support new functionality [Bulk Stream](https://help.mailtrap.io/article/113-sending-streams)
+
 ## [1.7.4] - 2024-03-20
 
 - Add PHP 8.3 support (GitHub Actions)
