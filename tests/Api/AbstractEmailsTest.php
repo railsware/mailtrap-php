@@ -51,7 +51,8 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
             ->html('<p>Some text</p>')
         ;
         $email->getHeaders()
-            ->addTextHeader('X-Message-Source', 'dev.mydomain.com');
+            ->addTextHeader('X-Message-Source', 'dev.mydomain.com')
+            ->addTextHeader('Test-Unicode-Header', 'Subašić');
 
         $this->email
             ->expects($this->once())
@@ -75,6 +76,7 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
                     'X-Message-Source' => 'dev.mydomain.com',
                     'Reply-To' => 'reply@example.com',
                     'X-Priority' => '2 (High)',
+                    'Test-Unicode-Header' => '=?utf-8?Q?Suba=C5=A1i=C4=87?=', // See RFC 2822, Sect 2.2
                 ]
             ])
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));
@@ -147,6 +149,7 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
         $email->getHeaders()
             ->add(new TemplateUuidHeader('bfa432fd-0000-0000-0000-8493da283a69'))
             ->add(new TemplateVariableHeader('user_name', 'Jon Bush'))
+            ->add(new TemplateVariableHeader('unicode_user_name', 'Subašić'))
             ->add(new TemplateVariableHeader('next_step_link', 'https://mailtrap.io/'))
             ->add(new TemplateVariableHeader('get_started_link', 'https://mailtrap.io/'))
             ->add(new TemplateVariableHeader('onboarding_video_link', 'some_video_link'))
@@ -167,6 +170,7 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
                 'template_uuid' => 'bfa432fd-0000-0000-0000-8493da283a69',
                 'template_variables' => [
                     'user_name' => 'Jon Bush',
+                    'unicode_user_name' => 'Subašić', // should not be encoded as it is not a real header
                     'next_step_link' => 'https://mailtrap.io/',
                     'get_started_link' => 'https://mailtrap.io/',
                     'onboarding_video_link' => 'some_video_link',
