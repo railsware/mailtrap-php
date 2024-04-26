@@ -58,10 +58,10 @@ abstract class AbstractEmails extends AbstractApi
 
             switch(true) {
                 case $header instanceof CustomVariableHeader:
-                    $payload[CustomVariableHeader::VAR_NAME][$header->getName()] = $header->getBodyAsString();
+                    $payload[CustomVariableHeader::VAR_NAME][$header->getName()] = $header->getValue();
                     break;
                 case $header instanceof TemplateVariableHeader:
-                    $payload[TemplateVariableHeader::VAR_NAME][$header->getName()] = $header->getBodyAsString();
+                    $payload[TemplateVariableHeader::VAR_NAME][$header->getName()] = $header->getValue();
                     break;
                 case $header instanceof CategoryHeader:
                     if (!empty($payload[CategoryHeader::VAR_NAME])) {
@@ -70,7 +70,7 @@ abstract class AbstractEmails extends AbstractApi
                         );
                     }
 
-                    $payload[CategoryHeader::VAR_NAME] = $header->getBodyAsString();
+                    $payload[CategoryHeader::VAR_NAME] = $header->getValue();
                     break;
                 case $header instanceof TemplateUuidHeader:
                     if (!empty($payload[TemplateUuidHeader::VAR_NAME])) {
@@ -79,7 +79,7 @@ abstract class AbstractEmails extends AbstractApi
                         );
                     }
 
-                    $payload[TemplateUuidHeader::VAR_NAME] = $header->getBodyAsString();
+                    $payload[TemplateUuidHeader::VAR_NAME] = $header->getValue();
                     break;
                 default:
                     $payload['headers'][$header->getName()] = $header->getBodyAsString();
