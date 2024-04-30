@@ -1,5 +1,6 @@
 ## [1.9.0] - 2024-05-06
 
+- Support templates in testing
 - Refactoring of examples
   - sandbox -> [testing](examples/testing)
   - bulkSending -> [sending](examples/sending)

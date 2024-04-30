@@ -102,7 +102,7 @@ final class EmailsTest extends MailtrapTestCase
         $this->assertArrayHasKey('message_ids', $responseData);
     }
 
-    public function testValidSendTemplate(): void
+    public function testValidSendTemplateToSandbox(): void
     {
         $inboxId = 1000001;
         $expectedData = [
