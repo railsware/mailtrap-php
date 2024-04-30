@@ -3,6 +3,8 @@
 use Mailtrap\Config;
 use Mailtrap\EmailHeader\CategoryHeader;
 use Mailtrap\EmailHeader\CustomVariableHeader;
+use Mailtrap\EmailHeader\Template\TemplateUuidHeader;
+use Mailtrap\EmailHeader\Template\TemplateVariableHeader;
 use Mailtrap\Helper\ResponseHelper;
 use Mailtrap\MailtrapClient;
 use Symfony\Component\Mime\Address;
@@ -73,6 +75,43 @@ try {
     // print all possible information from the response
     var_dump($response->getHeaders()); //headers (array)
     var_dump($response->getStatusCode()); //status code (int)
+    var_dump(ResponseHelper::toArray($response)); // body (array)
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), "\n";
+}
+
+
+/**
+ * Test Email WITH TEMPLATE
+ *
+ * WARNING! If template is provided then subject, text, html, category  and other params are forbidden.
+ *
+ * UUID of email template. Subject, text and html will be generated from template using optional template_variables.
+ * Optional template variables that will be used to generate actual subject, text and html from email template
+ */
+try {
+    // your API token from here https://mailtrap.io/api-tokens
+    $apiKey = getenv('MAILTRAP_API_KEY');
+    $mailtrap = new MailtrapClient(new Config($apiKey));
+
+    $email = (new Email())
+        ->from(new Address('example@YOUR-DOMAIN-HERE.com', 'Mailtrap Test')) // <--- you should use the domain which is linked to template UUID (otherwise you will get 401)
+        ->replyTo(new Address('reply@YOUR-DOMAIN-HERE.com'))
+        ->to(new Address('example@gmail.com', 'Jon'))
+    ;
+
+    // Template UUID and Variables
+    $email->getHeaders()
+        ->add(new TemplateUuidHeader('bfa432fd-0000-0000-0000-8493da283a69'))
+        ->add(new TemplateVariableHeader('user_name', 'Jon Bush'))
+        ->add(new TemplateVariableHeader('next_step_link', 'https://mailtrap.io/'))
+        ->add(new TemplateVariableHeader('get_started_link', 'https://mailtrap.io/'))
+        ->add(new TemplateVariableHeader('onboarding_video_link', 'some_video_link'))
+    ;
+
+    // Required param -> inbox_id
+    $response = $mailtrap->sandbox()->emails()->send($email, 1000001); // <--- you should use your inbox_id here (otherwise you will get 401)
+
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {
     echo 'Caught exception: ',  $e->getMessage(), "\n";
