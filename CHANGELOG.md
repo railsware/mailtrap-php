@@ -1,3 +1,9 @@
+## [1.9.0] - 2024-05-06
+
+- Refactoring of examples
+  - sandbox -> [testing](examples/testing)
+  - bulkSending -> [sending](examples/sending)
+
 ## [1.8.1] - 2024-04-25
 
 - Use real value for template headers (should not be encoded as it is not a real header) 
