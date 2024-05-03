@@ -13,15 +13,16 @@ use Symfony\Component\Mime\Header\UnstructuredHeader;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+
 /**********************************************************************************************************************
- ******************************************* EMAIL BULK SENDING *******************************************************
+ ******************************************* EMAIL TESTING ************************************************************
  **********************************************************************************************************************
  */
 
 /**
- * Email Bulk Sending API
+ * Email Testing API
  *
- * POST https://bulk.api.mailtrap.io/api/send
+ * POST https://sandbox.api.mailtrap.io/api/send/{inbox_id}
  */
 try {
     // your API token from here https://mailtrap.io/api-tokens
@@ -29,10 +30,9 @@ try {
     $mailtrap = new MailtrapClient(new Config($apiKey));
 
     $email = (new Email())
-        ->from(new Address('example@YOUR-DOMAIN-HERE.com', 'Mailtrap Test')) // <--- you should use your domain here that you installed in the mailtrap.io admin area (otherwise you will get 401)
-        ->replyTo(new Address('reply@YOUR-DOMAIN-HERE.com'))
+        ->from(new Address('mailtrap@example.com', 'Mailtrap Test'))
+        ->replyTo(new Address('reply@example.com'))
         ->to(new Address('email@example.com', 'Jon'))
-        ->priority(Email::PRIORITY_HIGH)
         ->cc('mailtrapqa@example.com')
         ->addCc('staging@example.com')
         ->bcc('mailtrapdev@example.com')
@@ -69,8 +69,12 @@ try {
         ->add(new CategoryHeader('Integration Test'))
     ;
 
-    $response = $mailtrap->bulkSending()->emails()->send($email);
+    // Required param -> inbox_id
+    $response = $mailtrap->sandbox()->emails()->send($email, 1000001); // <--- you should use your inbox_id here (otherwise you will get 401)
 
+    // print all possible information from the response
+    var_dump($response->getHeaders()); //headers (array)
+    var_dump($response->getStatusCode()); //status code (int)
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {
     echo 'Caught exception: ',  $e->getMessage(), "\n";
@@ -78,9 +82,9 @@ try {
 
 
 /**
- * Email Bulk Sending WITH TEMPLATE
+ * Test Email WITH TEMPLATE
  *
- * WARNING! If a template is provided, then subject, text, html, category and other params are forbidden.
+ * WARNING! If template is provided then subject, text, html, category  and other params are forbidden.
  *
  * UUID of email template. Subject, text and html will be generated from template using optional template_variables.
  * Optional template variables that will be used to generate actual subject, text and html from email template
@@ -91,7 +95,7 @@ try {
     $mailtrap = new MailtrapClient(new Config($apiKey));
 
     $email = (new Email())
-        ->from(new Address('example@YOUR-DOMAIN-HERE.com', 'Mailtrap Test')) // <--- you should use your domain here that you installed in the mailtrap.io admin area (otherwise you will get 401)
+        ->from(new Address('example@YOUR-DOMAIN-HERE.com', 'Mailtrap Test')) // <--- you should use the domain which is linked to template UUID (otherwise you will get 401)
         ->replyTo(new Address('reply@YOUR-DOMAIN-HERE.com'))
         ->to(new Address('example@gmail.com', 'Jon'))
     ;
@@ -105,7 +109,8 @@ try {
         ->add(new TemplateVariableHeader('onboarding_video_link', 'some_video_link'))
     ;
 
-    $response = $mailtrap->bulkSending()->emails()->send($email);
+    // Required param -> inbox_id
+    $response = $mailtrap->sandbox()->emails()->send($email, 1000001); // <--- you should use your inbox_id here (otherwise you will get 401)
 
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {
