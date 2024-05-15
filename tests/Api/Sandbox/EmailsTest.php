@@ -55,7 +55,7 @@ final class EmailsTest extends MailtrapTestCase
         ];
 
         $email = new Email();
-        $email->from(new Address('from.adress.email@example.com', 'Ms. Foo Bar'))
+        $email->from(new Address('phpnuit@example.com', 'Ms. Foo Bar'))
             ->replyTo(new Address('reply@example.com'))
             ->to(new Address('bar@example.com', 'Mr. Recipient'))
             ->priority(Email::PRIORITY_HIGH)
@@ -72,7 +72,7 @@ final class EmailsTest extends MailtrapTestCase
             ->method('httpPost')
             ->with(AbstractApi::SENDMAIL_SANDBOX_HOST . '/api/send/' . $inboxId, [], [
                 'from' => [
-                    'email' => 'from.adress.email@example.com',
+                    'email' => 'phpnuit@example.com',
                     'name' => 'Ms. Foo Bar',
                 ],
                 'to' => [[
@@ -113,7 +113,7 @@ final class EmailsTest extends MailtrapTestCase
         ];
 
         $email = (new Email())
-            ->from(new Address('from.adress.email@example.com', 'Ms. Foo Bar'))
+            ->from(new Address('phpnuit@example.com', 'Ms. Foo Bar'))
             ->to(new Address('bar@example.com', 'Mr. Recipient'))
         ;
 
@@ -131,7 +131,7 @@ final class EmailsTest extends MailtrapTestCase
             ->method('httpPost')
             ->with(AbstractApi::SENDMAIL_SANDBOX_HOST . '/api/send/' . $inboxId, [], [
                 'from' => [
-                    'email' => 'from.adress.email@example.com',
+                    'email' => 'phpnuit@example.com',
                     'name' => 'Ms. Foo Bar',
                 ],
                 'to' => [[
