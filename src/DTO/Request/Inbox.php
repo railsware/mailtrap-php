@@ -7,13 +7,8 @@ namespace Mailtrap\DTO\Request;
  */
 class Inbox implements RequestInterface
 {
-    private ?string $name;
-    private ?string $emailUsername;
-
-    public function __construct(string $name = null, string $emailUsername = null)
+    public function __construct(private ?string $name = null, private ?string $emailUsername = null)
     {
-        $this->name = $name;
-        $this->emailUsername = $emailUsername;
     }
 
     /**

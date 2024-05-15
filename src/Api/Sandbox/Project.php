@@ -42,7 +42,7 @@ class Project extends AbstractApi implements SandboxInterface
     }
 
     /**
-     * Create project
+     * Create a project
      *
      * @param int    $accountId
      * @param string $projectName

@@ -43,7 +43,7 @@ abstract class TransportFactoryTestCase extends MailtrapTestCase
     /**
      * @dataProvider supportsProvider
      */
-    public function testSupports(Dsn $dsn, bool $supports)
+    public function testSupports(Dsn $dsn, bool $supports): void
     {
         $factory = $this->getFactory();
 
@@ -53,7 +53,7 @@ abstract class TransportFactoryTestCase extends MailtrapTestCase
     /**
      * @dataProvider createProvider
      */
-    public function testCreate(Dsn $dsn, TransportInterface $transport)
+    public function testCreate(Dsn $dsn, TransportInterface $transport): void
     {
         $factory = $this->getFactory();
 
@@ -66,7 +66,7 @@ abstract class TransportFactoryTestCase extends MailtrapTestCase
     /**
      * @dataProvider unsupportedSchemeProvider
      */
-    public function testUnsupportedSchemeException(Dsn $dsn, string $message = null)
+    public function testUnsupportedSchemeException(Dsn $dsn, string $message = null): void
     {
         $factory = $this->getFactory();
 
@@ -81,7 +81,7 @@ abstract class TransportFactoryTestCase extends MailtrapTestCase
     /**
      * @dataProvider incompleteDsnProvider
      */
-    public function testIncompleteDsnException(Dsn $dsn)
+    public function testIncompleteDsnException(Dsn $dsn): void
     {
         $factory = $this->getFactory();
 

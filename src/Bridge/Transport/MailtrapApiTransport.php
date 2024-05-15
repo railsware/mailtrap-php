@@ -23,22 +23,13 @@ use Symfony\Component\Mime\MessageConverter;
  */
 class MailtrapApiTransport extends AbstractTransport
 {
-    /**
-     * @var MailtrapSendingClient|MailtrapSandboxClient
-     */
-    private MailtrapClientInterface $mailtrapClient;
-    private ?int $inboxId;
-
     public function __construct(
-        MailtrapClientInterface $mailtrapClient,
-        int $inboxId = null,
+        private MailtrapClientInterface $mailtrapClient,
+        private ?int $inboxId = null,
         EventDispatcherInterface $dispatcher = null,
         LoggerInterface $logger = null
     ) {
         parent::__construct($dispatcher, $logger);
-
-        $this->mailtrapClient = $mailtrapClient;
-        $this->inboxId = $inboxId;
     }
 
     public function __toString(): string

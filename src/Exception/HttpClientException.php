@@ -27,7 +27,7 @@ class HttpClientException extends HttpException
 
         try {
             $body = ResponseHelper::toArray($response);
-        } catch (JsonException|InvalidTypeException $e) {
+        } catch (JsonException|InvalidTypeException) {
             $body['error'] = $response->getBody()->__toString();
         }
 
@@ -56,11 +56,11 @@ class HttpClientException extends HttpException
      * {"errors": {"name":["is too short (minimum is 2 characters)"]}}      422 errorS (array with key name)
      *
      *
-     * @param string|array $errors
+     * @param array|string $errors
      *
      * @return string
      */
-    public static function getErrorMsg($errors): string
+    public static function getErrorMsg(array|string $errors): string
     {
         $errorMsg = '';
         if (is_array($errors)) {

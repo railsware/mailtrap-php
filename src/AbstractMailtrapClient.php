@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Mailtrap;
 
-use Mailtrap\Api\AbstractApi;
 use Mailtrap\Exception\BadMethodCallException;
 use Mailtrap\Exception\InvalidArgumentException;
 
@@ -13,18 +12,15 @@ use Mailtrap\Exception\InvalidArgumentException;
  */
 abstract class AbstractMailtrapClient implements MailtrapClientInterface
 {
-    protected ConfigInterface $config;
-
-    public function __construct(ConfigInterface $config)
+    public function __construct(protected ConfigInterface $config)
     {
-        $this->config = $config;
     }
 
     public function __call(string $name, array $arguments)
     {
         try {
             return $this->initByName($name);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException) {
             throw new BadMethodCallException(sprintf('%s -> undefined method called: "%s"', static::class, $name));
         }
     }

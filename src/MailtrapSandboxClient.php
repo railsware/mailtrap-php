@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Mailtrap;
 
-use Mailtrap\Api;
-
 /**
  * @method  Api\Sandbox\Emails      emails
  * @method  Api\Sandbox\Project     projects

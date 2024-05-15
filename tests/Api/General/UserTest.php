@@ -109,7 +109,7 @@ class UserTest extends MailtrapTestCase
         $this->user->getList(self::FAKE_ACCOUNT_ID);
     }
 
-    public function testValidRemove()
+    public function testValidRemove(): void
     {
         $this->user->expects($this->once())
             ->method('httpDelete')
