@@ -41,7 +41,7 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
         ];
 
         $email = new Email();
-        $email->from(new Address('phpnuit@example.com', 'Ms. Foo Bar'))
+        $email->from(new Address('foo@example.com', 'Ms. Foo Bar'))
             ->replyTo(new Address('reply@example.com'))
             ->to(new Address('bar@example.com', 'Mr. Recipient'))
             ->priority(Email::PRIORITY_HIGH)
@@ -59,7 +59,7 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
             ->method('httpPost')
             ->with($this->getHost() . '/api/send', [], [
                 'from' => [
-                    'email' => 'phpnuit@example.com',
+                    'email' => 'foo@example.com',
                     'name' => 'Ms. Foo Bar',
                 ],
                 'to' => [[
@@ -105,7 +105,7 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
         );
 
         $email = new Email();
-        $email->from(new Address('phpnuit@example.com', 'Ms. Foo Bar'))
+        $email->from(new Address('foo@example.com', 'Ms. Foo Bar'))
             ->text('Some text')
             ->html('<p>Some text</p>')
         ;
@@ -117,7 +117,7 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
             ->method('httpPost')
             ->with($this->getHost() . '/api/send', [], [
                 'from' => [
-                    'email' => 'phpnuit@example.com',
+                    'email' => 'foo@example.com',
                     'name' => 'Ms. Foo Bar',
                 ],
                 'to' => [],
@@ -142,7 +142,7 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
         ];
 
         $email = (new Email())
-            ->from(new Address('phpnuit@example.com', 'Ms. Foo Bar'))
+            ->from(new Address('foo@example.com', 'Ms. Foo Bar'))
             ->to(new Address('bar@example.com', 'Mr. Recipient'))
         ;
 
@@ -160,7 +160,7 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
             ->method('httpPost')
             ->with($this->getHost() . '/api/send', [], [
                 'from' => [
-                    'email' => 'phpnuit@example.com',
+                    'email' => 'foo@example.com',
                     'name' => 'Ms. Foo Bar',
                 ],
                 'to' => [[
@@ -190,7 +190,7 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
     public function testAttachments(): void
     {
         $email = (new Email())
-            ->from(new Address('phpnuit@example.com', 'Ms. Foo Bar'))
+            ->from(new Address('foo@example.com', 'Ms. Foo Bar'))
             ->attach('fake_body', 'fakeFile.jpg', 'image/jpg')
         ;
 
@@ -212,7 +212,7 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
      */
     public function testHeaders($name, $value): void
     {
-        $email = (new Email())->from(new Address('phpnuit@example.com', 'Ms. Foo Bar'));
+        $email = (new Email())->from(new Address('foo@example.com', 'Ms. Foo Bar'));
         $email->getHeaders()->addTextHeader($name, $value);
 
         $method = new \ReflectionMethod(Emails::class, 'getPayload');
@@ -229,7 +229,7 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
      */
     public function testCustomVariables($name, $value): void
     {
-        $email = (new Email())->from(new Address('phpnuit@example.com', 'Ms. Foo Bar'));
+        $email = (new Email())->from(new Address('foo@example.com', 'Ms. Foo Bar'));
         $email->getHeaders()
             ->add(new CustomVariableHeader($name, $value));
 
@@ -247,7 +247,7 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
      */
     public function testEmailCategory($value): void
     {
-        $email = (new Email())->from(new Address('phpnuit@example.com', 'Ms. Foo Bar'));
+        $email = (new Email())->from(new Address('foo@example.com', 'Ms. Foo Bar'));
         $email->getHeaders()
             ->add(new CategoryHeader($value));
 
@@ -261,7 +261,7 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
 
     public function testInvalidCountOfEmailCategory(): void
     {
-        $email = (new Email())->from(new Address('phpnuit@example.com', 'Ms. Foo Bar'));
+        $email = (new Email())->from(new Address('foo@example.com', 'Ms. Foo Bar'));
         $email->getHeaders()
             ->add(new CategoryHeader('category 1'))
             ->add(new CategoryHeader('category 2'))
@@ -283,7 +283,7 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
      */
     public function testTemplateUuid($value): void
     {
-        $email = (new Email())->from(new Address('phpnuit@example.com', 'Ms. Foo Bar'));
+        $email = (new Email())->from(new Address('foo@example.com', 'Ms. Foo Bar'));
         $email->getHeaders()
             ->add(new TemplateUuidHeader($value));
 
@@ -297,7 +297,7 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
 
     public function testInvalidCountOfTemplateUuid(): void
     {
-        $email = (new Email())->from(new Address('phpnuit@example.com', 'Ms. Foo Bar'));
+        $email = (new Email())->from(new Address('foo@example.com', 'Ms. Foo Bar'));
         $email->getHeaders()
             ->add(new TemplateUuidHeader('11111111-0000-0000-0000-8493da283a69'))
             ->add(new TemplateUuidHeader('22222222-0000-0000-0000-8493da283a69'))
@@ -319,7 +319,7 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
      */
     public function testTemplateVariables($name, $value): void
     {
-        $email = (new Email())->from(new Address('phpnuit@example.com', 'Ms. Foo Bar'));
+        $email = (new Email())->from(new Address('foo@example.com', 'Ms. Foo Bar'));
         $email->getHeaders()
             ->add(new TemplateVariableHeader($name, $value));
 
