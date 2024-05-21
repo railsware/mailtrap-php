@@ -69,8 +69,8 @@ try {
         ->add(new CategoryHeader('Integration Test'))
     ;
 
-    // Required param -> inbox_id
-    $response = $mailtrap->sandbox()->emails()->send($email, 1000001); // <--- you should use your inbox_id here (otherwise you will get 401)
+    // Required param -> inbox_id in emails() method
+    $response = $mailtrap->sandbox()->emails(1000001)->send($email);
 
     // print all possible information from the response
     var_dump($response->getHeaders()); //headers (array)
@@ -110,7 +110,7 @@ try {
     ;
 
     // Required param -> inbox_id
-    $response = $mailtrap->sandbox()->emails()->send($email, 1000001); // <--- you should use your inbox_id here (otherwise you will get 401)
+    $response = $mailtrap->sandbox()->emails(1000001)->send($email); // <--- you should use your inbox_id here (otherwise you will get 401)
 
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {
