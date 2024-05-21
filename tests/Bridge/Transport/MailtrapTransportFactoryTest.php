@@ -140,4 +140,10 @@ class MailtrapTransportFactoryTest extends TransportFactoryTestCase
     {
         yield [new Dsn('mailtrap+api', 'default')];
     }
+
+    public function unsupportedHostsProvider(): iterable
+    {
+        yield [new Dsn('mailtrap', 'invalid_url.api.mailtrap.io', self::USER)];
+        yield [new Dsn('mailtrap', 'mailtrap.io', self::USER)];
+    }
 }

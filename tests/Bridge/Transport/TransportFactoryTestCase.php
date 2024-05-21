@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mailtrap\Tests\Bridge\Transport;
 
 use Mailtrap\Api\AbstractApi;
+use Mailtrap\Exception\Transport\UnsupportedHostException;
 use Mailtrap\Tests\MailtrapTestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Exception\IncompleteDsnException;
@@ -37,6 +38,11 @@ abstract class TransportFactoryTestCase extends MailtrapTestCase
     }
 
     public function incompleteDsnProvider(): iterable
+    {
+        return [];
+    }
+
+    public function unsupportedHostsProvider(): iterable
     {
         return [];
     }
@@ -78,6 +84,18 @@ abstract class TransportFactoryTestCase extends MailtrapTestCase
         if (null !== $message) {
             $this->expectExceptionMessage($message);
         }
+
+        $factory->create($dsn);
+    }
+
+    /**
+     * @dataProvider unsupportedHostsProvider
+     */
+    public function testUnsupportedHostsException(Dsn $dsn): void
+    {
+        $factory = $this->getFactory();
+
+        $this->expectException(UnsupportedHostException::class);
 
         $factory->create($dsn);
     }
