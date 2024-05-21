@@ -32,7 +32,7 @@ final class EmailsTest extends MailtrapTestCase
 
         $this->email = $this->getMockBuilder(Emails::class)
             ->onlyMethods(['httpPost'])
-            ->setConstructorArgs([$this->getConfigMock()])
+            ->setConstructorArgs([$this->getConfigMock(), self::FAKE_INBOX_ID])
             ->getMock()
         ;
     }
@@ -46,7 +46,6 @@ final class EmailsTest extends MailtrapTestCase
 
     public function testValidSendToSandBox(): void
     {
-        $inboxId = 1000001;
         $expectedData = [
             "success" => true,
             "message_ids" => [
@@ -70,7 +69,7 @@ final class EmailsTest extends MailtrapTestCase
         $this->email
             ->expects($this->once())
             ->method('httpPost')
-            ->with(AbstractApi::SENDMAIL_SANDBOX_HOST . '/api/send/' . $inboxId, [], [
+            ->with(AbstractApi::SENDMAIL_SANDBOX_HOST . '/api/send/' . self::FAKE_INBOX_ID, [], [
                 'from' => [
                     'email' => 'foo@example.com',
                     'name' => 'Ms. Foo Bar',
@@ -93,7 +92,7 @@ final class EmailsTest extends MailtrapTestCase
             ])
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));
 
-        $response = $this->email->send($email, $inboxId);
+        $response = $this->email->send($email);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -104,7 +103,6 @@ final class EmailsTest extends MailtrapTestCase
 
     public function testValidSendTemplateToSandbox(): void
     {
-        $inboxId = 1000001;
         $expectedData = [
             "success" => true,
             "message_ids" => [
@@ -129,7 +127,7 @@ final class EmailsTest extends MailtrapTestCase
         $this->email
             ->expects($this->once())
             ->method('httpPost')
-            ->with(AbstractApi::SENDMAIL_SANDBOX_HOST . '/api/send/' . $inboxId, [], [
+            ->with(AbstractApi::SENDMAIL_SANDBOX_HOST . '/api/send/' . self::FAKE_INBOX_ID, [], [
                 'from' => [
                     'email' => 'foo@example.com',
                     'name' => 'Ms. Foo Bar',
@@ -149,7 +147,7 @@ final class EmailsTest extends MailtrapTestCase
             ])
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));
 
-        $response = $this->email->send($email, $inboxId);
+        $response = $this->email->send($email);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);

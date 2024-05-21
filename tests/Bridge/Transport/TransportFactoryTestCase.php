@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mailtrap\Tests\Bridge\Transport;
 
+use Mailtrap\Api\AbstractApi;
 use Mailtrap\Tests\MailtrapTestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Exception\IncompleteDsnException;
@@ -58,8 +59,11 @@ abstract class TransportFactoryTestCase extends MailtrapTestCase
         $factory = $this->getFactory();
 
         $this->assertEquals($transport, $factory->create($dsn));
-        if (str_contains('smtp', $dsn->getScheme())) {
-            $this->assertStringMatchesFormat($dsn->getScheme().'://%S'.$dsn->getHost().'%S', (string) $transport);
+
+        if ('default' === $dsn->getHost()) {
+            $this->assertStringMatchesFormat('mailtrap+api://' . AbstractApi::SENDMAIL_TRANSACTIONAL_HOST, (string) $transport);
+        } else {
+            $this->assertStringStartsWith('mailtrap+api://' . $dsn->getHost(), (string) $transport);
         }
     }
 

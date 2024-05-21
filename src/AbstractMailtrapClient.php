@@ -19,7 +19,7 @@ abstract class AbstractMailtrapClient implements MailtrapClientInterface
     public function __call(string $name, array $arguments)
     {
         try {
-            return $this->initByName($name);
+            return $this->initByName($name, $arguments);
         } catch (InvalidArgumentException) {
             throw new BadMethodCallException(sprintf('%s -> undefined method called: "%s"', static::class, $name));
         }
@@ -36,7 +36,7 @@ abstract class AbstractMailtrapClient implements MailtrapClientInterface
         return !empty(static::API_MAPPING[$name]) ? static::API_MAPPING[$name] : null;
     }
 
-    private function initByName(string $name)
+    private function initByName(string $name, $arguments)
     {
         $className = $this->getClassByName($name);
         if (null === $className) {
@@ -44,6 +44,6 @@ abstract class AbstractMailtrapClient implements MailtrapClientInterface
         }
 
         /** @psalm-suppress LessSpecificReturnStatement */
-        return new $className($this->getConfig());
+        return new $className($this->getConfig(), ...$arguments);
     }
 }

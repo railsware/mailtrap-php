@@ -26,8 +26,11 @@ class MailtrapSandboxClientTest extends MailtrapClientTestCase
 
     public function mapInstancesProvider(): iterable
     {
-        foreach (MailtrapSandboxClient::API_MAPPING as $item) {
-            yield [new $item($this->getConfigMock())];
+        foreach (MailtrapSandboxClient::API_MAPPING as $key => $item) {
+            yield match ($key) {
+                'emails' => [new $item($this->getConfigMock(), self::FAKE_INBOX_ID)],
+                default => [new $item($this->getConfigMock())],
+            };
         }
     }
 }

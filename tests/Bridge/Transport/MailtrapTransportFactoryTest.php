@@ -53,16 +53,23 @@ class MailtrapTransportFactoryTest extends TransportFactoryTestCase
     {
         $dispatcher = $this->getDispatcher();
         $logger = $this->getLogger();
+        $psrClient = new Psr18Client($this->getClient());
+        $sendConfig = (new Config(self::USER))
+            ->setHttpClient($psrClient)
+            ->setHost(AbstractApi::SENDMAIL_TRANSACTIONAL_HOST);
+        $sandboxConfig = (new Config(self::USER))
+            ->setHttpClient($psrClient)
+            ->setHost(AbstractApi::SENDMAIL_SANDBOX_HOST);
+        $bulkConfig = (new Config(self::USER))
+            ->setHttpClient($psrClient)
+            ->setHost(AbstractApi::SENDMAIL_BULK_HOST);
+        $inboxId = 1234;
 
         yield [
             new Dsn('mailtrap+api', 'default', self::USER),
             new MailtrapApiTransport(
-                (new MailtrapClient(
-                    (new Config(self::USER))
-                        ->setHttpClient(new Psr18Client($this->getClient()))
-                        ->setHost(AbstractApi::SENDMAIL_TRANSACTIONAL_HOST)
-                ))->sending(),
-                null,
+                (new MailtrapClient($sendConfig))->sending()->emails(),
+                $sendConfig,
                 $dispatcher,
                 $logger
             ),
@@ -71,12 +78,8 @@ class MailtrapTransportFactoryTest extends TransportFactoryTestCase
         yield [
             new Dsn('mailtrap', AbstractApi::SENDMAIL_TRANSACTIONAL_HOST, self::USER),
             new MailtrapApiTransport(
-                (new MailtrapClient(
-                    (new Config(self::USER))
-                        ->setHttpClient(new Psr18Client($this->getClient()))
-                        ->setHost(AbstractApi::SENDMAIL_TRANSACTIONAL_HOST)
-                ))->sending(),
-                null,
+                (new MailtrapClient($sendConfig))->sending()->emails(),
+                $sendConfig,
                 $dispatcher,
                 $logger
             ),
@@ -86,12 +89,8 @@ class MailtrapTransportFactoryTest extends TransportFactoryTestCase
         yield [
             new Dsn('mailtrap+api', AbstractApi::SENDMAIL_SANDBOX_HOST, self::USER, null, null, ['inboxId' => 1234]),
             new MailtrapApiTransport(
-                (new MailtrapClient(
-                    (new Config(self::USER))
-                        ->setHttpClient(new Psr18Client($this->getClient()))
-                        ->setHost(AbstractApi::SENDMAIL_SANDBOX_HOST)
-                ))->sandbox(),
-                1234,
+                (new MailtrapClient($sandboxConfig))->sandbox()->emails($inboxId),
+                $sandboxConfig,
                 $dispatcher,
                 $logger
             ),
@@ -100,12 +99,8 @@ class MailtrapTransportFactoryTest extends TransportFactoryTestCase
         yield [
             new Dsn('mailtrap', AbstractApi::SENDMAIL_SANDBOX_HOST, self::USER, null, null, ['inboxId' => 1234]),
             new MailtrapApiTransport(
-                (new MailtrapClient(
-                    (new Config(self::USER))
-                        ->setHttpClient(new Psr18Client($this->getClient()))
-                        ->setHost(AbstractApi::SENDMAIL_SANDBOX_HOST)
-                ))->sandbox(),
-                1234,
+                (new MailtrapClient($sandboxConfig))->sandbox()->emails($inboxId),
+                $sandboxConfig,
                 $dispatcher,
                 $logger
             ),
@@ -115,12 +110,8 @@ class MailtrapTransportFactoryTest extends TransportFactoryTestCase
         yield [
             new Dsn('mailtrap+api', AbstractApi::SENDMAIL_BULK_HOST, self::USER),
             new MailtrapApiTransport(
-                (new MailtrapClient(
-                    (new Config(self::USER))
-                        ->setHttpClient(new Psr18Client($this->getClient()))
-                        ->setHost(AbstractApi::SENDMAIL_BULK_HOST)
-                ))->bulkSending(),
-                null,
+                (new MailtrapClient($bulkConfig))->bulkSending()->emails(),
+                $bulkConfig,
                 $dispatcher,
                 $logger
             ),
@@ -129,12 +120,8 @@ class MailtrapTransportFactoryTest extends TransportFactoryTestCase
         yield [
             new Dsn('mailtrap', AbstractApi::SENDMAIL_BULK_HOST, self::USER),
             new MailtrapApiTransport(
-                (new MailtrapClient(
-                    (new Config(self::USER))
-                        ->setHttpClient(new Psr18Client($this->getClient()))
-                        ->setHost(AbstractApi::SENDMAIL_BULK_HOST)
-                ))->bulkSending(),
-                null,
+                (new MailtrapClient($bulkConfig))->bulkSending()->emails(),
+                $bulkConfig,
                 $dispatcher,
                 $logger
             ),
