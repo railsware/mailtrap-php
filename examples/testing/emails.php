@@ -1,6 +1,5 @@
 <?php
 
-use Mailtrap\Config;
 use Mailtrap\EmailHeader\CategoryHeader;
 use Mailtrap\EmailHeader\CustomVariableHeader;
 use Mailtrap\EmailHeader\Template\TemplateUuidHeader;
@@ -26,8 +25,11 @@ require __DIR__ . '/../vendor/autoload.php';
  */
 try {
     // your API token from here https://mailtrap.io/api-tokens
-    $apiKey = getenv('MAILTRAP_API_KEY');
-    $mailtrap = new MailtrapClient(new Config($apiKey));
+    $mailtrap = MailtrapClient::initSendingEmails(
+        apiKey: getenv('MAILTRAP_API_KEY'),
+        isSandbox: true, # Sandbox sending (@see https://help.mailtrap.io/article/109-getting-started-with-mailtrap-email-testing)
+        inboxId: getenv('MAILTRAP_INBOX_ID') # required param for sandbox sending
+    );
 
     $email = (new Email())
         ->from(new Address('mailtrap@example.com', 'Mailtrap Test'))
@@ -69,8 +71,7 @@ try {
         ->add(new CategoryHeader('Integration Test'))
     ;
 
-    // Required param -> inbox_id in emails() method
-    $response = $mailtrap->sandbox()->emails(1000001)->send($email);
+    $response = $mailtrap->send($email);
 
     // print all possible information from the response
     var_dump($response->getHeaders()); //headers (array)
@@ -91,8 +92,11 @@ try {
  */
 try {
     // your API token from here https://mailtrap.io/api-tokens
-    $apiKey = getenv('MAILTRAP_API_KEY');
-    $mailtrap = new MailtrapClient(new Config($apiKey));
+    $mailtrap = MailtrapClient::initSendingEmails(
+        apiKey: getenv('MAILTRAP_API_KEY'),
+        isSandbox: true, # Sandbox sending (@see https://help.mailtrap.io/article/109-getting-started-with-mailtrap-email-testing)
+        inboxId: getenv('MAILTRAP_INBOX_ID') # required param for sandbox sending
+    );
 
     $email = (new Email())
         ->from(new Address('example@YOUR-DOMAIN-HERE.com', 'Mailtrap Test')) // <--- you should use the domain which is linked to template UUID (otherwise you will get 401)
@@ -109,8 +113,7 @@ try {
         ->add(new TemplateVariableHeader('onboarding_video_link', 'some_video_link'))
     ;
 
-    // Required param -> inbox_id
-    $response = $mailtrap->sandbox()->emails(1000001)->send($email); // <--- you should use your inbox_id here (otherwise you will get 401)
+    $response = $mailtrap->send($email);
 
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {

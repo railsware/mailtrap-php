@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Mailtrap\Tests;
 
+use Mailtrap\Api\Sandbox\Emails as SandboxSendingEmails;
 use Mailtrap\Api\Sandbox\SandboxInterface;
+use Mailtrap\MailtrapClient;
 use Mailtrap\MailtrapSandboxClient;
 
 /**
@@ -32,5 +34,13 @@ class MailtrapSandboxClientTest extends MailtrapClientTestCase
                 default => [new $item($this->getConfigMock())],
             };
         }
+    }
+
+    public function testValidInitSandboxSendingEmails(): void
+    {
+        $this->assertInstanceOf(
+            SandboxSendingEmails::class,
+            MailtrapClient::initSendingEmails(apiKey: self::DEFAULT_API_KEY, isSandbox: true, inboxId: self::FAKE_INBOX_ID)
+        );
     }
 }

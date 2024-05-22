@@ -44,9 +44,10 @@ use Symfony\Component\Mime\Header\UnstructuredHeader;
 
 require __DIR__ . '/vendor/autoload.php';
 
-// your API token from here https://mailtrap.io/api-tokens
-$apiKey = getenv('MAILTRAP_API_KEY');
-$mailtrap = new MailtrapClient(new Config($apiKey));
+// Mailtrap SENDING client (real)
+$mailtrap = MailtrapClient::initSendingEmails(
+    apiKey: getenv('MAILTRAP_API_KEY') # your API token from here https://mailtrap.io/api-tokens
+);
 
 $email = (new Email())
     ->from(new Address('example@your-domain-here.com', 'Mailtrap Test'))
@@ -89,22 +90,43 @@ $email = (new Email())
     ;
     
 try {
-    $response = $mailtrap->sending()->emails()->send($email); // Email sending API (real)
+    $response = $mailtrap->send($email);
     
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {
     echo 'Caught exception: ',  $e->getMessage(), "\n";
 }
 
-// OR send email to the Mailtrap SANDBOX
 
+// OR -> Mailtrap BULK SENDING client (real)
 try {
-    $response = $mailtrap->sandbox()->emails()->send($email, 1000001); // Required second param -> inbox_id
+    $mailtrap = MailtrapClient::initSendingEmails(
+        apiKey: getenv('MAILTRAP_API_KEY'), # your API token from here https://mailtrap.io/api-tokens
+        isBulk: true # Bulk sending (@see https://help.mailtrap.io/article/113-sending-streams)
+    );
+    
+    $response = $mailtrap->send($email);
 
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {
     echo 'Caught exception: ',  $e->getMessage(), "\n";
 }
+
+// OR -> Mailtrap SANDBOX client (testing)
+try {
+    $mailtrap = MailtrapClient::initSendingEmails(
+        apiKey: getenv('MAILTRAP_API_KEY'), # your API token from here https://mailtrap.io/api-tokens
+        isSandbox: true, # Sandbox sending (@see https://help.mailtrap.io/article/109-getting-started-with-mailtrap-email-testing)
+        inboxId: getenv('MAILTRAP_INBOX_ID') # required param for sandbox sending
+    );
+    
+    $response = $mailtrap->send($email);
+
+    var_dump(ResponseHelper::toArray($response)); // body (array)
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), "\n";
+}
+
 ```
 
 ### All usage examples

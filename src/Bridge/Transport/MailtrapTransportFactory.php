@@ -10,7 +10,6 @@ use Mailtrap\EmailsSendMailtrapClientInterface;
 use Mailtrap\Exception\RuntimeException;
 use Mailtrap\Exception\Transport\UnsupportedHostException;
 use Mailtrap\MailtrapClient;
-use Mailtrap\MailtrapClientInterface;
 use Mailtrap\MailtrapSandboxClient;
 use Symfony\Component\HttpClient\Psr18Client;
 use Symfony\Component\Mailer\Exception\UnsupportedSchemeException;
