@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mailtrap\Api\Sandbox;
 
 use Mailtrap\Api\AbstractApi;
+use Mailtrap\ConfigInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -12,47 +13,48 @@ use Psr\Http\Message\ResponseInterface;
  */
 class Project extends AbstractApi implements SandboxInterface
 {
+    public function __construct(ConfigInterface $config, private int $accountId)
+    {
+        parent::__construct($config);
+    }
+
     /**
      * List projects and their inboxes to which the API token has access.
      *
-     * @param int $accountId
-     *
      * @return ResponseInterface
      */
-    public function getList(int $accountId): ResponseInterface
+    public function getList(): ResponseInterface
     {
         return $this->handleResponse($this->httpGet(
-            sprintf('%s/api/accounts/%s/projects', $this->getHost(), $accountId)
+            sprintf('%s/api/accounts/%s/projects', $this->getHost(), $this->accountId)
         ));
     }
 
     /**
      * Get the project and its inboxes.
      *
-     * @param int $accountId
      * @param int $projectId
      *
      * @return ResponseInterface
      */
-    public function getById(int $accountId, int $projectId): ResponseInterface
+    public function getById(int $projectId): ResponseInterface
     {
         return $this->handleResponse($this->httpGet(
-            sprintf('%s/api/accounts/%s/projects/%s', $this->getHost(), $accountId, $projectId)
+            sprintf('%s/api/accounts/%s/projects/%s', $this->getHost(), $this->accountId, $projectId)
         ));
     }
 
     /**
      * Create a project
      *
-     * @param int    $accountId
      * @param string $projectName
      *
      * @return ResponseInterface
      */
-    public function create(int $accountId, string $projectName): ResponseInterface
+    public function create(string $projectName): ResponseInterface
     {
         return $this->handleResponse($this->httpPost(
-            sprintf('%s/api/accounts/%s/projects', $this->getHost(), $accountId),
+            sprintf('%s/api/accounts/%s/projects', $this->getHost(), $this->accountId),
             [],
             ['project' => ['name' => $projectName]]
         ));
@@ -61,31 +63,29 @@ class Project extends AbstractApi implements SandboxInterface
     /**
      * Delete project and its inboxes.
      *
-     * @param int $accountId
      * @param int $projectId
      *
      * @return ResponseInterface
      */
-    public function delete(int $accountId, int $projectId): ResponseInterface
+    public function delete(int $projectId): ResponseInterface
     {
         return $this->handleResponse($this->httpDelete(
-            sprintf('%s/api/accounts/%s/projects/%s', $this->getHost(), $accountId, $projectId)
+            sprintf('%s/api/accounts/%s/projects/%s', $this->getHost(), $this->accountId, $projectId)
         ));
     }
 
     /**
      * Update project name.
      *
-     * @param int    $accountId
      * @param int    $projectId
      * @param string $projectName
      *
      * @return ResponseInterface
      */
-    public function updateName(int $accountId, int $projectId, string $projectName): ResponseInterface
+    public function updateName(int $projectId, string $projectName): ResponseInterface
     {
         return $this->handleResponse($this->httpPatch(
-            sprintf('%s/api/accounts/%s/projects/%s', $this->getHost(), $accountId, $projectId),
+            sprintf('%s/api/accounts/%s/projects/%s', $this->getHost(), $this->accountId, $projectId),
             [],
             ['project' => ['name' => $projectName]]
         ));
