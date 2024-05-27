@@ -8,6 +8,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $accountId = getenv('MAILTRAP_ACCOUNT_ID');
 $config = new Config(getenv('MAILTRAP_API_KEY')); #your API token from here https://mailtrap.io/api-tokens
+
 $sandboxProjects = (new MailtrapSandboxClient($config))->projects($accountId); #required parameter is accountId
 
 /**

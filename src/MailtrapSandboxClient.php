@@ -9,7 +9,7 @@ namespace Mailtrap;
  * @method  Api\Sandbox\Project     projects(int $accountId)
  * @method  Api\Sandbox\Inbox       inboxes
  * @method  Api\Sandbox\Attachment  attachments
- * @method  Api\Sandbox\Message     messages
+ * @method  Api\Sandbox\Message     messages(int $accountId, int $inboxId)
  *
  * Class MailtrapSandboxClient
  */

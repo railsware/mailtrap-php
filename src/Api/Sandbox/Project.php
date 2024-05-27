@@ -26,7 +26,7 @@ class Project extends AbstractApi implements SandboxInterface
     public function getList(): ResponseInterface
     {
         return $this->handleResponse($this->httpGet(
-            sprintf('%s/api/accounts/%s/projects', $this->getHost(), $this->accountId)
+            sprintf('%s/api/accounts/%s/projects', $this->getHost(), $this->getAccountId())
         ));
     }
 
@@ -40,7 +40,7 @@ class Project extends AbstractApi implements SandboxInterface
     public function getById(int $projectId): ResponseInterface
     {
         return $this->handleResponse($this->httpGet(
-            sprintf('%s/api/accounts/%s/projects/%s', $this->getHost(), $this->accountId, $projectId)
+            sprintf('%s/api/accounts/%s/projects/%s', $this->getHost(), $this->getAccountId(), $projectId)
         ));
     }
 
@@ -54,7 +54,7 @@ class Project extends AbstractApi implements SandboxInterface
     public function create(string $projectName): ResponseInterface
     {
         return $this->handleResponse($this->httpPost(
-            sprintf('%s/api/accounts/%s/projects', $this->getHost(), $this->accountId),
+            sprintf('%s/api/accounts/%s/projects', $this->getHost(), $this->getAccountId()),
             [],
             ['project' => ['name' => $projectName]]
         ));
@@ -70,7 +70,7 @@ class Project extends AbstractApi implements SandboxInterface
     public function delete(int $projectId): ResponseInterface
     {
         return $this->handleResponse($this->httpDelete(
-            sprintf('%s/api/accounts/%s/projects/%s', $this->getHost(), $this->accountId, $projectId)
+            sprintf('%s/api/accounts/%s/projects/%s', $this->getHost(), $this->getAccountId(), $projectId)
         ));
     }
 
@@ -85,9 +85,14 @@ class Project extends AbstractApi implements SandboxInterface
     public function updateName(int $projectId, string $projectName): ResponseInterface
     {
         return $this->handleResponse($this->httpPatch(
-            sprintf('%s/api/accounts/%s/projects/%s', $this->getHost(), $this->accountId, $projectId),
+            sprintf('%s/api/accounts/%s/projects/%s', $this->getHost(), $this->getAccountId(), $projectId),
             [],
             ['project' => ['name' => $projectName]]
         ));
+    }
+
+    public function getAccountId(): int
+    {
+        return $this->accountId;
     }
 }

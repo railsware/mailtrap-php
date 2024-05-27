@@ -32,6 +32,7 @@ class MailtrapSandboxClientTest extends MailtrapClientTestCase
             yield match ($key) {
                 'emails' => [new $item($this->getConfigMock(), self::FAKE_INBOX_ID)],
                 'projects' => [new $item($this->getConfigMock(), self::FAKE_ACCOUNT_ID)],
+                'messages' => [new $item($this->getConfigMock(), self::FAKE_ACCOUNT_ID, self::FAKE_INBOX_ID)],
                 default => [new $item($this->getConfigMock())],
             };
         }
