@@ -27,7 +27,7 @@ class AttachmentTest extends MailtrapTestCase
 
         $this->attachment = $this->getMockBuilder(Attachment::class)
             ->onlyMethods(['httpGet'])
-            ->setConstructorArgs([$this->getConfigMock()])
+            ->setConstructorArgs([$this->getConfigMock(), self::FAKE_ACCOUNT_ID, self::FAKE_INBOX_ID])
             ->getMock()
         ;
     }
@@ -59,8 +59,6 @@ class AttachmentTest extends MailtrapTestCase
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedData())));
 
         $response = $this->attachment->getMessageAttachments(
-            self::FAKE_ACCOUNT_ID,
-            self::FAKE_INBOX_ID,
             self::FAKE_MESSAGE_ID,
             $attachmentType
         );
@@ -86,8 +84,6 @@ class AttachmentTest extends MailtrapTestCase
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedData())));
 
         $response = $this->attachment->getMessageAttachment(
-            self::FAKE_ACCOUNT_ID,
-            self::FAKE_INBOX_ID,
             self::FAKE_MESSAGE_ID,
             self::FAKE_MESSAGE_ATTACHMENT_ID
         );
