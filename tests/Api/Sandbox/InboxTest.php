@@ -28,7 +28,7 @@ class InboxTest extends MailtrapTestCase
 
         $this->inbox = $this->getMockBuilder(Inbox::class)
             ->onlyMethods(['httpGet', 'httpPost',  'httpPatch', 'httpDelete'])
-            ->setConstructorArgs([$this->getConfigMock()])
+            ->setConstructorArgs([$this->getConfigMock(), self::FAKE_ACCOUNT_ID])
             ->getMock()
         ;
     }
@@ -47,7 +47,7 @@ class InboxTest extends MailtrapTestCase
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/inboxes')
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedInboxData())));
 
-        $response = $this->inbox->getList(self::FAKE_ACCOUNT_ID);
+        $response = $this->inbox->getList();
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -62,7 +62,7 @@ class InboxTest extends MailtrapTestCase
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/inboxes/' . self::FAKE_INBOX_ID)
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedInboxData()[0])));
 
-        $response = $this->inbox->getInboxAttributes(self::FAKE_ACCOUNT_ID, self::FAKE_INBOX_ID);
+        $response = $this->inbox->getInboxAttributes(self::FAKE_INBOX_ID);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -122,7 +122,7 @@ class InboxTest extends MailtrapTestCase
             )
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));
 
-        $response = $this->inbox->create(self::FAKE_ACCOUNT_ID, self::FAKE_PROJECT_ID, $expectedData['name']);
+        $response = $this->inbox->create(self::FAKE_PROJECT_ID, $expectedData['name']);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -151,7 +151,7 @@ class InboxTest extends MailtrapTestCase
             'Errors: name -> can\'t be blank.'
         );
 
-        $this->inbox->create(self::FAKE_ACCOUNT_ID, self::FAKE_PROJECT_ID, 'a');
+        $this->inbox->create(self::FAKE_PROJECT_ID, 'a');
     }
 
     public function testValidDelete(): void
@@ -163,7 +163,7 @@ class InboxTest extends MailtrapTestCase
             )
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedInboxData()[0])));
 
-        $response = $this->inbox->delete(self::FAKE_ACCOUNT_ID, self::FAKE_INBOX_ID);
+        $response = $this->inbox->delete(self::FAKE_INBOX_ID);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -224,7 +224,7 @@ class InboxTest extends MailtrapTestCase
             )
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));
 
-        $response = $this->inbox->update(self::FAKE_ACCOUNT_ID, self::FAKE_INBOX_ID, $inboxRequest);
+        $response = $this->inbox->update(self::FAKE_INBOX_ID, $inboxRequest);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -243,7 +243,7 @@ class InboxTest extends MailtrapTestCase
             )
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedInboxData()[0])));
 
-        $response = $this->inbox->clean(self::FAKE_ACCOUNT_ID, self::FAKE_INBOX_ID);
+        $response = $this->inbox->clean(self::FAKE_INBOX_ID);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -260,7 +260,7 @@ class InboxTest extends MailtrapTestCase
             )
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedInboxData()[0])));
 
-        $response = $this->inbox->markAsRead(self::FAKE_ACCOUNT_ID, self::FAKE_INBOX_ID);
+        $response = $this->inbox->markAsRead(self::FAKE_INBOX_ID);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -280,7 +280,7 @@ class InboxTest extends MailtrapTestCase
             )
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));
 
-        $response = $this->inbox->resetSmtpCredentials(self::FAKE_ACCOUNT_ID, self::FAKE_INBOX_ID);
+        $response = $this->inbox->resetSmtpCredentials(self::FAKE_INBOX_ID);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -302,7 +302,7 @@ class InboxTest extends MailtrapTestCase
             )
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));
 
-        $response = $this->inbox->toggleEmailAddress(self::FAKE_ACCOUNT_ID, self::FAKE_INBOX_ID);
+        $response = $this->inbox->toggleEmailAddress(self::FAKE_INBOX_ID);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -323,7 +323,7 @@ class InboxTest extends MailtrapTestCase
             )
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));
 
-        $response = $this->inbox->resetEmailAddress(self::FAKE_ACCOUNT_ID, self::FAKE_INBOX_ID);
+        $response = $this->inbox->resetEmailAddress(self::FAKE_INBOX_ID);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);

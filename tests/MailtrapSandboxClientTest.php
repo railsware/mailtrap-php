@@ -31,7 +31,7 @@ class MailtrapSandboxClientTest extends MailtrapClientTestCase
         foreach (MailtrapSandboxClient::API_MAPPING as $key => $item) {
             yield match ($key) {
                 'emails' => [new $item($this->getConfigMock(), self::FAKE_INBOX_ID)],
-                'projects' => [new $item($this->getConfigMock(), self::FAKE_ACCOUNT_ID)],
+                'projects', 'inboxes' => [new $item($this->getConfigMock(), self::FAKE_ACCOUNT_ID)],
                 'messages', 'attachments' => [new $item($this->getConfigMock(), self::FAKE_ACCOUNT_ID, self::FAKE_INBOX_ID)],
                 default => [new $item($this->getConfigMock())],
             };
