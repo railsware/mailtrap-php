@@ -8,6 +8,8 @@ on:
       - 'release/**'
       - 'feature/**'
       - 'main'
+  schedule:
+    - cron: '0 0 * * *'  # Runs every day at midnight UTC
 
 jobs:
   phpunit-tests:
