@@ -6,13 +6,13 @@ use Mailtrap\DTO\Request\Permission\DestroyPermission;
 use Mailtrap\DTO\Request\Permission\PermissionInterface;
 use Mailtrap\DTO\Request\Permission\Permissions;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailtrapClient;
+use Mailtrap\MailtrapGeneralClient;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-// your API token from here https://mailtrap.io/api-tokens
-$apiKey = getenv('MAILTRAP_API_KEY');
-$mailtrap = new MailtrapClient(new Config($apiKey));
+$accountId = getenv('MAILTRAP_ACCOUNT_ID');
+$config = new Config(getenv('MAILTRAP_API_KEY')); #your API token from here https://mailtrap.io/api-tokens
+$generalPermissions = (new MailtrapGeneralClient($config))->permissions($accountId);
 
 /**
  * Get resources
@@ -20,8 +20,7 @@ $mailtrap = new MailtrapClient(new Config($apiKey));
  * GET https://mailtrap.io/api/accounts/{account_id}/permissions/resources
  */
 try {
-    $accountId = getenv('MAILTRAP_ACCOUNT_ID');
-    $response = $mailtrap->general()->permissions()->getResources($accountId);
+    $response = $generalPermissions->getResources();
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));
@@ -39,7 +38,6 @@ try {
  * PUT https://mailtrap.io/api/accounts/{account_id}/account_accesses/{account_access_id}/permissions/bulk
  */
 try {
-    $accountId = getenv('MAILTRAP_ACCOUNT_ID');
     $accountAccessId = getenv('MAILTRAP_ACCOUNT_ACCESS_ID');
 
     // resource IDs
@@ -53,7 +51,7 @@ try {
         new DestroyPermission($destroyProjectResourceId, PermissionInterface::TYPE_PROJECT),
     );
 
-    $response = $mailtrap->general()->permissions()->update($accountId, $accountAccessId, $permissions);
+    $response = $generalPermissions->update($accountAccessId, $permissions);
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));
