@@ -24,9 +24,8 @@ require __DIR__ . '/../vendor/autoload.php';
  * POST https://send.api.mailtrap.io/api/send
  */
 try {
-    // your API token from here https://mailtrap.io/api-tokens
     $mailtrap = MailtrapClient::initSendingEmails(
-        apiKey: getenv('MAILTRAP_API_KEY')
+        apiKey: getenv('MAILTRAP_API_KEY') #your API token from here https://mailtrap.io/api-tokens
     );
 
     $email = (new Email())
@@ -87,9 +86,8 @@ try {
  * Optional template variables that will be used to generate actual subject, text and html from email template
  */
 try {
-    // your API token from here https://mailtrap.io/api-tokens
     $mailtrap = MailtrapClient::initSendingEmails(
-        apiKey: getenv('MAILTRAP_API_KEY')
+        apiKey: getenv('MAILTRAP_API_KEY') #your API token from here https://mailtrap.io/api-tokens
     );
 
     $email = (new Email())
@@ -126,10 +124,8 @@ try {
  * POST https://bulk.api.mailtrap.io/api/send
  */
 try {
-    // your API token from here https://mailtrap.io/api-tokens
-    $apiKey = getenv('MAILTRAP_API_KEY');
     $mailtrap = MailtrapClient::initSendingEmails(
-        apiKey: getenv('MAILTRAP_API_KEY'),
+        apiKey: getenv('MAILTRAP_API_KEY'), #your API token from here https://mailtrap.io/api-tokens
         isBulk: true # Bulk sending (@see https://help.mailtrap.io/article/113-sending-streams)
     );
 
@@ -191,10 +187,8 @@ try {
  * Optional template variables that will be used to generate actual subject, text and html from email template
  */
 try {
-    // your API token from here https://mailtrap.io/api-tokens
-    $apiKey = getenv('MAILTRAP_API_KEY');
     $mailtrap = MailtrapClient::initSendingEmails(
-        apiKey: getenv('MAILTRAP_API_KEY'),
+        apiKey: getenv('MAILTRAP_API_KEY'), #your API token from here https://mailtrap.io/api-tokens
         isBulk: true # Bulk sending (@see https://help.mailtrap.io/article/113-sending-streams)
     );
 

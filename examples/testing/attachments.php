@@ -6,7 +6,6 @@ use Mailtrap\MailtrapSandboxClient;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-// your API token from here https://mailtrap.io/api-tokens
 $accountId = getenv('MAILTRAP_ACCOUNT_ID');
 $inboxId = getenv('MAILTRAP_INBOX_ID');
 $config = new Config(getenv('MAILTRAP_API_KEY')); #your API token from here https://mailtrap.io/api-tokens

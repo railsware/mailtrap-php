@@ -24,9 +24,8 @@ require __DIR__ . '/../vendor/autoload.php';
  * POST https://sandbox.api.mailtrap.io/api/send/{inbox_id}
  */
 try {
-    // your API token from here https://mailtrap.io/api-tokens
     $mailtrap = MailtrapClient::initSendingEmails(
-        apiKey: getenv('MAILTRAP_API_KEY'),
+        apiKey: getenv('MAILTRAP_API_KEY'), #your API token from here https://mailtrap.io/api-tokens
         isSandbox: true, # Sandbox sending (@see https://help.mailtrap.io/article/109-getting-started-with-mailtrap-email-testing)
         inboxId: getenv('MAILTRAP_INBOX_ID') # required param for sandbox sending
     );
@@ -91,9 +90,8 @@ try {
  * Optional template variables that will be used to generate actual subject, text and html from email template
  */
 try {
-    // your API token from here https://mailtrap.io/api-tokens
     $mailtrap = MailtrapClient::initSendingEmails(
-        apiKey: getenv('MAILTRAP_API_KEY'),
+        apiKey: getenv('MAILTRAP_API_KEY'), #your API token from here https://mailtrap.io/api-tokens
         isSandbox: true, # Sandbox sending (@see https://help.mailtrap.io/article/109-getting-started-with-mailtrap-email-testing)
         inboxId: getenv('MAILTRAP_INBOX_ID') # required param for sandbox sending
     );
