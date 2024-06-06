@@ -33,11 +33,9 @@ Here's how to send a message using the SDK:
 ```php
 <?php
 
-use Mailtrap\Config;
-use Mailtrap\EmailHeader\CategoryHeader;
-use Mailtrap\EmailHeader\CustomVariableHeader;
 use Mailtrap\Helper\ResponseHelper;
 use Mailtrap\MailtrapClient;
+use Mailtrap\Mime\MailtrapEmail;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Header\UnstructuredHeader;
@@ -49,7 +47,7 @@ $mailtrap = MailtrapClient::initSendingEmails(
     apiKey: getenv('MAILTRAP_API_KEY') # your API token from here https://mailtrap.io/api-tokens
 );
 
-$email = (new Email())
+$email = (new MailtrapEmail())
     ->from(new Address('example@your-domain-here.com', 'Mailtrap Test'))
     ->replyTo(new Address('reply@your-domain-here.com'))
     ->to(new Address('email@example.com', 'Jon'))
@@ -70,28 +68,22 @@ $email = (new Email())
     </html>'
     )
     ->embed(fopen('https://mailtrap.io/wp-content/uploads/2021/04/mailtrap-new-logo.svg', 'r'), 'logo', 'image/svg+xml')
-    ;
-    
-    // Headers
-    $email->getHeaders()
+    ->category('Integration Test')
+    ->customVariables([
+        'user_id' => '45982',
+        'batch_id' => 'PSJ-12'
+    ])
+;
+
+// Custom email headers (optional)
+$email->getHeaders()
     ->addTextHeader('X-Message-Source', 'domain.com')
     ->add(new UnstructuredHeader('X-Mailer', 'Mailtrap PHP Client')) // the same as addTextHeader
-    ;
-    
-    // Custom Variables
-    $email->getHeaders()
-    ->add(new CustomVariableHeader('user_id', '45982'))
-    ->add(new CustomVariableHeader('batch_id', 'PSJ-12'))
-    ;
-    
-    // Category (should be only one)
-    $email->getHeaders()
-    ->add(new CategoryHeader('Integration Test'))
-    ;
-    
+;
+
 try {
     $response = $mailtrap->send($email);
-    
+
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {
     echo 'Caught exception: ',  $e->getMessage(), "\n";
@@ -100,27 +92,27 @@ try {
 
 // OR -> Mailtrap BULK SENDING client (real)
 try {
-    $mailtrap = MailtrapClient::initSendingEmails(
+    $mailtrapBulkSending = MailtrapClient::initSendingEmails(
         apiKey: getenv('MAILTRAP_API_KEY'), # your API token from here https://mailtrap.io/api-tokens
         isBulk: true # Bulk sending (@see https://help.mailtrap.io/article/113-sending-streams)
     );
-    
-    $response = $mailtrap->send($email);
+
+    $response = $mailtrapBulkSending->send($email);
 
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {
     echo 'Caught exception: ',  $e->getMessage(), "\n";
 }
 
-// OR -> Mailtrap SANDBOX client (testing)
+// OR -> Mailtrap Testing client (sandbox)
 try {
-    $mailtrap = MailtrapClient::initSendingEmails(
+    $mailtrapTesting = MailtrapClient::initSendingEmails(
         apiKey: getenv('MAILTRAP_API_KEY'), # your API token from here https://mailtrap.io/api-tokens
         isSandbox: true, # Sandbox sending (@see https://help.mailtrap.io/article/109-getting-started-with-mailtrap-email-testing)
         inboxId: getenv('MAILTRAP_INBOX_ID') # required param for sandbox sending
     );
-    
-    $response = $mailtrap->send($email);
+
+    $response = $mailtrapTesting->send($email);
 
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {

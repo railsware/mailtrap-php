@@ -9,6 +9,7 @@ use Mailtrap\Api\Sandbox\Emails;
 use Mailtrap\EmailHeader\Template\TemplateUuidHeader;
 use Mailtrap\EmailHeader\Template\TemplateVariableHeader;
 use Mailtrap\Helper\ResponseHelper;
+use Mailtrap\Mime\MailtrapEmail;
 use Mailtrap\Tests\MailtrapTestCase;
 use Nyholm\Psr7\Response;
 use Symfony\Component\Mime\Address;
@@ -122,6 +123,60 @@ final class EmailsTest extends MailtrapTestCase
             ->add(new TemplateVariableHeader('next_step_link', 'https://mailtrap.io/'))
             ->add(new TemplateVariableHeader('get_started_link', 'https://mailtrap.io/'))
             ->add(new TemplateVariableHeader('onboarding_video_link', 'some_video_link'))
+        ;
+
+        $this->email
+            ->expects($this->once())
+            ->method('httpPost')
+            ->with(AbstractApi::SENDMAIL_SANDBOX_HOST . '/api/send/' . self::FAKE_INBOX_ID, [], [
+                'from' => [
+                    'email' => 'foo@example.com',
+                    'name' => 'Ms. Foo Bar',
+                ],
+                'to' => [[
+                    'email' => 'bar@example.com',
+                    'name' => 'Mr. Recipient',
+                ]],
+                'template_uuid' => 'bfa432fd-0000-0000-0000-8493da283a69',
+                'template_variables' => [
+                    'user_name' => 'Jon Bush',
+                    'unicode_user_name' => 'Subašić', // should not be encoded as it is not a real header
+                    'next_step_link' => 'https://mailtrap.io/',
+                    'get_started_link' => 'https://mailtrap.io/',
+                    'onboarding_video_link' => 'some_video_link',
+                ]
+            ])
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));
+
+        $response = $this->email->send($email);
+        $responseData = ResponseHelper::toArray($response);
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertCount(2, $responseData);
+        $this->assertArrayHasKey('success', $responseData);
+        $this->assertArrayHasKey('message_ids', $responseData);
+    }
+
+    public function testValidSendTemplateToSandboxNewEmailWrapper(): void
+    {
+        $expectedData = [
+            "success" => true,
+            "message_ids" => [
+                "0c7fd939-02cf-11ed-88c2-0a58a9feac02"
+            ]
+        ];
+
+        $email = (new MailtrapEmail())
+            ->from(new Address('foo@example.com', 'Ms. Foo Bar'))
+            ->to(new Address('bar@example.com', 'Mr. Recipient'))
+            ->templateUuid('bfa432fd-0000-0000-0000-8493da283a69')
+            ->templateVariables([
+                'user_name' => 'Jon Bush',
+                'unicode_user_name' => 'Subašić', // should not be encoded as it is not a real header
+                'next_step_link' => 'https://mailtrap.io/',
+                'get_started_link' => 'https://mailtrap.io/',
+                'onboarding_video_link' => 'some_video_link',
+            ])
         ;
 
         $this->email
