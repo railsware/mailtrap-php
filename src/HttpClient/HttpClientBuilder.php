@@ -24,15 +24,13 @@ class HttpClientBuilder implements HttpClientBuilderInterface
     private RequestFactoryInterface $requestFactory;
     private StreamFactoryInterface $streamFactory;
     private ?HttpMethodsClientInterface $pluginClient = null;
-    private string $apiToken;
 
     public function __construct(
-        string $apiToken,
+        private string $apiToken,
         ClientInterface $httpClient = null,
         RequestFactoryInterface $requestFactory = null,
         StreamFactoryInterface $streamFactory = null
     ) {
-        $this->apiToken = $apiToken;
         $this->httpClient = $httpClient ?? Psr18ClientDiscovery::find();
         $this->requestFactory = $requestFactory ?? Psr17FactoryDiscovery::findRequestFactory();
         $this->streamFactory = $streamFactory ?? Psr17FactoryDiscovery::findStreamFactory();

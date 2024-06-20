@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Mailtrap;
 
+use Mailtrap\Api\EmailsSendApiInterface;
+use Mailtrap\Exception\InvalidArgumentException;
+
 /**
  * The main entry point to use all possible API layers
  *
@@ -27,4 +30,27 @@ class MailtrapClient extends AbstractMailtrapClient
         self::LAYER_TRANSACTIONAL_SENDING => MailtrapSendingClient::class,
         self::LAYER_BULK_SENDING => MailtrapBulkSendingClient::class,
     ];
+
+    public static function initSendingEmails(
+        string $apiKey,
+        bool $isBulk = false,
+        bool $isSandbox = false,
+        int $inboxId = null,
+    ): EmailsSendApiInterface {
+        $client = new self(new Config($apiKey));
+
+        if ($isBulk && $isSandbox) {
+            throw new InvalidArgumentException('Bulk mode is not applicable for sandbox API');
+        }
+
+        if ($isSandbox) {
+            return $client->sandbox()->emails($inboxId);
+        }
+
+        if ($isBulk) {
+            return $client->bulkSending()->emails();
+        }
+
+        return $client->sending()->emails();
+    }
 }

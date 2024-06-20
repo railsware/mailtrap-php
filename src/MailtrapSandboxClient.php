@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Mailtrap;
 
-use Mailtrap\Api;
-
 /**
- * @method  Api\Sandbox\Emails      emails
- * @method  Api\Sandbox\Project     projects
- * @method  Api\Sandbox\Inbox       inboxes
- * @method  Api\Sandbox\Attachment  attachments
- * @method  Api\Sandbox\Message     messages
+ * @method  Api\Sandbox\Emails      emails(int $inboxId)
+ * @method  Api\Sandbox\Project     projects(int $accountId)
+ * @method  Api\Sandbox\Inbox       inboxes(int $accountId)
+ * @method  Api\Sandbox\Attachment  attachments(int $accountId, int $inboxId)
+ * @method  Api\Sandbox\Message     messages(int $accountId, int $inboxId)
  *
  * Class MailtrapSandboxClient
  */
-final class MailtrapSandboxClient extends AbstractMailtrapClient
+final class MailtrapSandboxClient extends AbstractMailtrapClient implements EmailsSendMailtrapClientInterface
 {
     public const API_MAPPING = [
         'emails' => Api\Sandbox\Emails::class,

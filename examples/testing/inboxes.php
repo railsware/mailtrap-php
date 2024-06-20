@@ -3,14 +3,14 @@
 use Mailtrap\Config;
 use Mailtrap\DTO\Request\Inbox;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailtrapClient;
+use Mailtrap\MailtrapSandboxClient;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-// your API token from here https://mailtrap.io/api-tokens
-$apiKey = getenv('MAILTRAP_API_KEY');
-$mailtrap = new MailtrapClient(new Config($apiKey));
+$accountId = getenv('MAILTRAP_ACCOUNT_ID');
+$config = new Config(getenv('MAILTRAP_API_KEY')); #your API token from here https://mailtrap.io/api-tokens
 
+$sandboxInboxes = (new MailtrapSandboxClient($config))->inboxes($accountId); #required parameter is accountId
 
 /**
  * Get a list of inboxes.
@@ -18,9 +18,7 @@ $mailtrap = new MailtrapClient(new Config($apiKey));
  * GET https://mailtrap.io/api/accounts/{account_id}/inboxes
  */
 try {
-    $accountId = getenv('MAILTRAP_ACCOUNT_ID');
-
-    $response = $mailtrap->sandbox()->inboxes()->getList($accountId);
+    $response = $sandboxInboxes->getList();
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));
@@ -35,11 +33,10 @@ try {
  * POST https://mailtrap.io/api/accounts/{account_id}/projects/{project_id}/inboxes
  */
 try {
-    $accountId = getenv('MAILTRAP_ACCOUNT_ID');
     $projectId = getenv('MAILTRAP_PROJECT_ID');
     $inboxName = 'First inbox';
 
-    $response = $mailtrap->sandbox()->inboxes()->create($accountId, $projectId, $inboxName);
+    $response = $sandboxInboxes->create($projectId, $inboxName);
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));
@@ -54,10 +51,9 @@ try {
  * GET https://mailtrap.io/api/accounts/{account_id}/inboxes/{inbox_id}
  */
 try {
-    $accountId = getenv('MAILTRAP_ACCOUNT_ID');
     $inboxId = getenv('MAILTRAP_INBOX_ID');
 
-    $response = $mailtrap->sandbox()->inboxes()->getInboxAttributes($accountId, $inboxId);
+    $response = $sandboxInboxes->getInboxAttributes($inboxId);
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));
@@ -72,10 +68,9 @@ try {
  * DELETE https://mailtrap.io/api/accounts/{account_id}/inboxes/{inbox_id}
  */
 try {
-    $accountId = getenv('MAILTRAP_ACCOUNT_ID');
     $inboxId = getenv('MAILTRAP_INBOX_ID');
 
-    $response = $mailtrap->sandbox()->inboxes()->delete($accountId, $inboxId);
+    $response = $sandboxInboxes->delete($inboxId);
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));
@@ -90,10 +85,9 @@ try {
  * PATCH https://mailtrap.io/api/accounts/{account_id}/inboxes/{inbox_id}/reset_email_username
  */
 try {
-    $accountId = getenv('MAILTRAP_ACCOUNT_ID');
     $inboxId = getenv('MAILTRAP_INBOX_ID');
 
-    $response = $mailtrap->sandbox()->inboxes()->resetEmailAddress($accountId, $inboxId);
+    $response = $sandboxInboxes->resetEmailAddress($inboxId);
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));
@@ -108,10 +102,9 @@ try {
  * PATCH https://mailtrap.io/api/accounts/{account_id}/inboxes/{inbox_id}/toggle_email_username
  */
 try {
-    $accountId = getenv('MAILTRAP_ACCOUNT_ID');
     $inboxId = getenv('MAILTRAP_INBOX_ID');
 
-    $response = $mailtrap->sandbox()->inboxes()->toggleEmailAddress($accountId, $inboxId);
+    $response = $sandboxInboxes->toggleEmailAddress($inboxId);
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));
@@ -126,10 +119,9 @@ try {
  * PATCH https://mailtrap.io/api/accounts/{account_id}/inboxes/{inbox_id}/reset_credentials
  */
 try {
-    $accountId = getenv('MAILTRAP_ACCOUNT_ID');
     $inboxId = getenv('MAILTRAP_INBOX_ID');
 
-    $response = $mailtrap->sandbox()->inboxes()->resetSmtpCredentials($accountId, $inboxId);
+    $response = $sandboxInboxes->resetSmtpCredentials($inboxId);
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));
@@ -144,10 +136,9 @@ try {
  * PATCH https://mailtrap.io/api/accounts/{account_id}/inboxes/{inbox_id}/all_read
  */
 try {
-    $accountId = getenv('MAILTRAP_ACCOUNT_ID');
     $inboxId = getenv('MAILTRAP_INBOX_ID');
 
-    $response = $mailtrap->sandbox()->inboxes()->markAsRead($accountId, $inboxId);
+    $response = $sandboxInboxes->markAsRead($inboxId);
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));
@@ -162,10 +153,9 @@ try {
  * PATCH https://mailtrap.io/api/accounts/{account_id}/inboxes/{inbox_id}/clean
  */
 try {
-    $accountId = getenv('MAILTRAP_ACCOUNT_ID');
     $inboxId = getenv('MAILTRAP_INBOX_ID');
 
-    $response = $mailtrap->sandbox()->inboxes()->clean($accountId, $inboxId);
+    $response = $sandboxInboxes->clean($inboxId);
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));
@@ -180,13 +170,11 @@ try {
  * PATCH https://mailtrap.io/api/accounts/{account_id}/inboxes/{inbox_id}
  */
 try {
-    $accountId = getenv('MAILTRAP_ACCOUNT_ID');
     $inboxId = getenv('MAILTRAP_INBOX_ID');
     $newInboxName = 'New inbox name';
     $newEmailUsername = 'new-email-username';
 
-    $response = $mailtrap->sandbox()->inboxes()->update(
-        $accountId,
+    $response = $sandboxInboxes->update(
         $inboxId,
         new Inbox($newInboxName, $newEmailUsername)
     );

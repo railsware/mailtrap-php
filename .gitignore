@@ -11,7 +11,7 @@ phpunit.xml
 ###> files for local testing ###
 test.php
 docker-compose.yaml
-Dockerfile
+Dockerfile*
 ###> files for local testing ###
 
 ###> other ###

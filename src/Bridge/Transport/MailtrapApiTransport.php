@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Mailtrap\Bridge\Transport;
 
+use Mailtrap\Api\EmailsSendApiInterface;
+use Mailtrap\Api\Sandbox\Emails as SandboxEmails;
+use Mailtrap\Config;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailtrapClientInterface;
-use Mailtrap\MailtrapSandboxClient;
-use Mailtrap\MailtrapSendingClient;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Envelope;
@@ -23,22 +23,13 @@ use Symfony\Component\Mime\MessageConverter;
  */
 class MailtrapApiTransport extends AbstractTransport
 {
-    /**
-     * @var MailtrapSendingClient|MailtrapSandboxClient
-     */
-    private MailtrapClientInterface $mailtrapClient;
-    private ?int $inboxId;
-
     public function __construct(
-        MailtrapClientInterface $mailtrapClient,
-        int $inboxId = null,
+        private EmailsSendApiInterface $emailsSendApiLayer,
+        private Config $config,
         EventDispatcherInterface $dispatcher = null,
         LoggerInterface $logger = null
     ) {
         parent::__construct($dispatcher, $logger);
-
-        $this->mailtrapClient = $mailtrapClient;
-        $this->inboxId = $inboxId;
     }
 
     public function __toString(): string
@@ -61,20 +52,25 @@ class MailtrapApiTransport extends AbstractTransport
                 }
             }
 
-            $response = $this->mailtrapClient->emails()->send($email, $this->inboxId);
+            $response = $this->emailsSendApiLayer->send($email);
 
             $body = ResponseHelper::toArray($response);
             $message->setMessageId(implode(',', $body['message_ids']));
         } catch (\Exception $e) {
             throw new RuntimeException(
-                sprintf('Unable to send message with the "%s" transport: ', __CLASS__) . $e->getMessage(), 0, $e
+                sprintf('Unable to send a message with the "%s" transport: ', __CLASS__) . $e->getMessage(), 0, $e
             );
         }
     }
 
     private function getEndpoint(): string
     {
-        return $this->mailtrapClient->getConfig()->getHost() . (null === $this->inboxId ? '' : '?inboxId=' . $this->inboxId);
+        $inboxId = null;
+        if ($this->emailsSendApiLayer instanceof SandboxEmails) {
+            $inboxId = $this->emailsSendApiLayer->getInboxId();
+        }
+
+        return $this->config->getHost() . (null === $inboxId ? '' : '?inboxId=' . $inboxId);
     }
 
     private function getEnvelopeRecipients(Email $email, Envelope $envelope): array

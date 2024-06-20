@@ -1,12 +1,8 @@
 <?php
 
-use Mailtrap\Config;
-use Mailtrap\EmailHeader\CategoryHeader;
-use Mailtrap\EmailHeader\CustomVariableHeader;
-use Mailtrap\EmailHeader\Template\TemplateUuidHeader;
-use Mailtrap\EmailHeader\Template\TemplateVariableHeader;
 use Mailtrap\Helper\ResponseHelper;
 use Mailtrap\MailtrapClient;
+use Mailtrap\Mime\MailtrapEmail;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Header\UnstructuredHeader;
@@ -25,11 +21,11 @@ require __DIR__ . '/../vendor/autoload.php';
  * POST https://send.api.mailtrap.io/api/send
  */
 try {
-    // your API token from here https://mailtrap.io/api-tokens
-    $apiKey = getenv('MAILTRAP_API_KEY');
-    $mailtrap = new MailtrapClient(new Config($apiKey));
+    $mailtrap = MailtrapClient::initSendingEmails(
+        apiKey: getenv('MAILTRAP_API_KEY') #your API token from here https://mailtrap.io/api-tokens
+    );
 
-    $email = (new Email())
+    $email = (new MailtrapEmail())
         ->from(new Address('example@YOUR-DOMAIN-HERE.com', 'Mailtrap Test')) // <--- you should use your domain here that you installed in the mailtrap.io admin area (otherwise you will get 401)
         ->replyTo(new Address('reply@YOUR-DOMAIN-HERE.com'))
         ->to(new Address('email@example.com', 'Jon'))
@@ -51,26 +47,20 @@ try {
         )
         ->embed(fopen('https://mailtrap.io/wp-content/uploads/2021/04/mailtrap-new-logo.svg', 'r'), 'logo', 'image/svg+xml')
         ->attachFromPath('README.md')
+        ->customVariables([
+            'user_id' => '45982',
+            'batch_id' => 'PSJ-12'
+        ])
+        ->category('Integration Test')
     ;
 
-    // Headers
+    // Custom email headers (optional)
     $email->getHeaders()
-        ->addTextHeader('X-Message-Source', '1alf.com')
+        ->addTextHeader('X-Message-Source', 'test.com')
         ->add(new UnstructuredHeader('X-Mailer', 'Mailtrap PHP Client'))
     ;
 
-    // Custom Variables
-    $email->getHeaders()
-        ->add(new CustomVariableHeader('user_id', '45982'))
-        ->add(new CustomVariableHeader('batch_id', 'PSJ-12'))
-    ;
-
-    // Category (should be only one)
-    $email->getHeaders()
-        ->add(new CategoryHeader('Integration Test'))
-    ;
-
-    $response = $mailtrap->sending()->emails()->send($email);
+    $response = $mailtrap->send($email);
 
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {
@@ -87,26 +77,24 @@ try {
  * Optional template variables that will be used to generate actual subject, text and html from email template
  */
 try {
-    // your API token from here https://mailtrap.io/api-tokens
-    $apiKey = getenv('MAILTRAP_API_KEY');
-    $mailtrap = new MailtrapClient(new Config($apiKey));
+    $mailtrap = MailtrapClient::initSendingEmails(
+        apiKey: getenv('MAILTRAP_API_KEY') #your API token from here https://mailtrap.io/api-tokens
+    );
 
-    $email = (new Email())
+    $email = (new MailtrapEmail())
         ->from(new Address('example@YOUR-DOMAIN-HERE.com', 'Mailtrap Test')) // <--- you should use your domain here that you installed in the mailtrap.io admin area (otherwise you will get 401)
         ->replyTo(new Address('reply@YOUR-DOMAIN-HERE.com'))
         ->to(new Address('example@gmail.com', 'Jon'))
+        ->templateUuid('bfa432fd-0000-0000-0000-8493da283a69')
+        ->templateVariables([
+            'user_name' => 'Jon Bush',
+            'next_step_link' => 'https://mailtrap.io/',
+            'get_started_link' => 'https://mailtrap.io/',
+            'onboarding_video_link' => 'some_video_link'
+        ])
     ;
 
-    // Template UUID and Variables
-    $email->getHeaders()
-        ->add(new TemplateUuidHeader('bfa432fd-0000-0000-0000-8493da283a69'))
-        ->add(new TemplateVariableHeader('user_name', 'Jon Bush'))
-        ->add(new TemplateVariableHeader('next_step_link', 'https://mailtrap.io/'))
-        ->add(new TemplateVariableHeader('get_started_link', 'https://mailtrap.io/'))
-        ->add(new TemplateVariableHeader('onboarding_video_link', 'some_video_link'))
-    ;
-
-    $response = $mailtrap->sending()->emails()->send($email);
+    $response = $mailtrap->send($email);
 
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {
@@ -125,11 +113,12 @@ try {
  * POST https://bulk.api.mailtrap.io/api/send
  */
 try {
-    // your API token from here https://mailtrap.io/api-tokens
-    $apiKey = getenv('MAILTRAP_API_KEY');
-    $mailtrap = new MailtrapClient(new Config($apiKey));
+    $bulkMailtrap = MailtrapClient::initSendingEmails(
+        apiKey: getenv('MAILTRAP_API_KEY'), #your API token from here https://mailtrap.io/api-tokens
+        isBulk: true # Bulk sending (@see https://help.mailtrap.io/article/113-sending-streams)
+    );
 
-    $email = (new Email())
+    $email = (new MailtrapEmail())
         ->from(new Address('example@YOUR-DOMAIN-HERE.com', 'Mailtrap Test')) // <--- you should use your domain here that you installed in the mailtrap.io admin area (otherwise you will get 401)
         ->replyTo(new Address('reply@YOUR-DOMAIN-HERE.com'))
         ->to(new Address('email@example.com', 'Jon'))
@@ -151,26 +140,20 @@ try {
         )
         ->embed(fopen('https://mailtrap.io/wp-content/uploads/2021/04/mailtrap-new-logo.svg', 'r'), 'logo', 'image/svg+xml')
         ->attachFromPath('README.md')
+        ->customVariables([
+            'user_id' => '45982',
+            'batch_id' => 'PSJ-12'
+        ])
+        ->category('Integration Test')
     ;
 
-    // Headers
+    // Custom email headers (optional)
     $email->getHeaders()
-        ->addTextHeader('X-Message-Source', '1alf.com')
+        ->addTextHeader('X-Message-Source', 'test.com')
         ->add(new UnstructuredHeader('X-Mailer', 'Mailtrap PHP Client'))
     ;
 
-    // Custom Variables
-    $email->getHeaders()
-        ->add(new CustomVariableHeader('user_id', '45982'))
-        ->add(new CustomVariableHeader('batch_id', 'PSJ-12'))
-    ;
-
-    // Category (should be only one)
-    $email->getHeaders()
-        ->add(new CategoryHeader('Integration Test'))
-    ;
-
-    $response = $mailtrap->bulkSending()->emails()->send($email);
+    $response = $bulkMailtrap->send($email);
 
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {
@@ -187,26 +170,25 @@ try {
  * Optional template variables that will be used to generate actual subject, text and html from email template
  */
 try {
-    // your API token from here https://mailtrap.io/api-tokens
-    $apiKey = getenv('MAILTRAP_API_KEY');
-    $mailtrap = new MailtrapClient(new Config($apiKey));
+    $bulkMailtrap = MailtrapClient::initSendingEmails(
+        apiKey: getenv('MAILTRAP_API_KEY'), #your API token from here https://mailtrap.io/api-tokens
+        isBulk: true # Bulk sending (@see https://help.mailtrap.io/article/113-sending-streams)
+    );
 
-    $email = (new Email())
+    $email = (new MailtrapEmail())
         ->from(new Address('example@YOUR-DOMAIN-HERE.com', 'Mailtrap Test')) // <--- you should use your domain here that you installed in the mailtrap.io admin area (otherwise you will get 401)
         ->replyTo(new Address('reply@YOUR-DOMAIN-HERE.com'))
         ->to(new Address('example@gmail.com', 'Jon'))
+        ->templateUuid('bfa432fd-0000-0000-0000-8493da283a69')
+        ->templateVariables([
+            'user_name' => 'Jon Bush',
+            'next_step_link' => 'https://mailtrap.io/',
+            'get_started_link' => 'https://mailtrap.io/',
+            'onboarding_video_link' => 'some_video_link'
+        ])
     ;
 
-    // Template UUID and Variables
-    $email->getHeaders()
-        ->add(new TemplateUuidHeader('bfa432fd-0000-0000-0000-8493da283a69'))
-        ->add(new TemplateVariableHeader('user_name', 'Jon Bush'))
-        ->add(new TemplateVariableHeader('next_step_link', 'https://mailtrap.io/'))
-        ->add(new TemplateVariableHeader('get_started_link', 'https://mailtrap.io/'))
-        ->add(new TemplateVariableHeader('onboarding_video_link', 'some_video_link'))
-    ;
-
-    $response = $mailtrap->bulkSending()->emails()->send($email);
+    $response = $bulkMailtrap->send($email);
 
     var_dump(ResponseHelper::toArray($response)); // body (array)
 } catch (Exception $e) {

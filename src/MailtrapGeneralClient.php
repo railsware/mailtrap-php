@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Mailtrap;
 
-use Mailtrap\Api;
-
 /**
- * @method Api\General\Account      accounts
- * @method Api\General\User         users
- * @method Api\General\Permission   permissions
+ * @method Api\General\Account      accounts()
+ * @method Api\General\User         users(int $accountId)
+ * @method Api\General\Permission   permissions(int $accountId)
  *
  * Class MailtrapGeneralClient
  */

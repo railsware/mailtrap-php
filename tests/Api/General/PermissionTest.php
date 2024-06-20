@@ -32,7 +32,7 @@ class PermissionTest extends MailtrapTestCase
 
         $this->permission = $this->getMockBuilder(Permission::class)
             ->onlyMethods(['httpGet', 'httpPut'])
-            ->setConstructorArgs([$this->getConfigMock()])
+            ->setConstructorArgs([$this->getConfigMock(), self::FAKE_ACCOUNT_ID])
             ->getMock()
         ;
     }
@@ -51,7 +51,7 @@ class PermissionTest extends MailtrapTestCase
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/permissions/resources')
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedData())));
 
-        $response = $this->permission->getResources(self::FAKE_ACCOUNT_ID);
+        $response = $this->permission->getResources();
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -71,7 +71,7 @@ class PermissionTest extends MailtrapTestCase
             'Unauthorized. Make sure you are sending correct credentials with the request before retrying. Errors: Incorrect API token.'
         );
 
-        $this->permission->getResources(self::FAKE_ACCOUNT_ID);
+        $this->permission->getResources();
     }
 
     public function test403InvalidGetResources(): void
@@ -86,7 +86,7 @@ class PermissionTest extends MailtrapTestCase
             'Forbidden. Make sure domain verification process is completed or check your permissions. Errors: Access forbidden.'
         );
 
-        $this->permission->getResources(self::FAKE_ACCOUNT_ID);
+        $this->permission->getResources();
     }
 
     /**
@@ -99,7 +99,7 @@ class PermissionTest extends MailtrapTestCase
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses/' . self::FAKE_ACCOUNT_ACCESS_ID . '/permissions/bulk')
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode(['message' => 'Permissions have been updated!'])));
 
-        $response = $this->permission->update(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID, $permissions);
+        $response = $this->permission->update(self::FAKE_ACCOUNT_ACCESS_ID, $permissions);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -115,7 +115,7 @@ class PermissionTest extends MailtrapTestCase
         );
 
         $emptyPermissions = new Permissions();
-        $this->permission->update(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID, $emptyPermissions);
+        $this->permission->update(self::FAKE_ACCOUNT_ACCESS_ID, $emptyPermissions);
     }
 
     /**
@@ -125,7 +125,7 @@ class PermissionTest extends MailtrapTestCase
     {
         $method = new \ReflectionMethod(Permission::class, 'getPayload');
         $method->setAccessible(true);
-        $payload = $method->invoke(new Permission($this->getConfigMock()), $permissions);
+        $payload = $method->invoke(new Permission($this->getConfigMock(), self::FAKE_ACCOUNT_ID), $permissions);
 
         $this->assertEquals($expectedResult, $payload);
     }

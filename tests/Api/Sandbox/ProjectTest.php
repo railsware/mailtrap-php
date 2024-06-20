@@ -27,7 +27,7 @@ class ProjectTest extends MailtrapTestCase
 
         $this->project = $this->getMockBuilder(Project::class)
             ->onlyMethods(['httpGet', 'httpPost',  'httpPatch', 'httpDelete'])
-            ->setConstructorArgs([$this->getConfigMock()])
+            ->setConstructorArgs([$this->getConfigMock(), self::FAKE_ACCOUNT_ID])
             ->getMock()
         ;
     }
@@ -46,7 +46,7 @@ class ProjectTest extends MailtrapTestCase
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/projects')
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedData())));
 
-        $response = $this->project->getList(self::FAKE_ACCOUNT_ID);
+        $response = $this->project->getList();
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -61,7 +61,7 @@ class ProjectTest extends MailtrapTestCase
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/projects/' . self::FAKE_PROJECT_ID)
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedData()[1])));
 
-        $response = $this->project->getById(self::FAKE_ACCOUNT_ID, self::FAKE_PROJECT_ID);
+        $response = $this->project->getById(self::FAKE_PROJECT_ID);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -99,7 +99,7 @@ class ProjectTest extends MailtrapTestCase
             )
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));
 
-        $response = $this->project->create(self::FAKE_ACCOUNT_ID, $expectedData['name']);
+        $response = $this->project->create($expectedData['name']);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -126,7 +126,7 @@ class ProjectTest extends MailtrapTestCase
             'Errors: name -> is too short (minimum is 2 characters).'
         );
 
-        $this->project->create(self::FAKE_ACCOUNT_ID, 'a');
+        $this->project->create('a');
     }
 
     public function testValidDelete(): void
@@ -136,7 +136,7 @@ class ProjectTest extends MailtrapTestCase
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/projects/' . self::FAKE_PROJECT_ID)
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode(['id' => self::FAKE_PROJECT_ID])));
 
-        $response = $this->project->delete(self::FAKE_ACCOUNT_ID, self::FAKE_PROJECT_ID);
+        $response = $this->project->delete(self::FAKE_PROJECT_ID);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -172,7 +172,7 @@ class ProjectTest extends MailtrapTestCase
             )
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));
 
-        $response = $this->project->updateName(self::FAKE_ACCOUNT_ID, self::FAKE_PROJECT_ID, $expectedData['name']);
+        $response = $this->project->updateName(self::FAKE_PROJECT_ID, $expectedData['name']);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -204,7 +204,7 @@ class ProjectTest extends MailtrapTestCase
             'Errors: name -> is too long (maximum is 100 characters).'
         );
 
-        $this->project->updateName(self::FAKE_ACCOUNT_ID,  self::FAKE_PROJECT_ID, $longName);
+        $this->project->updateName(self::FAKE_PROJECT_ID, $longName);
     }
 
     private function getExpectedData(): array

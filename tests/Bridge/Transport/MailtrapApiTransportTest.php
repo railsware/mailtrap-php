@@ -7,6 +7,8 @@ namespace Mailtrap\Tests\Bridge\Transport;
 use Mailtrap\Api\AbstractApi;
 use Mailtrap\Bridge\Transport\MailtrapApiTransport;
 use Mailtrap\Config;
+use Mailtrap\MailtrapBulkSendingClient;
+use Mailtrap\MailtrapSandboxClient;
 use Mailtrap\MailtrapSendingClient;
 use Mailtrap\Tests\MailtrapTestCase;
 use Symfony\Component\Mailer\Envelope;
@@ -37,22 +39,32 @@ class MailtrapApiTransportTest extends MailtrapTestCase
 
     public static function getTransportData(): array
     {
+        $sendConfig = (new Config('key'))->setHost(AbstractApi::SENDMAIL_TRANSACTIONAL_HOST);
+        $sandboxConfig = (new Config('key'))->setHost(AbstractApi::SENDMAIL_SANDBOX_HOST);
+        $bulkConfig = (new Config('key'))->setHost(AbstractApi::SENDMAIL_BULK_HOST);
+        $inboxId = 1234;
+
         return [
             [
                 new MailtrapApiTransport(
-                    new MailtrapSendingClient(
-                        (new Config('key'))->setHost(AbstractApi::SENDMAIL_TRANSACTIONAL_HOST)
-                    )
+                    (new MailtrapSendingClient($sendConfig))->emails(),
+                    $sendConfig
                 ),
-                'mailtrap+api://send.api.mailtrap.io',
+                sprintf('mailtrap+api://%s', AbstractApi::SENDMAIL_TRANSACTIONAL_HOST),
             ],
             [
                 new MailtrapApiTransport(
-                    new MailtrapSendingClient(
-                        (new Config('key'))->setHost(AbstractApi::SENDMAIL_SANDBOX_HOST)
-                    )
+                    (new MailtrapSandboxClient($sandboxConfig))->emails($inboxId),
+                    $sandboxConfig
                 ),
-                'mailtrap+api://sandbox.api.mailtrap.io',
+                sprintf('mailtrap+api://%s?inboxId=%s', AbstractApi::SENDMAIL_SANDBOX_HOST, $inboxId),
+            ],
+            [
+                new MailtrapApiTransport(
+                    (new MailtrapBulkSendingClient($bulkConfig))->emails(),
+                    $bulkConfig
+                ),
+                sprintf('mailtrap+api://%s', AbstractApi::SENDMAIL_BULK_HOST),
             ],
         ];
     }

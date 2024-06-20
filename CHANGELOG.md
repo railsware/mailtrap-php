@@ -1,3 +1,11 @@
+## [2.0.0] - 2024-06-12
+- [BC BREAK] PHP 7.4 will no longer be supported (PHP 8.0+).
+- [BC BREAK] Rebuild `Emails` layers to use the `inboxId` at the client level ([examples](examples/testing/emails.php))
+- [BC BREAK] Rebuild SANDBOX `Projects` & `Messages` & `Attachments` & `Inboxes`  layers ([examples](examples/testing))
+- [BC BREAK] Rebuild GENERAL `Accounts` & `Permissions` & `Users` layers ([examples](examples/general))
+- Added a short method to get the Email layer depending on config params `MailtrapClient::initSendingEmails()`
+- Added MailtrapEmail wrapper (MIME) for easy add category, custom variables, template uuid, etc.
+
 ## [1.9.0] - 2024-05-06
 
 - Support templates in testing

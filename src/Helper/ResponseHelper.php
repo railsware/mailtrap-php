@@ -18,7 +18,7 @@ final class ResponseHelper
      */
     public static function toArray(ResponseInterface $response): array
     {
-        if (strpos($response->getHeaderLine('Content-Type'), 'application/json') === false) {
+        if (!str_contains($response->getHeaderLine('Content-Type'), 'application/json')) {
             // This can happen when the URL structure changes and the response returns a 404 HTML page. (rare case)
             throw new InvalidTypeException(sprintf(
                 'Invalid content type in response. "%s" type expected, but received "%s"',

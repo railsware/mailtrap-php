@@ -6,7 +6,6 @@ namespace Mailtrap\Tests;
 
 use Mailtrap\ConfigInterface;
 use Mailtrap\HttpClient\HttpClientBuilderInterface;
-use Mailtrap\MailtrapClientInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
 
