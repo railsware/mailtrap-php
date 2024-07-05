@@ -11,7 +11,7 @@ $accountId = getenv('MAILTRAP_ACCOUNT_ID');
 $inboxId = getenv('MAILTRAP_INBOX_ID');
 $config = new Config(getenv('MAILTRAP_API_KEY')); #your API token from here https://mailtrap.io/api-tokens
 
-$sandboxMessages = (new MailtrapSandboxClient($config))->messages($accountId, $inboxId); #required parameters are accountId amd inboxId
+$sandboxMessages = (new MailtrapSandboxClient($config))->messages($accountId, $inboxId); #required parameters are accountId and inboxId
 
 /**
  * Get messages
