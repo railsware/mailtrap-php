@@ -42,7 +42,7 @@ use Symfony\Component\Mime\Header\UnstructuredHeader;
 
 require __DIR__ . '/vendor/autoload.php';
 
-// Mailtrap SENDING client (real)
+// Mailtrap SENDING client (real) for transactional emails
 $mailtrap = MailtrapClient::initSendingEmails(
     apiKey: getenv('MAILTRAP_API_KEY') # your API token from here https://mailtrap.io/api-tokens
 );
