@@ -30,7 +30,7 @@ class UserTest extends MailtrapTestCase
 
         $this->user = $this->getMockBuilder(User::class)
             ->onlyMethods(['httpGet', 'httpDelete'])
-            ->setConstructorArgs([$this->getConfigMock()])
+            ->setConstructorArgs([$this->getConfigMock(), self::FAKE_ACCOUNT_ID])
             ->getMock()
         ;
     }
@@ -49,7 +49,7 @@ class UserTest extends MailtrapTestCase
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses')
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedData())));
 
-        $response = $this->user->getList(self::FAKE_ACCOUNT_ID);
+        $response = $this->user->getList();
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -71,7 +71,7 @@ class UserTest extends MailtrapTestCase
             )
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode(array_slice($expectedResult, 1))));
 
-        $response = $this->user->getList(self::FAKE_ACCOUNT_ID, $inboxIds, $projectIds);
+        $response = $this->user->getList($inboxIds, $projectIds);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -91,7 +91,7 @@ class UserTest extends MailtrapTestCase
             'Unauthorized. Make sure you are sending correct credentials with the request before retrying. Errors: Incorrect API token.'
         );
 
-        $this->user->getList(self::FAKE_ACCOUNT_ID);
+        $this->user->getList();
     }
 
     public function test403InvalidGetList(): void
@@ -106,17 +106,17 @@ class UserTest extends MailtrapTestCase
             'Forbidden. Make sure domain verification process is completed or check your permissions. Errors: Access forbidden.'
         );
 
-        $this->user->getList(self::FAKE_ACCOUNT_ID);
+        $this->user->getList();
     }
 
-    public function testValidRemove()
+    public function testValidRemove(): void
     {
         $this->user->expects($this->once())
             ->method('httpDelete')
             ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/account_accesses/' . self::FAKE_ACCOUNT_ACCESS_ID)
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode(['id' => self::FAKE_ACCOUNT_ACCESS_ID])));
 
-        $response = $this->user->delete(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
+        $response = $this->user->delete(self::FAKE_ACCOUNT_ACCESS_ID);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);
@@ -136,7 +136,7 @@ class UserTest extends MailtrapTestCase
             'Unauthorized. Make sure you are sending correct credentials with the request before retrying. Errors: Incorrect API token.'
         );
 
-        $this->user->delete(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
+        $this->user->delete(self::FAKE_ACCOUNT_ACCESS_ID);
     }
 
     public function test403InvalidRemove(): void
@@ -151,7 +151,7 @@ class UserTest extends MailtrapTestCase
             'Forbidden. Make sure domain verification process is completed or check your permissions. Errors: Access forbidden.'
         );
 
-        $this->user->delete(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
+        $this->user->delete(self::FAKE_ACCOUNT_ACCESS_ID);
     }
 
     public function test404InvalidRemove(): void
@@ -166,7 +166,7 @@ class UserTest extends MailtrapTestCase
             'The requested entity has not been found. Errors: Not Found.'
         );
 
-        $this->user->delete(self::FAKE_ACCOUNT_ID, self::FAKE_ACCOUNT_ACCESS_ID);
+        $this->user->delete(self::FAKE_ACCOUNT_ACCESS_ID);
     }
 
     private function getExpectedData(): array

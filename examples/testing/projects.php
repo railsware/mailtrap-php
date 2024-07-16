@@ -2,13 +2,14 @@
 
 use Mailtrap\Config;
 use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailtrapClient;
+use Mailtrap\MailtrapSandboxClient;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-// your API token from here https://mailtrap.io/api-tokens
-$apiKey = getenv('MAILTRAP_API_KEY');
-$mailtrap = new MailtrapClient(new Config($apiKey));
+$accountId = getenv('MAILTRAP_ACCOUNT_ID');
+$config = new Config(getenv('MAILTRAP_API_KEY')); #your API token from here https://mailtrap.io/api-tokens
+
+$sandboxProjects = (new MailtrapSandboxClient($config))->projects($accountId); #required parameter is accountId
 
 /**
  * List projects and their inboxes to which the API token has access.
@@ -16,9 +17,7 @@ $mailtrap = new MailtrapClient(new Config($apiKey));
  * GET https://mailtrap.io/api/accounts/{account_id}/projects
  */
 try {
-    $accountId = getenv('MAILTRAP_ACCOUNT_ID');
-
-    $response = $mailtrap->sandbox()->projects()->getList($accountId);
+    $response = $sandboxProjects->getList();
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));
@@ -33,10 +32,9 @@ try {
  * GET https://mailtrap.io/api/accounts/{account_id}/projects/{project_id}
  */
 try {
-    $accountId = getenv('MAILTRAP_ACCOUNT_ID');
     $projectId = getenv('MAILTRAP_PROJECT_ID');
 
-    $response = $mailtrap->sandbox()->projects()->getById($accountId, $projectId);
+    $response = $sandboxProjects->getById($projectId);
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));
@@ -51,10 +49,9 @@ try {
  * POST https://mailtrap.io/api/accounts/{account_id}/projects
  */
 try {
-    $accountId = getenv('MAILTRAP_ACCOUNT_ID');
     $projectName = 'Some project name';
 
-    $response = $mailtrap->sandbox()->projects()->create($accountId, $projectName);
+    $response = $sandboxProjects->create($projectName);
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));
@@ -70,11 +67,10 @@ try {
  * PATCH https://mailtrap.io/api/accounts/{account_id}/projects/{project_id}
  */
 try {
-    $accountId = getenv('MAILTRAP_ACCOUNT_ID');
     $projectId = getenv('MAILTRAP_PROJECT_ID');
     $newProjectName = 'New project name';
 
-    $response = $mailtrap->sandbox()->projects()->updateName($accountId, $projectId, $newProjectName);
+    $response = $sandboxProjects->updateName($projectId, $newProjectName);
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));
@@ -89,10 +85,9 @@ try {
  * DELETE https://mailtrap.io/api/accounts/{account_id}/projects/{project_id}
  */
 try {
-    $accountId = getenv('MAILTRAP_ACCOUNT_ID');
     $projectId = getenv('MAILTRAP_PROJECT_ID');
 
-    $response = $mailtrap->sandbox()->projects()->delete($accountId, $projectId);
+    $response = $sandboxProjects->delete($projectId);
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));

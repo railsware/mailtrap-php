@@ -58,6 +58,7 @@ php bin/console mailer:test to@example.com
 ```php
 <?php
 
+use Mailtrap\Mime\MailtrapEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\Transport\TransportInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -81,11 +82,20 @@ final class SomeController extends AbstractController
      */
     public function sendTestEmail(): JsonResponse
     {
-        $message = (new Email())
-            ->to('to@xample.com')
+        $message = (new MailtrapEmail())
             ->from('from@xample.com')
+            ->to('to@xample.com')
+            ->cc('cc@example.com')
+            ->bcc('bcc@example.com')
+            ->replyTo('fabien@example.com')
+            ->priority(Email::PRIORITY_HIGH)
             ->subject('Test email')
             ->text('text')
+            ->category('category')
+            ->customVariables([
+                'var1' => 'value1',
+                'var2' => 'value2'
+            ])
         ;
 
         $response = $this->transport->send($message);

@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mailtrap\Api\Sandbox;
 
 use Mailtrap\Api\AbstractApi;
+use Mailtrap\ConfigInterface;
 use Mailtrap\DTO\Request\Inbox as InboxRequest;
 use Mailtrap\Exception\RuntimeException;
 use Psr\Http\Message\ResponseInterface;
@@ -12,49 +15,50 @@ use Psr\Http\Message\ResponseInterface;
  */
 class Inbox extends AbstractApi implements SandboxInterface
 {
+    public function __construct(ConfigInterface $config, private int $accountId)
+    {
+        parent::__construct($config);
+    }
+
     /**
      * Get a list of inboxes.
      *
-     * @param int $accountId
-     *
      * @return ResponseInterface
      */
-    public function getList(int $accountId): ResponseInterface
+    public function getList(): ResponseInterface
     {
         return $this->handleResponse($this->httpGet(
-            sprintf('%s/api/accounts/%s/inboxes', $this->getHost(), $accountId)
+            sprintf('%s/api/accounts/%s/inboxes', $this->getHost(), $this->getAccountId())
         ));
     }
 
     /**
      * Get inbox attributes by inbox id. See the list of attributes in the example
      *
-     * @param int $accountId
      * @param int $inboxId
      *
      * @return ResponseInterface
      */
-    public function getInboxAttributes(int $accountId, int $inboxId): ResponseInterface
+    public function getInboxAttributes(int $inboxId): ResponseInterface
     {
         return $this->handleResponse($this->httpGet(
-            sprintf('%s/api/accounts/%s/inboxes/%s', $this->getHost(), $accountId, $inboxId)
+            sprintf('%s/api/accounts/%s/inboxes/%s', $this->getHost(), $this->getAccountId(), $inboxId)
         ));
     }
 
     /**
      * Create an inbox in a project.
      *
-     * @param int    $accountId
      * @param int    $projectId
      * @param string $inboxName
      *
      * @return ResponseInterface
      */
-    public function create(int $accountId, int $projectId, string $inboxName): ResponseInterface
+    public function create(int $projectId, string $inboxName): ResponseInterface
     {
         return $this->handleResponse(
             $this->httpPost(
-                sprintf('%s/api/accounts/%s/projects/%s/inboxes', $this->getHost(), $accountId, $projectId),
+                sprintf('%s/api/accounts/%s/projects/%s/inboxes', $this->getHost(), $this->getAccountId(), $projectId),
                 [],
                 ['inbox' => ['name' => $inboxName]]
             )
@@ -64,31 +68,29 @@ class Inbox extends AbstractApi implements SandboxInterface
     /**
      * Delete an inbox with all its emails.
      *
-     * @param int $accountId
      * @param int $inboxId
      *
      * @return ResponseInterface
      */
-    public function delete(int $accountId, int $inboxId): ResponseInterface
+    public function delete(int $inboxId): ResponseInterface
     {
         return $this->handleResponse($this->httpDelete(
-            sprintf('%s/api/accounts/%s/inboxes/%s', $this->getHost(), $accountId, $inboxId)
+            sprintf('%s/api/accounts/%s/inboxes/%s', $this->getHost(), $this->getAccountId(), $inboxId)
         ));
     }
 
     /**
      * Update inbox name and/or inbox email username.
      *
-     * @param int          $accountId
      * @param int          $inboxId
      * @param InboxRequest $updateInbox
      *
      * @return ResponseInterface
      */
-    public function update(int $accountId, int $inboxId, InboxRequest $updateInbox): ResponseInterface
+    public function update(int $inboxId, InboxRequest $updateInbox): ResponseInterface
     {
         return $this->handleResponse($this->httpPatch(
-            sprintf('%s/api/accounts/%s/inboxes/%s', $this->getHost(), $accountId, $inboxId),
+            sprintf('%s/api/accounts/%s/inboxes/%s', $this->getHost(), $this->getAccountId(), $inboxId),
             [],
             ['inbox' => $this->getUpdatePayload($updateInbox)]
         ));
@@ -97,75 +99,70 @@ class Inbox extends AbstractApi implements SandboxInterface
     /**
      * Delete all messages (emails) from inbox.
      *
-     * @param int $accountId
      * @param int $inboxId
      *
      * @return ResponseInterface
      */
-    public function clean(int $accountId, int $inboxId): ResponseInterface
+    public function clean(int $inboxId): ResponseInterface
     {
         return $this->handleResponse($this->httpPatch(
-            sprintf('%s/api/accounts/%s/inboxes/%s/clean', $this->getHost(), $accountId, $inboxId)
+            sprintf('%s/api/accounts/%s/inboxes/%s/clean', $this->getHost(), $this->getAccountId(), $inboxId)
         ));
     }
 
     /**
      * Mark all messages in the inbox as read.
      *
-     * @param int $accountId
      * @param int $inboxId
      *
      * @return ResponseInterface
      */
-    public function markAsRead(int $accountId, int $inboxId): ResponseInterface
+    public function markAsRead(int $inboxId): ResponseInterface
     {
         return $this->handleResponse($this->httpPatch(
-            sprintf('%s/api/accounts/%s/inboxes/%s/all_read', $this->getHost(), $accountId, $inboxId)
+            sprintf('%s/api/accounts/%s/inboxes/%s/all_read', $this->getHost(), $this->getAccountId(), $inboxId)
         ));
     }
 
     /**
      * Reset SMTP credentials of the inbox.
      *
-     * @param int $accountId
      * @param int $inboxId
      *
      * @return ResponseInterface
      */
-    public function resetSmtpCredentials(int $accountId, int $inboxId): ResponseInterface
+    public function resetSmtpCredentials(int $inboxId): ResponseInterface
     {
         return $this->handleResponse($this->httpPatch(
-            sprintf('%s/api/accounts/%s/inboxes/%s/reset_credentials', $this->getHost(), $accountId, $inboxId)
+            sprintf('%s/api/accounts/%s/inboxes/%s/reset_credentials', $this->getHost(), $this->getAccountId(), $inboxId)
         ));
     }
 
     /**
      * Turn the email address of the inbox on/off.
      *
-     * @param int $accountId
      * @param int $inboxId
      *
      * @return ResponseInterface
      */
-    public function toggleEmailAddress(int $accountId, int $inboxId): ResponseInterface
+    public function toggleEmailAddress(int $inboxId): ResponseInterface
     {
         return $this->handleResponse($this->httpPatch(
-            sprintf('%s/api/accounts/%s/inboxes/%s/toggle_email_username', $this->getHost(), $accountId, $inboxId)
+            sprintf('%s/api/accounts/%s/inboxes/%s/toggle_email_username', $this->getHost(), $this->getAccountId(), $inboxId)
         ));
     }
 
     /**
      * Reset username of email address per inbox.
      *
-     * @param int $accountId
      * @param int $inboxId
      *
      * @return ResponseInterface
      */
-    public function resetEmailAddress(int $accountId, int $inboxId): ResponseInterface
+    public function resetEmailAddress(int $inboxId): ResponseInterface
     {
         return $this->handleResponse($this->httpPatch(
-            sprintf('%s/api/accounts/%s/inboxes/%s/reset_email_username', $this->getHost(), $accountId, $inboxId)
+            sprintf('%s/api/accounts/%s/inboxes/%s/reset_email_username', $this->getHost(), $this->getAccountId(), $inboxId)
         ));
     }
 
@@ -177,5 +174,10 @@ class Inbox extends AbstractApi implements SandboxInterface
         }
 
         return $result;
+    }
+
+    public function getAccountId(): int
+    {
+        return $this->accountId;
     }
 }

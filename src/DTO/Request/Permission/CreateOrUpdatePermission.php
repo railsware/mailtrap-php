@@ -14,11 +14,11 @@ final class CreateOrUpdatePermission implements PermissionInterface
     private string $accessLevel;
 
     /**
-     * @param string|int $resourceId
+     * @param int|string $resourceId
      * @param string     $resourceType
-     * @param string|int $accessLevel
+     * @param int|string $accessLevel
      */
-    public function __construct($resourceId, string $resourceType, $accessLevel)
+    public function __construct(int|string $resourceId, string $resourceType, int|string $accessLevel)
     {
         $this->resourceId = (string) $resourceId;
         $this->resourceType = $resourceType;

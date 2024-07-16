@@ -17,7 +17,7 @@ use Symfony\Component\Mime\Header\Headers;
 /**
  * Class AbstractEmails
  */
-abstract class AbstractEmails extends AbstractApi
+abstract class AbstractEmails extends AbstractApi implements EmailsSendApiInterface
 {
     protected function getPayload(Email $email): array
     {
