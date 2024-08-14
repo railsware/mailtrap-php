@@ -29,7 +29,7 @@ class MailtrapEmail extends Email
         return $this;
     }
 
-    public function templateVariable(string $name, string $value): self
+    public function templateVariable(string $name, mixed $value): self
     {
         $this->getHeaders()->add(new TemplateVariableHeader($name, $value));
 

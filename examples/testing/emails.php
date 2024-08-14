@@ -95,7 +95,23 @@ try {
             'user_name' => 'Jon Bush',
             'next_step_link' => 'https://mailtrap.io/',
             'get_started_link' => 'https://mailtrap.io/',
-            'onboarding_video_link' => 'some_video_link'
+            'onboarding_video_link' => 'some_video_link',
+            'company' => [
+                'name' => 'Best Company',
+                'address' => 'Its Address',
+            ],
+            'products' => [
+                [
+                    'name' => 'Product 1',
+                    'price' => 100,
+                ],
+                [
+                    'name' => 'Product 2',
+                    'price' => 200,
+                ],
+            ],
+            'isBool' => true,
+            'int' => 123
         ])
     ;
 

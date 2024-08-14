@@ -15,19 +15,16 @@ class TemplateVariableHeader extends AbstractHeader
 {
     public const VAR_NAME = 'template_variables';
 
-    private string $value;
+    private mixed $value;
 
-    public function __construct(string $name, string $value)
+    public function __construct(string $name, mixed $value)
     {
         parent::__construct($name);
 
         $this->setValue($value);
     }
 
-    /**
-     * @param string $body
-     */
-    public function setBody($body): void
+    public function setBody(mixed $body): void
     {
         $this->setValue($body);
     }
@@ -43,7 +40,7 @@ class TemplateVariableHeader extends AbstractHeader
     /**
      * Get the (unencoded) value of this header.
      */
-    public function getValue(): string
+    public function getValue(): mixed
     {
         return $this->value;
     }
@@ -51,7 +48,7 @@ class TemplateVariableHeader extends AbstractHeader
     /**
      * Set the (unencoded) value of this header.
      */
-    public function setValue(string $value): void
+    public function setValue(mixed $value): void
     {
         $this->value = $value;
     }
@@ -61,6 +58,9 @@ class TemplateVariableHeader extends AbstractHeader
      */
     public function getBodyAsString(): string
     {
-        return $this->encodeWords($this, $this->value);
+        return $this->encodeWords(
+            $this,
+            is_array($this->value) ? json_encode($this->value, JSON_THROW_ON_ERROR) : $this->value
+        );
     }
 }
