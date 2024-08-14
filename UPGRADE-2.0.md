@@ -122,7 +122,7 @@ UPGRADE FROM 1.x to 2.0
           'user_name' => 'Jon Bush',
           'next_step_link' => 'https://mailtrap.io/',
           'get_started_link' => 'https://mailtrap.io/',
-          'onboarding_video_link' => 'some_video_link',
+          'onboarding_video_link' => 'some_video_link'
       ])
   ;
   ```

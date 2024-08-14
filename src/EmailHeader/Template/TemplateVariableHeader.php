@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mailtrap\EmailHeader\Template;
 
+use Mailtrap\Exception\RuntimeException;
 use Symfony\Component\Mime\Header\AbstractHeader;
 
 /**
@@ -53,14 +54,8 @@ class TemplateVariableHeader extends AbstractHeader
         $this->value = $value;
     }
 
-    /**
-     * Get the value of this header prepared for rendering.
-     */
     public function getBodyAsString(): string
     {
-        return $this->encodeWords(
-            $this,
-            is_array($this->value) ? json_encode($this->value, JSON_THROW_ON_ERROR) : $this->value
-        );
+        throw new RuntimeException(__METHOD__ . ' method is not supported for this type of header');
     }
 }
