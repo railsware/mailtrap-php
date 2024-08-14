@@ -32,7 +32,7 @@ class TemplateVariableHeader extends AbstractHeader
     /**
      * @psalm-suppress MethodSignatureMismatch
      */
-    public function getBody(): string
+    public function getBody(): mixed
     {
         return $this->getValue();
     }
