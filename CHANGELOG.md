@@ -1,3 +1,7 @@
+## [2.0.1] - 2024-08-16
+
+- Support mixed types in template_variables (array, string, int, float, bool)
+
 ## [2.0.0] - 2024-06-12
 - [BC BREAK] PHP 7.4 will no longer be supported (PHP 8.0+).
 - [BC BREAK] Rebuild `Emails` layers to use the `inboxId` at the client level ([examples](examples/testing/emails.php))
