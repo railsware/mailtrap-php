@@ -154,6 +154,22 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
             ->add(new TemplateVariableHeader('next_step_link', 'https://mailtrap.io/'))
             ->add(new TemplateVariableHeader('get_started_link', 'https://mailtrap.io/'))
             ->add(new TemplateVariableHeader('onboarding_video_link', 'some_video_link'))
+            ->add(new TemplateVariableHeader('company', [
+                'name' => 'Best Company',
+                'address' => 'Its Address',
+            ]))
+            ->add(new TemplateVariableHeader('products', [
+                [
+                    'name' => 'Product 1',
+                    'price' => 100,
+                ],
+                [
+                    'name' => 'Product 2',
+                    'price' => 200,
+                ],
+            ]))
+            ->add(new TemplateVariableHeader('isBool', true))
+            ->add(new TemplateVariableHeader('int', 123))
         ;
 
         $this->email
@@ -175,6 +191,22 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
                     'next_step_link' => 'https://mailtrap.io/',
                     'get_started_link' => 'https://mailtrap.io/',
                     'onboarding_video_link' => 'some_video_link',
+                    'company' => [
+                        'name' => 'Best Company',
+                        'address' => 'Its Address',
+                    ],
+                    'products' => [
+                        [
+                            'name' => 'Product 1',
+                            'price' => 100,
+                        ],
+                        [
+                            'name' => 'Product 2',
+                            'price' => 200,
+                        ],
+                    ],
+                    'isBool' => true,
+                    'int' => 123,
                 ]
             ])
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));
@@ -206,7 +238,23 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
                 'unicode_user_name' => 'Subašić',
                 'next_step_link' => 'https://mailtrap.io/',
                 'get_started_link' => 'https://mailtrap.io/',
-                'onboarding_video_link' => 'some_video_link'
+                'onboarding_video_link' => 'some_video_link',
+                'company' => [
+                    'name' => 'Best Company',
+                    'address' => 'Its Address',
+                ],
+                'products' => [
+                    [
+                        'name' => 'Product 1',
+                        'price' => 100,
+                    ],
+                    [
+                        'name' => 'Product 2',
+                        'price' => 200,
+                    ],
+                ],
+                'isBool' => true,
+                'int' => 123,
             ])
         ;
 
@@ -229,6 +277,22 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
                     'next_step_link' => 'https://mailtrap.io/',
                     'get_started_link' => 'https://mailtrap.io/',
                     'onboarding_video_link' => 'some_video_link',
+                    'company' => [
+                        'name' => 'Best Company',
+                        'address' => 'Its Address',
+                    ],
+                    'products' => [
+                        [
+                            'name' => 'Product 1',
+                            'price' => 100,
+                        ],
+                        [
+                            'name' => 'Product 2',
+                            'price' => 200,
+                        ],
+                    ],
+                    'isBool' => true,
+                    'int' => 123,
                 ]
             ])
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedData)));
@@ -533,6 +597,22 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
             ['user_name', 'Jon Bush'],
             ['next_step_link', 'https://mailtrap.io/'],
             ['onboarding_video_link', 'some_video_link'],
+            ['company', [
+                'name' => 'Best Company',
+                'address' => 'Its Address',
+            ]],
+            ['products', [
+                [
+                    'name' => 'Product 1',
+                    'price' => 100,
+                ],
+                [
+                    'name' => 'Product 2',
+                    'price' => 200,
+                ],
+            ]],
+            ['isBool', true],
+            ['int', 123],
         ];
     }
 

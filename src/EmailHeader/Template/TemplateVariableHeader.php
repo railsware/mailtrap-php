@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mailtrap\EmailHeader\Template;
 
+use Mailtrap\Exception\RuntimeException;
 use Symfony\Component\Mime\Header\AbstractHeader;
 
 /**
@@ -15,19 +16,16 @@ class TemplateVariableHeader extends AbstractHeader
 {
     public const VAR_NAME = 'template_variables';
 
-    private string $value;
+    private mixed $value;
 
-    public function __construct(string $name, string $value)
+    public function __construct(string $name, mixed $value)
     {
         parent::__construct($name);
 
         $this->setValue($value);
     }
 
-    /**
-     * @param string $body
-     */
-    public function setBody($body): void
+    public function setBody(mixed $body): void
     {
         $this->setValue($body);
     }
@@ -35,7 +33,7 @@ class TemplateVariableHeader extends AbstractHeader
     /**
      * @psalm-suppress MethodSignatureMismatch
      */
-    public function getBody(): string
+    public function getBody(): mixed
     {
         return $this->getValue();
     }
@@ -43,7 +41,7 @@ class TemplateVariableHeader extends AbstractHeader
     /**
      * Get the (unencoded) value of this header.
      */
-    public function getValue(): string
+    public function getValue(): mixed
     {
         return $this->value;
     }
@@ -51,16 +49,13 @@ class TemplateVariableHeader extends AbstractHeader
     /**
      * Set the (unencoded) value of this header.
      */
-    public function setValue(string $value): void
+    public function setValue(mixed $value): void
     {
         $this->value = $value;
     }
 
-    /**
-     * Get the value of this header prepared for rendering.
-     */
     public function getBodyAsString(): string
     {
-        return $this->encodeWords($this, $this->value);
+        throw new RuntimeException(__METHOD__ . ' method is not supported for this type of header');
     }
 }
