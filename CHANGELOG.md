@@ -1,3 +1,8 @@
+## [2.0.2] - 2024-10-04
+
+- Remove an expected message from the `testUnsupportedSchemeException` method ([reason](https://github.com/symfony/mailer/commit/a098a3fe7f42a30235b862162090900cbf787ff6))
+
+
 ## [2.0.1] - 2024-08-16
 
 - Support mixed types in template_variables (array, string, int, float, bool)

@@ -131,8 +131,7 @@ class MailtrapTransportFactoryTest extends TransportFactoryTestCase
     public function unsupportedSchemeProvider(): iterable
     {
         yield [
-            new Dsn('mailtrap+foo', 'mailtrap', self::USER),
-            'The "mailtrap+foo" scheme is not supported; supported schemes for mailer "mailtrap" are: "mailtrap", "mailtrap+api".',
+            new Dsn('mailtrap+foo', 'mailtrap', self::USER)
         ];
     }
 
