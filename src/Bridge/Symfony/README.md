@@ -60,6 +60,7 @@ php bin/console mailer:test to@example.com
 
 use Mailtrap\MailtrapClient;
 use Mailtrap\Mime\MailtrapEmail;
+use Mailtrap\Helper\ResponseHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\Transport\TransportInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
