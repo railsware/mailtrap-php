@@ -107,7 +107,7 @@ final class SomeController extends AbstractController
     }
     
     /**
-     * WARNING! To send ‘Template Email, you should use the native library and its methods,
+     * WARNING! To send using Mailtrap Email Template, you should use the native library and its methods,
      * as mail transport validation does not allow you to send emails without ‘html’ or ‘text’
      *
      * @Route(name="send-template-email", path="/send-template-email", methods={"GET"})

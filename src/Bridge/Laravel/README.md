@@ -80,7 +80,7 @@ Firstly you need to generate `Mailable` class. More info [here](https://laravel.
 ```bash
 php artisan make:mail WelcomeMail
 ```
-After that, you can configure your Email as you which. Below will be an example.
+After that, you can configure your Email as you wish. Below will be an example.
 ```php
 # app/Mail/WelcomeMail.php
 <?php
@@ -228,7 +228,7 @@ php artisan send-welcome-mail
 ```
 
 ### Send Template Email
-To send 'Template Email', you should use the native library and its methods,
+To send using Mailtrap Email Template, you should use the native library and its methods,
 as mail transport validation does not allow you to send emails without ‘html’ or ‘text’.
 
 Add CLI command
