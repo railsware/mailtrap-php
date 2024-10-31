@@ -1,3 +1,7 @@
+## [2.0.3] - 2024-11-01
+
+- Add more template examples in Laravel/Symfony docs
+
 ## [2.0.2] - 2024-10-04
 
 - Remove an expected message from the `testUnsupportedSchemeException` method ([reason](https://github.com/symfony/mailer/commit/a098a3fe7f42a30235b862162090900cbf787ff6))
