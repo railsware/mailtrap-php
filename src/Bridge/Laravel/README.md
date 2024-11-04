@@ -80,7 +80,7 @@ Firstly you need to generate `Mailable` class. More info [here](https://laravel.
 ```bash
 php artisan make:mail WelcomeMail
 ```
-After that you can configure you Email as you which. Below will be example.
+After that, you can configure your Email as you wish. Below will be an example.
 ```php
 # app/Mail/WelcomeMail.php
 <?php
@@ -188,7 +188,7 @@ class WelcomeMail extends Mailable
     }
 }
 ```
-Email template
+Create email template `resources/views/mail/welcome-email.blade.php`
 ```php
 # resources/views/mail/welcome-email.blade.php
 
@@ -216,6 +216,7 @@ use Illuminate\Support\Facades\Mail;
 
 Artisan::command('send-welcome-mail', function () {
     Mail::to('testreceiver@gmail.com')->send(new WelcomeMail("Jon"));
+    
     // Also, you can use specific mailer if your default mailer is not "mailtrap" but you want to use it for welcome mails
     // Mail::mailer('mailtrap')->to('testreceiver@gmail.com')->send(new WelcomeMail("Jon"));
 })->purpose('Send welcome mail');
@@ -224,6 +225,63 @@ Artisan::command('send-welcome-mail', function () {
 After that just call this CLI command, and it will send your email
 ```bash
 php artisan send-welcome-mail
+```
+
+### Send Template Email
+To send using Mailtrap Email Template, you should use the native library and its methods,
+as mail transport validation does not allow you to send emails without ‘html’ or ‘text’.
+
+Add CLI command
+```php
+# app/routes/console.php
+<?php
+
+use Illuminate\Support\Facades\Artisan;
+use Mailtrap\MailtrapClient;
+use Mailtrap\Mime\MailtrapEmail;
+use Symfony\Component\Mime\Address;
+
+Artisan::command('send-template-mail', function () {
+    $email = (new MailtrapEmail())
+        ->from(new Address('example@YOUR-DOMAIN-HERE.com', 'Mailtrap Test')) // <--- you should use your domain here that you installed in the mailtrap.io admin area (otherwise you will get 401)
+        ->replyTo(new Address('reply@YOUR-DOMAIN-HERE.com'))
+        ->to(new Address('example@gmail.com', 'Jon'))
+        // when using a template, you should not set a subject, text, HTML, category
+        // otherwise there will be a validation error from the API side
+        ->templateUuid('bfa432fd-0000-0000-0000-8493da283a69')
+        ->templateVariables([
+            'user_name' => 'Jon Bush',
+            'next_step_link' => 'https://mailtrap.io/',
+            'get_started_link' => 'https://mailtrap.io/',
+            'onboarding_video_link' => 'some_video_link',
+            'company' => [
+                'name' => 'Best Company',
+                'address' => 'Its Address',
+            ],
+            'products' => [
+                [
+                    'name' => 'Product 1',
+                    'price' => 100,
+                ],
+                [
+                    'name' => 'Product 2',
+                    'price' => 200,
+                ],
+            ],
+            'isBool' => true,
+            'int' => 123
+        ])
+    ;
+
+    MailtrapClient::initSendingEmails(
+        apiKey: env('MAILTRAP_API_KEY') // your API token from here https://mailtrap.io/api-tokens
+    )->send($email);
+})->purpose('Send Template Mail');
+```
+
+After that just call this CLI command, and it will send your template email
+```bash
+php artisan send-template-mail
 ```
 
 ## Compatibility
