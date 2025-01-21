@@ -4,23 +4,26 @@ declare(strict_types=1);
 
 namespace Mailtrap\EmailHeader\Template;
 
+use Mailtrap\EmailHeader\CustomHeaderInterface;
 use Mailtrap\Exception\RuntimeException;
 use Symfony\Component\Mime\Header\AbstractHeader;
 
 /**
  * MIME Header for Template UUID
  *
- * Class CustomVariableHeader
+ * Class TemplateVariableHeader
  */
-class TemplateVariableHeader extends AbstractHeader
+class TemplateVariableHeader extends AbstractHeader implements CustomHeaderInterface
 {
     public const VAR_NAME = 'template_variables';
+    public const NAME_PREFIX = 'template_variables_prefix_';
 
     private mixed $value;
 
     public function __construct(string $name, mixed $value)
     {
-        parent::__construct($name);
+        // add prefix to avoid conflicts with reserved header names Symfony\Component\Mime\Header\Headers::HEADER_CLASS_MAP
+        parent::__construct(self::NAME_PREFIX . $name);
 
         $this->setValue($value);
     }
@@ -52,6 +55,11 @@ class TemplateVariableHeader extends AbstractHeader
     public function setValue(mixed $value): void
     {
         $this->value = $value;
+    }
+
+    public function getNameWithoutPrefix(): string
+    {
+        return substr($this->getName(), strlen(self::NAME_PREFIX));
     }
 
     public function getBodyAsString(): string

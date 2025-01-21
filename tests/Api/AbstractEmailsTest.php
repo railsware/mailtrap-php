@@ -572,6 +572,17 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
         return [
             ['user_id', '45982'],
             ['batch_id', 'PSJ-12'],
+            ['date', '2025'],
+            ['from', 'Some name'],
+            ['sender', 'Sender info'],
+            ['reply-to', 'Reply to info'],
+            ['to', 'To info'],
+            ['cc', 'Cc info'],
+            ['bcc', 'Bcc info'],
+            ['message-id', 'Message ID info'],
+            ['in-reply-to', 'In reply to info'],
+            ['references', 'References info'],
+            ['return-path', 'Return path info'],
         ];
     }
 
@@ -613,6 +624,17 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
             ]],
             ['isBool', true],
             ['int', 123],
+            ['date', '2025'],
+            ['from', 'Some name'],
+            ['sender', 'Sender info'],
+            ['reply-to', 'Reply to info'],
+            ['to', 'To info'],
+            ['cc', 'Cc info'],
+            ['bcc', 'Bcc info'],
+            ['message-id', 'Message ID info'],
+            ['in-reply-to', 'In reply to info'],
+            ['references', 'References info'],
+            ['return-path', 'Return path info'],
         ];
     }
 
