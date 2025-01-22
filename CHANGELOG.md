@@ -1,3 +1,7 @@
+## [2.0.4] - 2025-01-22
+
+- Add name prefix into custom EmailHeaders to avoid conflicts with reserved names Symfony\Component\Mime\Header\Headers::HEADER_CLASS_MAP
+
 ## [2.0.3] - 2024-11-01
 
 - Add more template examples in Laravel/Symfony docs

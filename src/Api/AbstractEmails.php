@@ -58,10 +58,10 @@ abstract class AbstractEmails extends AbstractApi implements EmailsSendApiInterf
 
             switch(true) {
                 case $header instanceof CustomVariableHeader:
-                    $payload[CustomVariableHeader::VAR_NAME][$header->getName()] = $header->getValue();
+                    $payload[CustomVariableHeader::VAR_NAME][$header->getNameWithoutPrefix()] = $header->getValue();
                     break;
                 case $header instanceof TemplateVariableHeader:
-                    $payload[TemplateVariableHeader::VAR_NAME][$header->getName()] = $header->getValue();
+                    $payload[TemplateVariableHeader::VAR_NAME][$header->getNameWithoutPrefix()] = $header->getValue();
                     break;
                 case $header instanceof CategoryHeader:
                     if (!empty($payload[CategoryHeader::VAR_NAME])) {
