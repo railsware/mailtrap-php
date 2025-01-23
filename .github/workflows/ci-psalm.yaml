@@ -45,5 +45,11 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-progress
 
+      - name: Install Psalm
+        run: composer require --dev vimeo/psalm --no-update
+
       - name: Run Psalm analyze
         run: vendor/bin/psalm
+
+      - name: Remove Psalm
+        run: composer remove vimeo/psalm --dev --no-update
