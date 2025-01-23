@@ -26,8 +26,8 @@ class MailtrapApiTransport extends AbstractTransport
     public function __construct(
         private EmailsSendApiInterface $emailsSendApiLayer,
         private Config $config,
-        EventDispatcherInterface $dispatcher = null,
-        LoggerInterface $logger = null
+        ?EventDispatcherInterface $dispatcher = null,
+        ?LoggerInterface $logger = null
     ) {
         parent::__construct($dispatcher, $logger);
     }

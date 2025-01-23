@@ -35,7 +35,7 @@ class MailtrapClient extends AbstractMailtrapClient
         string $apiKey,
         bool $isBulk = false,
         bool $isSandbox = false,
-        int $inboxId = null,
+        ?int $inboxId = null,
     ): EmailsSendApiInterface {
         $client = new self(new Config($apiKey));
 

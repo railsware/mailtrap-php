@@ -31,7 +31,7 @@ class Attachment extends AbstractApi implements SandboxInterface
      */
     public function getMessageAttachments(
         int $messageId,
-        string $attachmentType = null
+        ?string $attachmentType = null
     ): ResponseInterface {
         $parameters = [];
         if (!empty($attachmentType)) {
