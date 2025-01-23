@@ -46,7 +46,7 @@ jobs:
         run: composer install --prefer-dist --no-progress
 
       - name: Install Psalm
-        run: composer require --dev vimeo/psalm
+        run: composer require --dev vimeo/psalm:^5
 
       - name: Run Psalm analyze
         run: vendor/bin/psalm
