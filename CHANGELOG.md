@@ -1,3 +1,8 @@
+## [2.1.0] - 2025-01-28
+
+- Use psr/http-factory instead of php-http/message-factory
+- Remove a Psalm library from dependencies which can break installation on PHP 8.4
+
 ## [2.0.4] - 2025-01-22
 
 - Add name prefix into custom EmailHeaders to avoid conflicts with reserved names Symfony\Component\Mime\Header\Headers::HEADER_CLASS_MAP
