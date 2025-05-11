@@ -43,7 +43,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Mailtrap\\Bridge\\Laravel\\MailtrapApiProvider"
+        "Mailtrap\\Bridge\\Laravel\\MailtrapSdkProvider"
       ]
     }
   },

@@ -19,9 +19,9 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\MessageConverter;
 
 /**
- * Class MailtrapApiTransport
+ * Class MailtrapSdkTransport
  */
-class MailtrapApiTransport extends AbstractTransport
+class MailtrapSdkTransport extends AbstractTransport
 {
     public function __construct(
         private EmailsSendApiInterface $emailsSendApiLayer,
@@ -34,7 +34,7 @@ class MailtrapApiTransport extends AbstractTransport
 
     public function __toString(): string
     {
-        return sprintf('mailtrap+api://%s', $this->getEndpoint());
+        return sprintf('mailtrap+sdk://%s', $this->getEndpoint());
     }
 
     protected function doSend(SentMessage $message): void

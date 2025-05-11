@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Mailtrap\Tests\Bridge\Transport;
 
 use Mailtrap\Api\AbstractApi;
-use Mailtrap\Bridge\Transport\MailtrapApiTransport;
+use Mailtrap\Bridge\Transport\MailtrapSdkTransport;
 use Mailtrap\Config;
 use Mailtrap\MailtrapBulkSendingClient;
 use Mailtrap\MailtrapSandboxClient;
@@ -14,15 +14,15 @@ use Mailtrap\Tests\MailtrapTestCase;
 use Symfony\Component\Mailer\Envelope;
 
 /**
- * @covers MailtrapApiTransport
+ * @covers MailtrapSdkTransport
  */
-class MailtrapApiTransportTest extends MailtrapTestCase
+class MailtrapSdkTransportTest extends MailtrapTestCase
 {
     protected function setUp(): void
     {
         if (!class_exists(Envelope::class)) {
             $this->markTestSkipped(
-                'The "MailtrapApiTransportTest" tests skipped, because "symfony/mailer" package is not installed.'
+                'The "MailtrapSdkTransportTest" tests skipped, because "symfony/mailer" package is not installed.'
             );
         }
 
@@ -32,7 +32,7 @@ class MailtrapApiTransportTest extends MailtrapTestCase
     /**
      * @dataProvider getTransportData
      */
-    public function testToString(MailtrapApiTransport $transport, string $expected): void
+    public function testToString(MailtrapSdkTransport $transport, string $expected): void
     {
         $this->assertSame($expected, (string) $transport);
     }
@@ -46,25 +46,25 @@ class MailtrapApiTransportTest extends MailtrapTestCase
 
         return [
             [
-                new MailtrapApiTransport(
+                new MailtrapSdkTransport(
                     (new MailtrapSendingClient($sendConfig))->emails(),
                     $sendConfig
                 ),
-                sprintf('mailtrap+api://%s', AbstractApi::SENDMAIL_TRANSACTIONAL_HOST),
+                sprintf('mailtrap+sdk://%s', AbstractApi::SENDMAIL_TRANSACTIONAL_HOST),
             ],
             [
-                new MailtrapApiTransport(
+                new MailtrapSdkTransport(
                     (new MailtrapSandboxClient($sandboxConfig))->emails($inboxId),
                     $sandboxConfig
                 ),
-                sprintf('mailtrap+api://%s?inboxId=%s', AbstractApi::SENDMAIL_SANDBOX_HOST, $inboxId),
+                sprintf('mailtrap+sdk://%s?inboxId=%s', AbstractApi::SENDMAIL_SANDBOX_HOST, $inboxId),
             ],
             [
-                new MailtrapApiTransport(
+                new MailtrapSdkTransport(
                     (new MailtrapBulkSendingClient($bulkConfig))->emails(),
                     $bulkConfig
                 ),
-                sprintf('mailtrap+api://%s', AbstractApi::SENDMAIL_BULK_HOST),
+                sprintf('mailtrap+sdk://%s', AbstractApi::SENDMAIL_BULK_HOST),
             ],
         ];
     }

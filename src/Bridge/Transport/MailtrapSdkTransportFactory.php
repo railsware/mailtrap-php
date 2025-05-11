@@ -18,14 +18,14 @@ use Symfony\Component\Mailer\Transport\Dsn;
 use Symfony\Component\Mailer\Transport\TransportInterface;
 
 /**
- * Class MailtrapTransportFactory
+ * Class MailtrapSdkTransportFactory
  */
-final class MailtrapTransportFactory extends AbstractTransportFactory
+final class MailtrapSdkTransportFactory extends AbstractTransportFactory
 {
     public function create(Dsn $dsn): TransportInterface
     {
         if (!in_array($dsn->getScheme(), $this->getSupportedSchemes())) {
-            throw new UnsupportedSchemeException($dsn, 'mailtrap', $this->getSupportedSchemes());
+            throw new UnsupportedSchemeException($dsn, 'mailtrap+sdk', $this->getSupportedSchemes());
         }
 
         $inboxId = !empty($dsn->getOption('inboxId')) ? (int) $dsn->getOption('inboxId') : null;
@@ -38,7 +38,7 @@ final class MailtrapTransportFactory extends AbstractTransportFactory
         if ($emailsSendMailtrapClient instanceof MailtrapSandboxClient) {
             if (null === $inboxId) {
                 throw new RuntimeException(
-                    'You cannot send an email to a sandbox with an empty "inboxId" parameter. Example -> "MAILER_DSN=mailtrap+api://APIKEY@sandbox.api.mailtrap.io?inboxId=1234"'
+                    'You cannot send an email to a sandbox with an empty "inboxId" parameter. Example -> "MAILER_DSN=mailtrap+sdk://APIKEY@sandbox.api.mailtrap.io?inboxId=1234"'
                 );
             }
 
@@ -47,12 +47,12 @@ final class MailtrapTransportFactory extends AbstractTransportFactory
             $emailsSendApiLayer = $emailsSendMailtrapClient->emails();
         }
 
-        return new MailtrapApiTransport($emailsSendApiLayer, $config, $this->dispatcher, $this->logger);
+        return new MailtrapSdkTransport($emailsSendApiLayer, $config, $this->dispatcher, $this->logger);
     }
 
     protected function getSupportedSchemes(): array
     {
-        return ['mailtrap', 'mailtrap+api'];
+        return ['mailtrap+sdk'];
     }
 
     private function getEmailsSendMailTrapClient(Config $config): EmailsSendMailtrapClientInterface
