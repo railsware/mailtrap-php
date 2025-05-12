@@ -1,6 +1,7 @@
 ## [2.2.0] - 2025-05-14
 
 - [BC BREAK] Change Symfony&Laravel integration naming from `mailtrap+api` to `mailtrap+sdk` ([reason](https://symfony.com/packages/MailtrapMailer))
+- Rollback Psalm library because now they support PHP 8.4
 
 ## [2.1.0] - 2025-01-28
 

@@ -1,4 +1,4 @@
-Mailtrap bridge for Symfony framework [API SDK]
+Mailtrap bridge for Symfony framework [SDK]
 ===============
 
 Provides full mailtrap.io integration for Symfony Mailer.

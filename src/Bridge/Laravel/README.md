@@ -1,4 +1,4 @@
-Mailtrap bridge for Laravel framework [API SDK]
+Mailtrap bridge for Laravel framework [SDK]
 ===============
 
 Provides full mailtrap.io integration for Laravel framework.
