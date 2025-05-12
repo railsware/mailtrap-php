@@ -28,7 +28,7 @@ return [
             // end mailtrap transport
     
     ]
-]
+];
 ```
   __After__:
 ```php
@@ -49,7 +49,7 @@ return [
             // end mailtrap transport
     
     ]
-]
+];
 ```
 
 2. Set `mailtrap-sdk` transport as a default instead `mailtrap` inside your `.env` file.

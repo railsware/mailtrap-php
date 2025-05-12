@@ -34,7 +34,7 @@ return [
             // end mailtrap transport
     
     ]
-]
+];
 ```
 
 Set `mailtrap-sdk` transport as a default Laravel mailer and change default mailtrap config variables inside your `.env` file.
