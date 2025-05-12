@@ -159,3 +159,8 @@ final class SomeController extends AbstractController
 ## Resources
 
 * [Symfony mailer documentation](https://symfony.com/doc/current/mailer.html)
+
+### Notes
+> If you are looking for a quicker setup and don’t need advanced features like templates or custom variables, 
+> you can also use the [MailtrapMailer Symfony package](https://symfony.com/packages/MailtrapMailer), which provides a simple bridge for sending emails 
+> through Mailtrap using standard Symfony Mailer configuration.
