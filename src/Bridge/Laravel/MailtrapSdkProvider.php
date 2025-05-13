@@ -6,20 +6,20 @@ namespace Mailtrap\Bridge\Laravel;
 
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\ServiceProvider;
-use Mailtrap\Bridge\Transport\MailtrapTransportFactory;
+use Mailtrap\Bridge\Transport\MailtrapSdkTransportFactory;
 use Symfony\Component\Mailer\Transport\Dsn;
 
 /**
- * Class MailtrapApiProvider
+ * Class MailtrapSdkProvider
  */
-class MailtrapApiProvider extends ServiceProvider
+class MailtrapSdkProvider extends ServiceProvider
 {
     /**
      * Register services.
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/config/mailtrap.php', 'services');
+        $this->mergeConfigFrom(__DIR__ . '/config/mailtrap-sdk.php', 'services');
     }
 
     /**
@@ -29,15 +29,15 @@ class MailtrapApiProvider extends ServiceProvider
     {
         // https://laravel.com/docs/9.x/upgrade#symfony-mailer
         if ((int) $this->app->version() >= 9) {
-            Mail::extend('mailtrap', function () {
-                return (new MailTrapTransportFactory)->create(
+            Mail::extend('mailtrap-sdk', function () {
+                return (new MailtrapSdkTransportFactory)->create(
                     new Dsn(
-                        'mailtrap+api',
-                        config('services.mailtrap.host'),
-                        config('services.mailtrap.apiKey'),
+                        'mailtrap+sdk',
+                        config('services.mailtrap-sdk.host'),
+                        config('services.mailtrap-sdk.apiKey'),
                         null,
                         null,
-                        config('services.mailtrap', [])
+                        config('services.mailtrap-sdk', [])
                     )
                 );
             });

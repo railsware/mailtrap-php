@@ -67,9 +67,9 @@ abstract class TransportFactoryTestCase extends MailtrapTestCase
         $this->assertEquals($transport, $factory->create($dsn));
 
         if ('default' === $dsn->getHost()) {
-            $this->assertStringMatchesFormat('mailtrap+api://' . AbstractApi::SENDMAIL_TRANSACTIONAL_HOST, (string) $transport);
+            $this->assertStringMatchesFormat('mailtrap+sdk://' . AbstractApi::SENDMAIL_TRANSACTIONAL_HOST, (string) $transport);
         } else {
-            $this->assertStringStartsWith('mailtrap+api://' . $dsn->getHost(), (string) $transport);
+            $this->assertStringStartsWith('mailtrap+sdk://' . $dsn->getHost(), (string) $transport);
         }
     }
 

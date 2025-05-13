@@ -1,16 +1,16 @@
-Mailtrap bridge for Laravel framework [API]
+Mailtrap bridge for Laravel framework [SDK]
 ===============
 
-Provides mailtrap.io integration for Laravel framework.
+Provides full mailtrap.io integration for Laravel framework.
 
 ## Installation
 If you just want to get started quickly, you should run one of the following command (depends on which HTTP client you want to use):
 ```bash
 # With symfony http client (recommend)
-composer require railsware/mailtrap-php symfony/http-client nyholm/psr7
+composer require railsware/mailtrap-php symfony/http-client nyholm/psr7 symfony/mailer
 
 # Or with guzzle http client
-composer require railsware/mailtrap-php guzzlehttp/guzzle php-http/guzzle7-adapter
+composer require railsware/mailtrap-php guzzlehttp/guzzle php-http/guzzle7-adapter symfony/mailer
 ```
 
 ## Usage
@@ -28,22 +28,22 @@ return [
     'mailers' => [
     
             // start mailtrap transport
-            'mailtrap' => [
-                'transport' => 'mailtrap'
+            'mailtrap-sdk' => [
+                'transport' => 'mailtrap-sdk'
             ],
             // end mailtrap transport
     
     ]
-]
+];
 ```
 
-Set `mailtrap` transport as a default Laravel mailer and change default mailtrap config variables inside your `.env` file.
+Set `mailtrap-sdk` transport as a default Laravel mailer and change default mailtrap config variables inside your `.env` file.
 
 
 ### Sending
 You need to set the API key to the `MAILTRAP_API_KEY` variable.
 ```bash
-MAIL_MAILER="mailtrap"
+MAIL_MAILER="mailtrap-sdk"
 
 MAILTRAP_HOST="send.api.mailtrap.io"
 MAILTRAP_API_KEY="YOUR_API_KEY_HERE"
@@ -53,7 +53,7 @@ You need to set the API key to the `MAILTRAP_API_KEY` variable.
 
 More info about bulk sending -> https://help.mailtrap.io/article/113-sending-streams
 ```bash
-MAIL_MAILER="mailtrap"
+MAIL_MAILER="mailtrap-sdk"
 
 MAILTRAP_HOST="bulk.api.mailtrap.io"
 MAILTRAP_API_KEY="YOUR_API_KEY_HERE"
@@ -63,7 +63,7 @@ You need to set the API key to the `MAILTRAP_API_KEY` variable and set your inbo
 
 More info sandbox -> https://help.mailtrap.io/article/109-getting-started-with-mailtrap-email-testing
 ```bash
-MAIL_MAILER="mailtrap"
+MAIL_MAILER="mailtrap-sdk"
 
 MAILTRAP_HOST="sandbox.api.mailtrap.io"
 MAILTRAP_API_KEY="YOUR_API_KEY_HERE"
@@ -217,8 +217,8 @@ use Illuminate\Support\Facades\Mail;
 Artisan::command('send-welcome-mail', function () {
     Mail::to('testreceiver@gmail.com')->send(new WelcomeMail("Jon"));
     
-    // Also, you can use specific mailer if your default mailer is not "mailtrap" but you want to use it for welcome mails
-    // Mail::mailer('mailtrap')->to('testreceiver@gmail.com')->send(new WelcomeMail("Jon"));
+    // Also, you can use specific mailer if your default mailer is not "mailtrap-sdk" but you want to use it for welcome mails
+    // Mail::mailer('mailtrap-sdk')->to('testreceiver@gmail.com')->send(new WelcomeMail("Jon"));
 })->purpose('Send welcome mail');
 ```
 

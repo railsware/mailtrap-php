@@ -1,12 +1,12 @@
-Mailtrap bridge for Symfony framework [API]
+Mailtrap bridge for Symfony framework [SDK]
 ===============
 
-Provides mailtrap.io integration for Symfony Mailer.
+Provides full mailtrap.io integration for Symfony Mailer.
 
 ## Installation
-If you just want to get started quickly, you should run the following command:
+If you just want to get started quickly with the SDK library, you should run the following command:
 ```bash
-composer require railsware/mailtrap-php symfony/http-client nyholm/psr7
+composer require railsware/mailtrap-php symfony/http-client nyholm/psr7 symfony/mailer
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ Add MailtrapTransport into your `config/services.yaml` file
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    Mailtrap\Bridge\Transport\MailtrapTransportFactory:
+    Mailtrap\Bridge\Transport\MailtrapSdkTransportFactory:
         tags:
             - { name: 'mailer.transport_factory' }
 ```
@@ -25,9 +25,9 @@ Add MailtrapTransport into your `config/services.yaml` file
 ### Sending
 Add or change MAILER_DSN variable inside your `.env` file. Also, you need to change the `YOUR_API_KEY_HERE` placeholder.
 ```bash
-MAILER_DSN=mailtrap+api://YOUR_API_KEY_HERE@default
+MAILER_DSN=mailtrap+sdk://YOUR_API_KEY_HERE@default
 # or
-MAILER_DSN=mailtrap+api://YOUR_API_KEY_HERE@send.api.mailtrap.io
+MAILER_DSN=mailtrap+sdk://YOUR_API_KEY_HERE@send.api.mailtrap.io
 ```
 
 ### Bulk Sending
@@ -35,7 +35,7 @@ Add or change MAILER_DSN variable inside your `.env` file. Also, you need to cha
 
 More info about bulk sending -> https://help.mailtrap.io/article/113-sending-streams
 ```bash
-MAILER_DSN=mailtrap+api://YOUR_API_KEY_HERE@bulk.api.mailtrap.io
+MAILER_DSN=mailtrap+sdk://YOUR_API_KEY_HERE@bulk.api.mailtrap.io
 ```
 
 ### Sandbox
@@ -43,7 +43,7 @@ Add or change MAILER_DSN variable inside your `.env` file. Also, you need to cha
 
 More info sandbox -> https://help.mailtrap.io/article/109-getting-started-with-mailtrap-email-testing
 ```bash
-MAILER_DSN=mailtrap+api://YOUR_API_KEY_HERE@sandbox.api.mailtrap.io?inboxId=1000001
+MAILER_DSN=mailtrap+sdk://YOUR_API_KEY_HERE@sandbox.api.mailtrap.io?inboxId=1000001
 ```
 
 ### Send you first email
@@ -159,3 +159,8 @@ final class SomeController extends AbstractController
 ## Resources
 
 * [Symfony mailer documentation](https://symfony.com/doc/current/mailer.html)
+
+### Notes
+> If you are looking for a quicker setup and don’t need advanced features like templates or custom variables, 
+> you can also use the [MailtrapMailer Symfony package](https://symfony.com/packages/MailtrapMailer), which provides a simple bridge for sending emails 
+> through Mailtrap using standard Symfony Mailer configuration.

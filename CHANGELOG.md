@@ -1,3 +1,8 @@
+## [3.0.0] - 2025-05-15
+
+- [BC BREAK] Change Symfony&Laravel integration naming from `mailtrap+api` to `mailtrap+sdk` ([reason](https://symfony.com/packages/MailtrapMailer))
+- Rollback Psalm library because now they support PHP 8.4
+
 ## [2.1.0] - 2025-01-28
 
 - Use psr/http-factory instead of php-http/message-factory
