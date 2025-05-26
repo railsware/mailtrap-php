@@ -55,12 +55,15 @@ final class UpdateContact implements ContactInterface
 
     public function toArray(): array
     {
-        return [
-            'email' => $this->getEmail(),
-            'fields' => $this->getFields(),
-            'list_ids_included' => $this->getListIdsIncluded(),
-            'list_ids_excluded' => $this->getListIdsExcluded(),
-            'unsubscribed' => $this->getUnsubscribed(),
-        ];
+        return array_filter(
+            [
+                'email'                => $this->getEmail(),
+                'fields'               => $this->getFields(),
+                'list_ids_included'    => $this->getListIdsIncluded(),
+                'list_ids_excluded'    => $this->getListIdsExcluded(),
+                'unsubscribed'         => $this->getUnsubscribed(),
+            ],
+            fn($value) => $value !== null
+        );
     }
 }

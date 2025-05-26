@@ -117,7 +117,7 @@ class ContactTest extends MailtrapTestCase
         $this->contact->expects($this->once())
             ->method('httpPut')
             ->with(
-                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/' . $contactEmail,
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/' . urlencode($contactEmail),
                 [],
                 ['contact' => $contactDTO->toArray()]
             )
@@ -130,6 +130,33 @@ class ContactTest extends MailtrapTestCase
 
         $this->assertInstanceOf(Response::class, $response);
         $this->assertEquals($contactEmail, $responseData['email']);
+    }
+
+    public function testUpdateContactExcludesNullUnsubscribed(): void
+    {
+        $contactEmail = 'test@example.com';
+        $contactDTO = new UpdateContact($contactEmail, ['last_name' => 'Smith'], [3], [1, 2]);
+
+        $this->contact->expects($this->once())
+            ->method('httpPut')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/' . urlencode($contactEmail),
+                [],
+                $this->callback(function (array $payload) {
+                    $this->assertArrayHasKey('contact', $payload);
+                    $this->assertArrayNotHasKey('unsubscribed', $payload['contact']);
+                    return true;
+                })
+            )
+            ->willReturn(
+                new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedUpdateContactData()))
+            );
+
+        $response = $this->contact->updateContactByEmail($contactEmail, $contactDTO);
+        $responseData = ResponseHelper::toArray($response)['data'];
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertEquals('unsubscribed', $responseData['status']);
     }
 
     public function testDeleteContactById(): void
@@ -151,7 +178,7 @@ class ContactTest extends MailtrapTestCase
         $contactEmail = 'test@example.com';
         $this->contact->expects($this->once())
             ->method('httpDelete')
-            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/' . $contactEmail)
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/' . urlencode($contactEmail))
             ->willReturn(new Response(204));
 
         $response = $this->contact->deleteContactByEmail($contactEmail);

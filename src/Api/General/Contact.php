@@ -107,7 +107,7 @@ class Contact extends AbstractApi implements GeneralInterface
     {
         return $this->handleResponse(
             $this->httpPut(
-                path: $this->getBasePath() . '/' . $contactIdOrEmail,
+                path: $this->getBasePath() . '/' . urlencode($contactIdOrEmail),
                 body: ['contact' => $contact->toArray()]
             )
         );
@@ -122,7 +122,7 @@ class Contact extends AbstractApi implements GeneralInterface
     private function deleteContact(string $idOrEmail): ResponseInterface
     {
         return $this->handleResponse(
-            $this->httpDelete($this->getBasePath() . '/' . $idOrEmail)
+            $this->httpDelete($this->getBasePath() . '/' . urlencode($idOrEmail))
         );
     }
 
