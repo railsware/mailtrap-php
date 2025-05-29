@@ -1,3 +1,6 @@
+## [3.1.0] - 2025-05-27
+- Add Contacts API functionality
+
 ## [3.0.0] - 2025-05-15
 
 - [BC BREAK] Change Symfony&Laravel integration naming from `mailtrap+api` to `mailtrap+sdk` ([reason](https://symfony.com/packages/MailtrapMailer))
