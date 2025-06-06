@@ -55,6 +55,44 @@ class ContactTest extends MailtrapTestCase
         $this->assertArrayHasKey('id', $responseData[0]);
     }
 
+    public function testGetContactById(): void
+    {
+        $contactId = '019706a8-9612-77be-8586-4f26816b467a';
+
+        $this->contact->expects($this->once())
+            ->method('httpGet')
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/' . $contactId)
+            ->willReturn(
+                new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedContactData()))
+            );
+
+        $response = $this->contact->getContactById($contactId);
+        $responseData = ResponseHelper::toArray($response)['data'];
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertArrayHasKey('email', $responseData);
+        $this->assertEquals('test@example.com', $responseData['email']);
+    }
+
+    public function testGetContactByEmail(): void
+    {
+        $contactEmail = 'test@example.com';
+
+        $this->contact->expects($this->once())
+            ->method('httpGet')
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/' . urlencode($contactEmail))
+            ->willReturn(
+                new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedContactData()))
+            );
+
+        $response = $this->contact->getContactByEmail($contactEmail);
+        $responseData = ResponseHelper::toArray($response)['data'];
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertArrayHasKey('email', $responseData);
+        $this->assertEquals($contactEmail, $responseData['email']);
+    }
+
     public function testCreateContact(): void
     {
         $fakeEmail = 'test@example.com';
