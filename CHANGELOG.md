@@ -1,3 +1,7 @@
+## [3.2.0] - 2025-06-12
+- Add Get contact API endpoint
+- Add Email Templates API functionality
+
 ## [3.1.0] - 2025-05-27
 - Add Contacts API functionality
 

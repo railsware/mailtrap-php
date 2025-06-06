@@ -33,6 +33,28 @@ class Contact extends AbstractApi implements GeneralInterface
     }
 
     /**
+     * Get a Contact by ID (UUID)
+     *
+     * @param string $contactId
+     * @return ResponseInterface
+     */
+    public function getContactById(string $contactId): ResponseInterface
+    {
+        return $this->getContact($contactId);
+    }
+
+    /**
+     * Get a Contact by Email.
+     *
+     * @param string $email
+     * @return ResponseInterface
+     */
+    public function getContactByEmail(string $email): ResponseInterface
+    {
+        return $this->getContact($email);
+    }
+
+    /**
      * Create a new Contact.
      *
      * @param CreateContact $contact
@@ -94,6 +116,19 @@ class Contact extends AbstractApi implements GeneralInterface
     public function getAccountId(): int
     {
         return $this->accountId;
+    }
+
+    /**
+     * Get a Contact by ID or Email.
+     *
+     * @param string $idOrEmail
+     * @return ResponseInterface
+     */
+    private function getContact(string $idOrEmail): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpGet($this->getBasePath() . '/' . urlencode($idOrEmail))
+        );
     }
 
     /**
