@@ -17,7 +17,7 @@ To get the most of this official Mailtrap.io PHP SDK:
 
 It supports Symphony and Laravel integrations. 
 
-Currently this SDK you can do:
+Currently with this SDK you can:
 - Email API/SMTP
   - Send an email (Transactional and Bulk streams)
   - Send an email with a Template
