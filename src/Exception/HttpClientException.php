@@ -29,6 +29,9 @@ class HttpClientException extends HttpException
             $body = ResponseHelper::toArray($response);
         } catch (JsonException|InvalidTypeException) {
             $body['error'] = $response->getBody()->__toString();
+            if (empty($body['error'])) {
+                $body['error'] = 'No error info in the response body';
+            }
         }
 
         if (isset(self::ERROR_PREFIXES[$statusCode])) {

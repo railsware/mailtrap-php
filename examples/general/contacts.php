@@ -114,8 +114,8 @@ try {
     // OR delete contact by email
     $response = $contacts->deleteContactByEmail('john.smith@example.com');
 
-    // print the response body (array)
-    var_dump(ResponseHelper::toArray($response));
+    // Print the response status code
+    var_dump($response->getStatusCode());
 } catch (Exception $e) {
     echo 'Caught exception: ',  $e->getMessage(), PHP_EOL;
 }
