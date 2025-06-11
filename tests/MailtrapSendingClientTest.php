@@ -28,8 +28,11 @@ class MailtrapSendingClientTest extends MailtrapClientTestCase
 
     public function mapInstancesProvider(): iterable
     {
-        foreach (MailtrapSendingClient::API_MAPPING as $item) {
-            yield [new $item($this->getConfigMock())];
+        foreach (MailtrapSendingClient::API_MAPPING as $key => $item) {
+            yield match ($key) {
+                'suppressions' => [new $item($this->getConfigMock(), self::FAKE_ACCOUNT_ID)],
+                default => [new $item($this->getConfigMock())],
+            };
         }
     }
 
