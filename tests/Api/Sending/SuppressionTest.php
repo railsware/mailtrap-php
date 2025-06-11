@@ -7,6 +7,7 @@ namespace Mailtrap\Tests\Api\Sending;
 use Mailtrap\Api\AbstractApi;
 use Mailtrap\Api\Sending\Suppression;
 use Mailtrap\Exception\HttpClientException;
+use Mailtrap\Helper\ResponseHelper;
 use Mailtrap\Tests\MailtrapTestCase;
 use Nyholm\Psr7\Response;
 
@@ -44,8 +45,10 @@ class SuppressionTest extends MailtrapTestCase
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], $expectedResponseBody));
 
         $response = $this->suppression->getSuppressions();
+        $responseData = ResponseHelper::toArray($response);
+
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertJson($response->getBody()->getContents());
+        $this->assertArrayHasKey('id', $responseData[0]);
     }
 
     public function testGetSuppressionsWithEmail(): void
@@ -59,8 +62,12 @@ class SuppressionTest extends MailtrapTestCase
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], $expectedResponseBody));
 
         $response = $this->suppression->getSuppressions($email);
+        $responseData = ResponseHelper::toArray($response);
+
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertJson($response->getBody()->getContents());
+        $this->assertArrayHasKey('id', $responseData[0]);
+        $this->assertArrayHasKey('email', $responseData[0]);
+        $this->assertSame($email, $responseData[0]['email']);
     }
 
     public function testDeleteSuppression(): void
