@@ -39,8 +39,8 @@ try {
 
     $response = $generalUsers->delete($accountAccessId);
 
-    // print the response body (array)
-    var_dump(ResponseHelper::toArray($response));
+    // Print the response status code
+    var_dump($response->getStatusCode());
 } catch (Exception $e) {
     echo 'Caught exception: ',  $e->getMessage(), "\n";
 }

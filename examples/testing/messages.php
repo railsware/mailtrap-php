@@ -197,8 +197,8 @@ try {
 
     $response = $sandboxMessages->delete($messageId);
 
-    // print the response body (array)
-    var_dump(ResponseHelper::toArray($response));
+    // Print the response status code
+    var_dump($response->getStatusCode());
 } catch (Exception $e) {
     echo 'Caught exception: ',  $e->getMessage(), "\n";
 }

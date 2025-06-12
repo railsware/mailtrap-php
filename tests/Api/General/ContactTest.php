@@ -28,7 +28,7 @@ class ContactTest extends MailtrapTestCase
         parent::setUp();
 
         $this->contact = $this->getMockBuilder(Contact::class)
-            ->onlyMethods(['httpGet', 'httpPost', 'httpPut', 'httpDelete'])
+            ->onlyMethods(['httpGet', 'httpPost', 'httpPut', 'httpPatch', 'httpDelete'])
             ->setConstructorArgs([$this->getConfigMock(), self::FAKE_ACCOUNT_ID])
             ->getMock();
     }
@@ -53,6 +53,153 @@ class ContactTest extends MailtrapTestCase
         $this->assertInstanceOf(Response::class, $response);
         $this->assertCount(2, $responseData);
         $this->assertArrayHasKey('id', $responseData[0]);
+    }
+
+    public function testGetContactList(): void
+    {
+        $contactListId = 1;
+
+        $this->contact->expects($this->once())
+            ->method('httpGet')
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/lists/' . $contactListId)
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedContactLists()[0])));
+
+        $response = $this->contact->getContactList($contactListId);
+        $responseData = ResponseHelper::toArray($response);
+
+        $this->assertArrayHasKey('id', $responseData);
+        $this->assertEquals($contactListId, $responseData['id']);
+    }
+
+    public function testGetContactListNotFound(): void
+    {
+        $contactListId = 999; // Non-existent ID for testing
+
+        $this->contact->expects($this->once())
+            ->method('httpGet')
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/lists/' . $contactListId)
+            ->willReturn(
+                new Response(404, ['Content-Type' => 'application/json'], json_encode(['error' => 'Not Found']))
+            );
+
+        $this->expectException(HttpClientException::class);
+        $this->expectExceptionMessage('Errors: Not Found.');
+
+        $this->contact->getContactList($contactListId);
+    }
+
+    public function testCreateContactList(): void
+    {
+        $contactListName = 'List 1';
+
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/lists',
+                [],
+                ['name' => $contactListName]
+            )
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedContactLists()[0])));
+
+        $response = $this->contact->createContactList($contactListName);
+        $responseData = ResponseHelper::toArray($response);
+
+        $this->assertArrayHasKey('id', $responseData);
+        $this->assertEquals($contactListName, $responseData['name']);
+    }
+
+    public function testCreateContactListRateLimitExceeded(): void
+    {
+        $contactListName = 'List 1';
+
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/lists',
+                [],
+                ['name' => $contactListName]
+            )
+            ->willReturn(
+                new Response(429, ['Content-Type' => 'application/json'], json_encode(['errors' => 'Rate limit exceeded']))
+            );
+
+        $this->expectException(HttpClientException::class);
+        $this->expectExceptionMessage('Errors: Rate limit exceeded.');
+
+        $this->contact->createContactList($contactListName);
+    }
+
+    public function testUpdateContactList(): void
+    {
+        $contactListId = 2;
+        $newContactListName = 'List 2';
+
+        $this->contact->expects($this->once())
+            ->method('httpPatch')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/lists/' . $contactListId,
+                [],
+                ['name' => $newContactListName]
+            )
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedContactLists()[1])));
+
+        $response = $this->contact->updateContactList($contactListId, $newContactListName);
+        $responseData = ResponseHelper::toArray($response);
+
+        $this->assertArrayHasKey('id', $responseData);
+        $this->assertEquals($newContactListName, $responseData['name']);
+    }
+
+    public function testDeleteContactList(): void
+    {
+        $contactListId = 1;
+
+        $this->contact->expects($this->once())
+            ->method('httpDelete')
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/lists/' . $contactListId)
+            ->willReturn(new Response(204));
+
+        $response = $this->contact->deleteContactList($contactListId);
+
+        $this->assertEquals(204, $response->getStatusCode());
+    }
+
+    public function testGetContactById(): void
+    {
+        $contactId = '019706a8-9612-77be-8586-4f26816b467a';
+
+        $this->contact->expects($this->once())
+            ->method('httpGet')
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/' . $contactId)
+            ->willReturn(
+                new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedContactData()))
+            );
+
+        $response = $this->contact->getContactById($contactId);
+        $responseData = ResponseHelper::toArray($response)['data'];
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertArrayHasKey('email', $responseData);
+        $this->assertEquals('test@example.com', $responseData['email']);
+    }
+
+    public function testGetContactByEmail(): void
+    {
+        $contactEmail = 'test@example.com';
+
+        $this->contact->expects($this->once())
+            ->method('httpGet')
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/' . urlencode($contactEmail))
+            ->willReturn(
+                new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedContactData()))
+            );
+
+        $response = $this->contact->getContactByEmail($contactEmail);
+        $responseData = ResponseHelper::toArray($response)['data'];
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertArrayHasKey('email', $responseData);
+        $this->assertEquals($contactEmail, $responseData['email']);
     }
 
     public function testCreateContact(): void

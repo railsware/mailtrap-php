@@ -28,6 +28,90 @@ try {
 
 
 /**
+ * Get a specific Contact List by ID.
+ *
+ * GET https://mailtrap.io/api/accounts/{account_id}/contacts/lists/{list_id}
+ */
+try {
+    $contactListId = 1; // Replace 1 with the actual list ID
+    $response = $contacts->getContactList($contactListId);
+
+    // print the response body (array)
+    var_dump(ResponseHelper::toArray($response));
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), PHP_EOL;
+}
+
+
+/**
+ * Create a new Contact List.
+ *
+ * POST https://mailtrap.io/api/accounts/{account_id}/contacts/lists
+ */
+try {
+    $contactListName = 'New Contact List'; // Replace with your desired list name
+    $response = $contacts->createContactList($contactListName);
+
+    // print the response body (array)
+    var_dump(ResponseHelper::toArray($response));
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), PHP_EOL;
+}
+
+
+/**
+ * Update a Contact List by ID.
+ *
+ * PATCH https://mailtrap.io/api/accounts/{account_id}/contacts/lists/{list_id}
+ */
+try {
+    $contactListId = 1; // Replace 1 with the actual list ID
+    $newContactListName = 'Updated Contact List Name'; // Replace with your desired list name
+    $response = $contacts->updateContactList($contactListId, $newContactListName);
+
+    // print the response body (array)
+    var_dump(ResponseHelper::toArray($response));
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), PHP_EOL;
+}
+
+
+/**
+ * Delete a Contact List by ID.
+ *
+ * DELETE https://mailtrap.io/api/accounts/{account_id}/contacts/lists/{list_id}
+ */
+try {
+    $contactListId = 1; // Replace 1 with the actual list ID
+    $response = $contacts->deleteContactList($contactListId);
+
+    // Print the response status code
+    var_dump($response->getStatusCode());
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), PHP_EOL;
+}
+
+
+/**
+ * Get contact
+ *
+ * GET https://mailtrap.io/api/accounts/{account_id}/contacts/{id_or_email}
+ */
+try {
+    // Get contact by ID
+    $response = $contacts->getContactById('019706a8-0000-0000-0000-4f26816b467a');
+
+    // OR get contact by email
+    $response = $contacts->getContactByEmail('john.smith@example.com');
+
+    // print the response body (array)
+    var_dump(ResponseHelper::toArray($response));
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), PHP_EOL;
+}
+
+
+/**
  * Create a new Contact
  *
  * POST https://mailtrap.io/api/accounts/{account_id}/contacts
@@ -97,8 +181,8 @@ try {
     // OR delete contact by email
     $response = $contacts->deleteContactByEmail('john.smith@example.com');
 
-    // print the response body (array)
-    var_dump(ResponseHelper::toArray($response));
+    // Print the response status code
+    var_dump($response->getStatusCode());
 } catch (Exception $e) {
     echo 'Caught exception: ',  $e->getMessage(), PHP_EOL;
 }

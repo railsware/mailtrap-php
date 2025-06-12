@@ -33,6 +33,87 @@ class Contact extends AbstractApi implements GeneralInterface
     }
 
     /**
+     * Get a specific Contact List by ID.
+     *
+     * @param int $listId
+     * @return ResponseInterface
+     */
+    public function getContactList(int $listId): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpGet($this->getBasePath() . '/lists/' . $listId)
+        );
+    }
+
+    /**
+     * Create a new Contact List.
+     *
+     * @param string $name
+     * @return ResponseInterface
+     */
+    public function createContactList(string $name): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpPost(
+                path: $this->getBasePath() . '/lists',
+                body: ['name' => $name]
+            )
+        );
+    }
+
+    /**
+     * Update an existing Contact List by ID.
+     *
+     * @param int $listId
+     * @param string $name
+     * @return ResponseInterface
+     */
+    public function updateContactList(int $listId, string $name): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpPatch(
+                path: $this->getBasePath() . '/lists/' . $listId,
+                body: ['name' => $name]
+            )
+        );
+    }
+
+    /**
+     * Delete a Contact List by ID.
+     *
+     * @param int $listId
+     * @return ResponseInterface
+     */
+    public function deleteContactList(int $listId): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpDelete($this->getBasePath() . '/lists/' . $listId)
+        );
+    }
+
+    /**
+     * Get a Contact by ID (UUID)
+     *
+     * @param string $contactId
+     * @return ResponseInterface
+     */
+    public function getContactById(string $contactId): ResponseInterface
+    {
+        return $this->getContact($contactId);
+    }
+
+    /**
+     * Get a Contact by Email.
+     *
+     * @param string $email
+     * @return ResponseInterface
+     */
+    public function getContactByEmail(string $email): ResponseInterface
+    {
+        return $this->getContact($email);
+    }
+
+    /**
      * Create a new Contact.
      *
      * @param CreateContact $contact
@@ -94,6 +175,19 @@ class Contact extends AbstractApi implements GeneralInterface
     public function getAccountId(): int
     {
         return $this->accountId;
+    }
+
+    /**
+     * Get a Contact by ID or Email.
+     *
+     * @param string $idOrEmail
+     * @return ResponseInterface
+     */
+    private function getContact(string $idOrEmail): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpGet($this->getBasePath() . '/' . urlencode($idOrEmail))
+        );
     }
 
     /**
