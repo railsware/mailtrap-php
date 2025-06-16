@@ -1,3 +1,6 @@
+## [3.3.0] - 2025-06-17
+- Add Email Sending Suppressions API
+
 ## [3.2.0] - 2025-06-13
 - Add Contact Lists API functionality
 - Add Email Templates API functionality
