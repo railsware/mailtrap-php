@@ -33,6 +33,65 @@ class Contact extends AbstractApi implements GeneralInterface
     }
 
     /**
+     * Get a specific Contact List by ID.
+     *
+     * @param int $listId
+     * @return ResponseInterface
+     */
+    public function getContactList(int $listId): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpGet($this->getBasePath() . '/lists/' . $listId)
+        );
+    }
+
+    /**
+     * Create a new Contact List.
+     *
+     * @param string $name
+     * @return ResponseInterface
+     */
+    public function createContactList(string $name): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpPost(
+                path: $this->getBasePath() . '/lists',
+                body: ['name' => $name]
+            )
+        );
+    }
+
+    /**
+     * Update an existing Contact List by ID.
+     *
+     * @param int $listId
+     * @param string $name
+     * @return ResponseInterface
+     */
+    public function updateContactList(int $listId, string $name): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpPatch(
+                path: $this->getBasePath() . '/lists/' . $listId,
+                body: ['name' => $name]
+            )
+        );
+    }
+
+    /**
+     * Delete a Contact List by ID.
+     *
+     * @param int $listId
+     * @return ResponseInterface
+     */
+    public function deleteContactList(int $listId): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpDelete($this->getBasePath() . '/lists/' . $listId)
+        );
+    }
+
+    /**
      * Get a Contact by ID (UUID)
      *
      * @param string $contactId
