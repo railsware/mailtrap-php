@@ -13,6 +13,7 @@ use Mailtrap\EmailHeader\Template\TemplateVariableHeader;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Header\Headers;
+use Symfony\Component\Mime\Header\MailboxListHeader;
 
 /**
  * Class AbstractEmails
@@ -21,10 +22,15 @@ abstract class AbstractEmails extends AbstractApi implements EmailsSendApiInterf
 {
     protected function getPayload(Email $email): array
     {
-        $payload = [
-            'from' => $this->getStringifierAddress($this->getSender($email->getHeaders())),
-            'to' => array_map([$this, 'getStringifierAddress'], $this->getRecipients($email->getHeaders(), $email)),
-        ];
+        $payload = [];
+
+        if (null !== $this->getSender($email->getHeaders())) {
+            $payload['from'] = $this->getStringifierAddress($this->getSender($email->getHeaders()));
+        }
+
+        if (!empty($this->getRecipients($email->getHeaders(), $email))) {
+            $payload['to'] = array_map([$this, 'getStringifierAddress'], $this->getRecipients($email->getHeaders(), $email));
+        }
 
         if (null !== $email->getSubject()) {
             $payload['subject'] = $email->getSubject();
@@ -89,6 +95,24 @@ abstract class AbstractEmails extends AbstractApi implements EmailsSendApiInterf
         return $payload;
     }
 
+    protected function getBatchBasePayload(Email $email): array
+    {
+        $payload = $this->getPayload($email);
+        if (!empty($payload['to']) || !empty($payload['cc']) || !empty($payload['bcc'])) {
+            throw new LogicException(
+                "Batch base email does not support 'to', 'cc', or 'bcc' fields. Please use 'Reply-To' instead."
+            );
+        }
+
+        if (!empty($this->getFirstReplyTo($email->getHeaders()))) {
+            $payload['reply_to'] = $this->getStringifierAddress(
+                $this->getFirstReplyTo($email->getHeaders())
+            );
+        }
+
+        return $payload;
+    }
+
     private function getAttachments(Email $email): array
     {
         $attachments = [];
@@ -125,7 +149,7 @@ abstract class AbstractEmails extends AbstractApi implements EmailsSendApiInterf
         return $res;
     }
 
-    private function getSender(Headers $headers): Address
+    private function getSender(Headers $headers): ?Address
     {
         if ($sender = $headers->get('Sender')) {
             return $sender->getAddress();
@@ -137,7 +161,7 @@ abstract class AbstractEmails extends AbstractApi implements EmailsSendApiInterf
             return $from->getAddresses()[0];
         }
 
-        throw new LogicException('Unable to determine the sender of the message.');
+        return null;
     }
 
     /**
@@ -161,5 +185,24 @@ abstract class AbstractEmails extends AbstractApi implements EmailsSendApiInterf
             $recipients,
             static fn (Address $address) => false === in_array($address, array_merge($email->getCc(), $email->getBcc()), true)
         );
+    }
+
+    /**
+     * Returns the first address from the 'Reply-To' header, if it exists.
+     *
+     * @param Headers $headers
+     *
+     * @return Address|null
+     */
+    private function getFirstReplyTo(Headers $headers): ?Address
+    {
+        /** @var MailboxListHeader|null $replyToHeader */
+        $replyToHeader = $headers->get('Reply-To');
+
+        if (empty($replyToHeader) || empty($replyToHeader->getAddresses())) {
+            return null;
+        }
+
+        return $replyToHeader->getAddresses()[0];
     }
 }

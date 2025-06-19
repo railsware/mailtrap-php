@@ -10,5 +10,15 @@ use Symfony\Component\Mime\Email;
 interface EmailsSendApiInterface
 {
     public function send(Email $email): ResponseInterface;
+
+    /**
+     * Sends a batch of emails.
+     *
+     * @param Email $baseEmail General properties of all emails in the batch. Each of them can be overridden in requests for individual emails.
+     * @param Email[] $recipientEmails The list of emails. Each of them requires recipients (one of to, cc, or bcc). Each email inherits properties from base but can override them.
+     *
+     * @return ResponseInterface The response from the API.
+     */
+    public function batchSend(Email $baseEmail, array $recipientEmails): ResponseInterface;
 }
 

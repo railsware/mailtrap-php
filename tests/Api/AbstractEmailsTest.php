@@ -121,7 +121,6 @@ abstract class AbstractEmailsTest extends MailtrapTestCase
                     'email' => 'foo@example.com',
                     'name' => 'Ms. Foo Bar',
                 ],
-                'to' => [],
                 'text' => 'Some text',
                 'html' => '<p>Some text</p>',
                 'headers' => [

@@ -20,6 +20,23 @@ class Emails extends AbstractEmails implements BulkSendingInterface
         );
     }
 
+    public function batchSend(Email $baseEmail, array $recipientEmails): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpPost(
+                sprintf('%s/api/batch', $this->getHost()),
+                [],
+                [
+                    'base' => $this->getBatchBasePayload($baseEmail),
+                    'requests' => array_map(
+                        fn(Email $email) => $this->getPayload($email),
+                        $recipientEmails
+                    ),
+                ]
+            )
+        );
+    }
+
     protected function getHost(): string
     {
         return $this->config->getHost() ?: self::SENDMAIL_BULK_HOST;
