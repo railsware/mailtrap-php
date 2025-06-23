@@ -242,16 +242,17 @@ try {
  * Please note that the endpoint accepts up to 500 messages per API call, and up to 50 MB payload size, including attachments.
  */
 try {
-    // Transactional API
+    // Choose either Transactional API or Bulk API
+    // For Transactional API
     $mailtrap = MailtrapClient::initSendingEmails(
         apiKey: getenv('MAILTRAP_API_KEY'), // Your API token from https://mailtrap.io/api-tokens
     );
 
-    // Bulk API
-    $mailtrap = MailtrapClient::initSendingEmails(
-        apiKey: getenv('MAILTRAP_API_KEY'), // Your API token from https://mailtrap.io/api-tokens
-        isBulk: true // Enable bulk sending
-    );
+    // OR for Bulk API (uncomment the line below and comment out the transactional initialization)
+    // $mailtrap = MailtrapClient::initSendingEmails(
+    //    apiKey: getenv('MAILTRAP_API_KEY'), // Your API token from https://mailtrap.io/api-tokens
+    //    isBulk: true // Enable bulk sending
+    //);
 
     $baseEmail = (new MailtrapEmail())
         ->from(new Address('example@YOUR-DOMAIN-HERE.com', 'Mailtrap Test')) // Use your domain installed in Mailtrap
@@ -281,16 +282,17 @@ try {
  * Optional template variables that will be used to generate actual subject, text and html from email template
  */
 try {
-    // Transactional API
+    // Choose either Transactional API or Bulk API
+    // For Transactional API
     $mailtrap = MailtrapClient::initSendingEmails(
         apiKey: getenv('MAILTRAP_API_KEY'), // Your API token from https://mailtrap.io/api-tokens
     );
 
-    // OR Bulk API
-    $mailtrap = MailtrapClient::initSendingEmails(
-        apiKey: getenv('MAILTRAP_API_KEY'), // Your API token from https://mailtrap.io/api-tokens
-        isBulk: true // Enable bulk sending
-    );
+    // OR for Bulk API (uncomment the line below and comment out the transactional initialization)
+    // $mailtrap = MailtrapClient::initSendingEmails(
+    //    apiKey: getenv('MAILTRAP_API_KEY'), // Your API token from https://mailtrap.io/api-tokens
+    //    isBulk: true // Enable bulk sending
+    //);
 
     $baseEmail = (new MailtrapEmail())
         ->from(new Address('example@YOUR-DOMAIN-HERE.com', 'Mailtrap Test')) // Use your domain installed in Mailtrap

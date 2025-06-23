@@ -163,16 +163,17 @@ final class SomeController extends AbstractController
      */
     public function sendBatchEmail(): JsonResponse
     {
-        // Transactional API
+        // Choose either Transactional API or Bulk API
+        // For Transactional API
         $mailtrap = MailtrapClient::initSendingEmails(
             apiKey: getenv('MAILTRAP_API_KEY'), // Your API token from https://mailtrap.io/api-tokens
         );
     
-        // OR Bulk API
-        $mailtrap = MailtrapClient::initSendingEmails(
-            apiKey: getenv('MAILTRAP_API_KEY'), // Your API token from https://mailtrap.io/api-tokens
-            isBulk: true // Enable bulk sending
-        );
+        // OR for Bulk API (uncomment the line below and comment out the transactional initialization)
+        // $mailtrap = MailtrapClient::initSendingEmails(
+        //    apiKey: getenv('MAILTRAP_API_KEY'), // Your API token from https://mailtrap.io/api-tokens
+        //    isBulk: true // Enable bulk sending
+        //);
     
         $baseEmail = (new MailtrapEmail())
             ->from(new Address('example@YOUR-DOMAIN-HERE.com', 'Mailtrap Test')) // Use your domain installed in Mailtrap
