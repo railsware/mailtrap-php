@@ -1,11 +1,39 @@
-Official Mailtrap PHP client
-===============
+# Mailtrap PHP client - Official
+
 ![GitHub Actions](https://github.com/railsware/mailtrap-php/actions/workflows/ci-phpunit.yml/badge.svg)
 ![GitHub Actions](https://github.com/railsware/mailtrap-php/actions/workflows/ci-psalm.yaml/badge.svg)
 
 [![PHP version support](https://img.shields.io/packagist/dependency-v/railsware/mailtrap-php/php?style=flat)](https://packagist.org/packages/railsware/mailtrap-php)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/railsware/mailtrap-php.svg?style=flat)](https://packagist.org/packages/railsware/mailtrap-php)
 [![Total Downloads](https://img.shields.io/packagist/dt/railsware/mailtrap-php.svg?style=flat)](https://packagist.org/packages/railsware/mailtrap-php)
+
+## Prerequisites
+
+To get the most of this official Mailtrap.io PHP SDK:
+- [Create a Mailtrap account](https://mailtrap.io/signup)
+- [Verify your domain](https://mailtrap.io/sending/domains)
+
+## Supported functionality
+
+It supports Symphony and Laravel integrations. 
+
+Currently with this SDK you can:
+- Email API/SMTP
+  - Send an email (Transactional and Bulk streams)
+  - Send an email with a Template
+  - Send a batch of emails (Transactional and Bulk streams)
+- Email Sandbox
+  - Send an email
+  - Send an email with a template
+  - Message management
+  - Inbox management
+  - Project management
+- Contact management
+  - Contacts CRUD
+  - Lists CRUD
+- General
+  - Templates CRUD
+  - Suppressions management (find and delete)
 
 
 ## Installation
@@ -56,13 +84,13 @@ $email = (new MailtrapEmail())
     ->addCc('staging@example.com')
     ->bcc('mailtrapdev@example.com')
     ->subject('Best practices of building HTML emails')
-    ->text('Hey! Learn the best practices of building HTML emails and play with ready-to-go templates. Mailtrap’s Guide on How to Build HTML Email is live on our blog')
+    ->text('Hey! Learn the best practices of building HTML emails and play with ready-to-go templates. Mailtrap's Guide on How to Build HTML Email is live on our blog')
     ->html(
         '<html>
         <body>
         <p><br>Hey</br>
         Learn the best practices of building HTML emails and play with ready-to-go templates.</p>
-        <p><a href="https://mailtrap.io/blog/build-html-email/">Mailtrap’s Guide on How to Build HTML Email</a> is live on our blog</p>
+        <p><a href="https://mailtrap.io/blog/build-html-email/">Mailtrap's Guide on How to Build HTML Email</a> is live on our blog</p>
         <img src="cid:logo">
         </body>
     </html>'
