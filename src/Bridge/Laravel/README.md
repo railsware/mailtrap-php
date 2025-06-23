@@ -284,6 +284,51 @@ After that just call this CLI command, and it will send your template email
 php artisan send-template-mail
 ```
 
+### Batch Sending (Transactional OR Bulk)
+
+Add CLI command
+```php
+# app/routes/console.php
+<?php
+
+use Illuminate\Support\Facades\Artisan;
+use Mailtrap\MailtrapClient;
+use Mailtrap\Mime\MailtrapEmail;
+use Symfony\Component\Mime\Address;
+
+Artisan::command('batch-send-mail', function () {
+    // Transactional API
+    $mailtrap = MailtrapClient::initSendingEmails(
+        apiKey: getenv('MAILTRAP_API_KEY'), // Your API token from https://mailtrap.io/api-tokens
+    );
+
+    // OR Bulk API
+    $mailtrap = MailtrapClient::initSendingEmails(
+        apiKey: getenv('MAILTRAP_API_KEY'), // Your API token from https://mailtrap.io/api-tokens
+        isBulk: true // Enable bulk sending
+    );
+
+    $baseEmail = (new MailtrapEmail())
+        ->from(new Address('example@YOUR-DOMAIN-HERE.com', 'Mailtrap Test')) // Use your domain installed in Mailtrap
+        ->subject('Batch Email Subject')
+        ->text('Batch email text')
+        ->html('<p>Batch email text</p>');
+
+    $recipientEmails = [
+        (new MailtrapEmail())->to(new Address('recipient1@example.com', 'Recipient 1')),
+        (new MailtrapEmail())->to(new Address('recipient2@example.com', 'Recipient 2')),
+    ];
+
+    $mailtrap->batchSend($baseEmail, $recipientEmails);
+})->purpose('Send Template Mail');
+```
+
+After that just call this CLI command, and it will send your template email
+```bash
+php artisan batch-send-mail
+```
+
+
 ## Compatibility
 The Mailtrap library is fully compatible with **Laravel 9.x and above**.
 > Laravel did one of the largest changes in Laravel 9.x is the transition from SwiftMailer, which is no longer maintained as of December 2021, to Symfony Mailer.
