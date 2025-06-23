@@ -279,7 +279,7 @@ Artisan::command('send-template-mail', function () {
 })->purpose('Send Template Mail');
 ```
 
-After that just call this CLI command, and it will send your template email
+After that, just call this CLI command, and it will send your template email
 ```bash
 php artisan send-template-mail
 ```
@@ -300,12 +300,12 @@ Artisan::command('batch-send-mail', function () {
     // Choose either Transactional API or Bulk API
     // For Transactional API
     $mailtrap = MailtrapClient::initSendingEmails(
-        apiKey: getenv('MAILTRAP_API_KEY'), // Your API token from https://mailtrap.io/api-tokens
+        apiKey: env('MAILTRAP_API_KEY'), // Your API token from https://mailtrap.io/api-tokens
     );
 
     // OR for Bulk API (uncomment the line below and comment out the transactional initialization)
     // $mailtrap = MailtrapClient::initSendingEmails(
-    //    apiKey: getenv('MAILTRAP_API_KEY'), // Your API token from https://mailtrap.io/api-tokens
+    //    apiKey: env('MAILTRAP_API_KEY'), // Your API token from https://mailtrap.io/api-tokens
     //    isBulk: true // Enable bulk sending
     //);
 
@@ -324,7 +324,7 @@ Artisan::command('batch-send-mail', function () {
 })->purpose('Send Batch Mail');
 ```
 
-After that just call this CLI command, and it will send your batch emails
+After that, just call this CLI command, and it will send your batch emails
 ```bash
 php artisan batch-send-mail
 ```
