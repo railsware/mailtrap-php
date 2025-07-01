@@ -338,7 +338,7 @@ final class EmailsTest extends MailtrapTestCase
             ->with(AbstractApi::SENDMAIL_SANDBOX_HOST . '/api/batch/' . self::FAKE_INBOX_ID, [], $expectedPayload)
             ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedResponse)));
 
-        $response = $this->email->batchSend($baseEmail, $recipientEmails);
+        $response = $this->email->batchSend($recipientEmails, $baseEmail);
         $responseData = ResponseHelper::toArray($response);
 
         $this->assertInstanceOf(Response::class, $response);

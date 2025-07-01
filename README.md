@@ -25,6 +25,7 @@ Currently with this SDK you can:
 - Email Sandbox
   - Send an email
   - Send an email with a template
+  - Send a batch of emails
   - Message management
   - Inbox management
   - Project management

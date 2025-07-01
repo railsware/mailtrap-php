@@ -320,7 +320,7 @@ Artisan::command('batch-send-mail', function () {
         (new MailtrapEmail())->to(new Address('recipient2@example.com', 'Recipient 2')),
     ];
 
-    $mailtrap->batchSend($baseEmail, $recipientEmails);
+    $mailtrap->batchSend($recipientEmails, $baseEmail);
 })->purpose('Send Batch Mail');
 ```
 

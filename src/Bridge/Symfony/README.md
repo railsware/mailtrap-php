@@ -186,7 +186,7 @@ final class SomeController extends AbstractController
             (new MailtrapEmail())->to(new Address('recipient2@example.com', 'Recipient 2')),
         ];
     
-        $response = $mailtrap->batchSend($baseEmail, $recipientEmails);
+        $response = $mailtrap->batchSend($recipientEmails, $baseEmail);
 
         return JsonResponse::create(ResponseHelper::toArray($response));
     }

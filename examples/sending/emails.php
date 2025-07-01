@@ -265,7 +265,7 @@ try {
         (new MailtrapEmail())->to(new Address('recipient2@example.com', 'Recipient 2')),
     ];
 
-    $response = $mailtrap->batchSend($baseEmail, $recipientEmails);
+    $response = $mailtrap->batchSend($recipientEmails, $baseEmail);
 
     var_dump(ResponseHelper::toArray($response)); // Output response body as array
 } catch (Exception $e) {
@@ -328,7 +328,7 @@ try {
             ->to(new Address('recipient2@example.com', 'Recipient 2')),
     ];
 
-    $response = $mailtrap->batchSend($baseEmail, $recipientEmails);
+    $response = $mailtrap->batchSend($recipientEmails, $baseEmail);
 
     var_dump(ResponseHelper::toArray($response)); // Output response body as array
 } catch (Exception $e) {
