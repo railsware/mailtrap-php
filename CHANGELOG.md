@@ -1,3 +1,6 @@
+## [3.4.0] - 2025-07-04
+- Add Batch sending functionality (transactional, bulk and sandbox)
+
 ## [3.3.0] - 2025-06-17
 - Add Email Sending Suppressions API
 

@@ -274,4 +274,77 @@ final class EmailsTest extends MailtrapTestCase
         $this->assertArrayHasKey('success', $responseData);
         $this->assertArrayHasKey('message_ids', $responseData);
     }
+
+    public function testBatchSend(): void
+    {
+        $baseEmail = (new Email())
+            ->from(new Address('foo@example.com', 'Ms. Foo Bar'))
+            ->subject('Batch Email Subject')
+            ->text('Batch email text')
+            ->html('<p>Batch email text</p>');
+
+        $recipientEmails = [
+            (new Email())->to(new Address('recipient1@example.com', 'Recipient 1')),
+            (new Email())->to(new Address('recipient2@example.com', 'Recipient 2')),
+        ];
+
+        $expectedPayload = [
+            'base' => [
+                'from' => [
+                    'email' => 'foo@example.com',
+                    'name' => 'Ms. Foo Bar',
+                ],
+                'subject' => 'Batch Email Subject',
+                'text' => 'Batch email text',
+                'html' => '<p>Batch email text</p>',
+            ],
+            'requests' => [
+                [
+                    'to' => [[
+                        'email' => 'recipient1@example.com',
+                        'name' => 'Recipient 1',
+                    ]],
+                ],
+                [
+                    'to' => [[
+                        'email' => 'recipient2@example.com',
+                        'name' => 'Recipient 2',
+                    ]],
+                ],
+            ],
+        ];
+
+        $expectedResponse = [
+            'success' => true,
+            'responses' => [
+                [
+                    'success' => true,
+                    'message_ids' => [
+                        '53f764a0-4dca-11f0-0000-f185d7639148',
+                    ],
+                ],
+                [
+                    'success' => true,
+                    'message_ids' => [
+                        '53f764a0-4dca-11f0-0001-f185d7639148',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->email
+            ->expects($this->once())
+            ->method('httpPost')
+            ->with(AbstractApi::SENDMAIL_SANDBOX_HOST . '/api/batch/' . self::FAKE_INBOX_ID, [], $expectedPayload)
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedResponse)));
+
+        $response = $this->email->batchSend($recipientEmails, $baseEmail);
+        $responseData = ResponseHelper::toArray($response);
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertArrayHasKey('success', $responseData);
+        $this->assertTrue($responseData['success']);
+        $this->assertArrayHasKey('responses', $responseData);
+        $this->assertCount(2, $responseData['responses']);
+    }
 }
