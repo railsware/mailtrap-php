@@ -1,3 +1,6 @@
+## [3.5.0] - 2025-07-12
+- Add Contact Fields API functionality
+
 ## [3.4.0] - 2025-07-04
 - Add Batch sending functionality (transactional, bulk and sandbox)
 

@@ -30,6 +30,7 @@ Currently with this SDK you can:
   - Inbox management
   - Project management
 - Contact management
+  - Fields CRUD
   - Contacts CRUD
   - Lists CRUD
 - General

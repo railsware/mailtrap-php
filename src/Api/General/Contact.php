@@ -172,6 +172,80 @@ class Contact extends AbstractApi implements GeneralInterface
         return $this->deleteContact($email);
     }
 
+    /**
+     * Get all Contact Fields.
+     *
+     * @return ResponseInterface
+     */
+    public function getAllContactFields(): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpGet($this->getBasePath() . '/fields')
+        );
+    }
+
+    /**
+     * Get a specific Contact Field by ID.
+     *
+     * @param int $fieldId
+     * @return ResponseInterface
+     */
+    public function getContactField(int $fieldId): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpGet($this->getBasePath() . '/fields/' . $fieldId)
+        );
+    }
+
+    /**
+     * Create a new Contact Field.
+     *
+     * @param string $name
+     * @param string $dataType
+     * @param string $mergeTag
+     * @return ResponseInterface
+     */
+    public function createContactField(string $name, string $dataType, string $mergeTag): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpPost(
+                path: $this->getBasePath() . '/fields',
+                body: ['name' => $name, 'data_type' => $dataType, 'merge_tag' => $mergeTag]
+            )
+        );
+    }
+
+    /**
+     * Update an existing Contact Field by ID.
+     *
+     * @param int $fieldId
+     * @param string $name
+     * @param string $mergeTag
+     * @return ResponseInterface
+     */
+    public function updateContactField(int $fieldId, string $name, string $mergeTag): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpPatch(
+                path: $this->getBasePath() . '/fields/' . $fieldId,
+                body: ['name' => $name, 'merge_tag' => $mergeTag]
+            )
+        );
+    }
+
+    /**
+     * Delete a Contact Field by ID.
+     *
+     * @param int $fieldId
+     * @return ResponseInterface
+     */
+    public function deleteContactField(int $fieldId): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpDelete($this->getBasePath() . '/fields/' . $fieldId)
+        );
+    }
+
     public function getAccountId(): int
     {
         return $this->accountId;
