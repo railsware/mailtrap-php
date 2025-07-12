@@ -359,6 +359,131 @@ class ContactTest extends MailtrapTestCase
         $this->contact->createContact($invalidContactDTO);
     }
 
+    public function testGetAllContactFields(): void
+    {
+        $this->contact->expects($this->once())
+            ->method('httpGet')
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/fields')
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedContactFields())));
+
+        $response = $this->contact->getAllContactFields();
+        $responseData = ResponseHelper::toArray($response);
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertCount(2, $responseData);
+        $this->assertArrayHasKey('id', $responseData[0]);
+        $this->assertArrayHasKey('name', $responseData[0]);
+        $this->assertArrayHasKey('data_type', $responseData[0]);
+        $this->assertArrayHasKey('merge_tag', $responseData[0]);
+    }
+
+    public function testGetContactField(): void
+    {
+        $fieldId = 1;
+
+        $this->contact->expects($this->once())
+            ->method('httpGet')
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/fields/' . $fieldId)
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedContactFields()[0])));
+
+        $response = $this->contact->getContactField($fieldId);
+        $responseData = ResponseHelper::toArray($response);
+
+        $this->assertArrayHasKey('id', $responseData);
+        $this->assertEquals($fieldId, $responseData['id']);
+    }
+
+    public function testCreateContactField(): void
+    {
+        $fieldData = ['name' => 'Custom Field', 'data_type' => 'text', 'merge_tag' => 'my_contact_field'];
+
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/fields',
+                [],
+                $fieldData
+            )
+            ->willReturn(new Response(201, ['Content-Type' => 'application/json'], json_encode($this->getExpectedContactFields()[0])));
+
+        $response = $this->contact->createContactField($fieldData['name'], $fieldData['data_type'], $fieldData['merge_tag']);
+        $responseData = ResponseHelper::toArray($response);
+
+        $this->assertArrayHasKey('id', $responseData);
+        $this->assertEquals($fieldData['name'], $responseData['name']);
+    }
+
+    public function testCreateContactFieldMultipleValidationErrors(): void
+    {
+        $fieldData = ['name' => 'Duplicate Field', 'data_type' => 'text', 'merge_tag' => 'duplicate_merge_tag'];
+        $errors = [
+            'errors' => [
+                'name' => ['has already been taken'],
+                'merge_tag' => ['has already been taken'],
+            ],
+        ];
+
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/fields',
+                [],
+                $fieldData
+            )
+            ->willReturn(
+                new Response(422, ['Content-Type' => 'application/json'], json_encode($errors))
+            );
+
+        $this->expectException(HttpClientException::class);
+        $this->expectExceptionMessage('Errors: name -> has already been taken. merge_tag -> has already been taken.');
+
+        $this->contact->createContactField($fieldData['name'], $fieldData['data_type'], $fieldData['merge_tag']);
+    }
+
+    public function testUpdateContactField(): void
+    {
+        $fieldId = 1;
+        $fieldData = ['name' => 'Updated Field', 'merge_tag' => 'my_contact_field_new'];
+
+        $this->contact->expects($this->once())
+            ->method('httpPatch')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/fields/' . $fieldId,
+                [],
+                $fieldData
+            )
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($this->getExpectedContactFields()[1])));
+
+        $response = $this->contact->updateContactField($fieldId, $fieldData['name'], $fieldData['merge_tag']);
+        $responseData = ResponseHelper::toArray($response);
+
+        $this->assertArrayHasKey('id', $responseData);
+        $this->assertEquals($fieldData['name'], $responseData['name']);
+        $this->assertEquals($fieldData['merge_tag'], $responseData['merge_tag']);
+    }
+
+    public function testDeleteContactField(): void
+    {
+        $fieldId = 1;
+
+        $this->contact->expects($this->once())
+            ->method('httpDelete')
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/fields/' . $fieldId)
+            ->willReturn(new Response(204));
+
+        $response = $this->contact->deleteContactField($fieldId);
+
+        $this->assertEquals(204, $response->getStatusCode());
+    }
+
+    private function getExpectedContactFields(): array
+    {
+        return [
+            ['id' => 1, 'name' => 'Custom Field', 'data_type' => 'text', 'merge_tag' => 'my_contact_field'],
+            ['id' => 2, 'name' => 'Updated Field', 'data_type' => 'text', 'merge_tag' => 'my_contact_field_new'],
+        ];
+    }
+
     private function getExpectedContactLists(): array
     {
         return [
