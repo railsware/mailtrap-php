@@ -7,6 +7,7 @@ namespace Mailtrap\Api\General;
 use Mailtrap\Api\AbstractApi;
 use Mailtrap\ConfigInterface;
 use Mailtrap\DTO\Request\Contact\CreateContact;
+use Mailtrap\DTO\Request\Contact\ImportContact;
 use Mailtrap\DTO\Request\Contact\UpdateContact;
 use Psr\Http\Message\ResponseInterface;
 
@@ -243,6 +244,35 @@ class Contact extends AbstractApi implements GeneralInterface
     {
         return $this->handleResponse(
             $this->httpDelete($this->getBasePath() . '/fields/' . $fieldId)
+        );
+    }
+
+    /**
+     * Import contacts in bulk.
+     *
+     * @param ImportContact[] $contacts
+     * @return ResponseInterface
+     */
+    public function importContacts(array $contacts): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpPost(
+                path: $this->getBasePath() . '/imports',
+                body: ['contacts' => array_map(fn(ImportContact $contact) => $contact->toArray(), $contacts)]
+            )
+        );
+    }
+
+    /**
+     * Get the status of a contact import by ID.
+     *
+     * @param int $importId
+     * @return ResponseInterface
+     */
+    public function getContactImport(int $importId): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpGet($this->getBasePath() . '/imports/' . $importId)
         );
     }
 
