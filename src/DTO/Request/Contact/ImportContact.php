@@ -48,14 +48,11 @@ final class ImportContact implements ContactInterface
 
     public function toArray(): array
     {
-        return array_filter(
-            [
-                'email'                => $this->getEmail(),
-                'fields'               => $this->getFields(),
-                'list_ids_included'    => $this->getListIdsIncluded(),
-                'list_ids_excluded'    => $this->getListIdsExcluded(),
-            ],
-            fn($value) => $value !== null
-        );
+        return [
+            'email'                => $this->getEmail(),
+            'fields'               => $this->getFields(),
+            'list_ids_included'    => $this->getListIdsIncluded(),
+            'list_ids_excluded'    => $this->getListIdsExcluded(),
+        ];
     }
 }
