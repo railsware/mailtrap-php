@@ -9,6 +9,7 @@ use Mailtrap\ConfigInterface;
 use Mailtrap\DTO\Request\Contact\CreateContact;
 use Mailtrap\DTO\Request\Contact\ImportContact;
 use Mailtrap\DTO\Request\Contact\UpdateContact;
+use Mailtrap\Exception\InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -255,10 +256,23 @@ class Contact extends AbstractApi implements GeneralInterface
      */
     public function importContacts(array $contacts): ResponseInterface
     {
+
         return $this->handleResponse(
             $this->httpPost(
                 path: $this->getBasePath() . '/imports',
-                body: ['contacts' => array_map(fn(ImportContact $contact) => $contact->toArray(), $contacts)]
+                body: [
+                        'contacts' => array_map(
+                            function ($contact): array {
+                                if (!$contact instanceof ImportContact) {
+                                    throw new InvalidArgumentException(
+                                        'Each contact must be an instance of ImportContact.'
+                                    );
+                                }
+                                return $contact->toArray();
+                            },
+                            $contacts
+                        )
+                    ]
             )
         );
     }

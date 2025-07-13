@@ -8,6 +8,7 @@ use Mailtrap\DTO\Request\Contact\CreateContact;
 use Mailtrap\DTO\Request\Contact\UpdateContact;
 use Mailtrap\DTO\Request\Contact\ImportContact;
 use Mailtrap\Exception\HttpClientException;
+use Mailtrap\Exception\InvalidArgumentException;
 use Mailtrap\Tests\MailtrapTestCase;
 use Nyholm\Psr7\Response;
 use Mailtrap\Helper\ResponseHelper;
@@ -622,6 +623,32 @@ class ContactTest extends MailtrapTestCase
 
         $this->expectException(HttpClientException::class);
         $this->expectExceptionMessage('Errors: email -> invalid-email. errors -> email -> is invalid. top level domain is too short.');
+
+        $this->contact->importContacts($contacts);
+    }
+
+    public function testImportContactsThrowsExceptionForInvalidInput(): void
+    {
+        $contacts = [
+            new ImportContact(
+                email: 'valid@example.com',
+                fields: ['first_name' => 'John'],
+                listIdsIncluded: [1],
+                listIdsExcluded: []
+            ),
+            // Invalid input
+            new UpdateContact(
+                email: 'valid@example.com',
+                fields: ['first_name' => 'John'],
+                listIdsIncluded: [1],
+                listIdsExcluded: []
+            ),
+        ];
+
+        $this->contact->expects($this->never())->method('httpPost');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Each contact must be an instance of ImportContact.');
 
         $this->contact->importContacts($contacts);
     }
