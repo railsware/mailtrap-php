@@ -6,7 +6,9 @@ use Mailtrap\Api\AbstractApi;
 use Mailtrap\Api\General\Contact;
 use Mailtrap\DTO\Request\Contact\CreateContact;
 use Mailtrap\DTO\Request\Contact\UpdateContact;
+use Mailtrap\DTO\Request\Contact\ImportContact;
 use Mailtrap\Exception\HttpClientException;
+use Mailtrap\Exception\InvalidArgumentException;
 use Mailtrap\Tests\MailtrapTestCase;
 use Nyholm\Psr7\Response;
 use Mailtrap\Helper\ResponseHelper;
@@ -474,6 +476,181 @@ class ContactTest extends MailtrapTestCase
         $response = $this->contact->deleteContactField($fieldId);
 
         $this->assertEquals(204, $response->getStatusCode());
+    }
+
+    public function testImportContacts(): void
+    {
+        $contacts = [
+            new ImportContact(
+                email: 'customer1@example.com',
+                fields: ['first_name' => 'John', 'last_name' => 'Smith', 'zip_code' => 11111],
+                listIdsIncluded: [1, 2, 3],
+                listIdsExcluded: [4, 5, 6]
+            ),
+            new ImportContact(
+                email: 'customer2@example.com',
+                fields: ['first_name' => 'Joe', 'last_name' => 'Doe', 'zip_code' => 22222],
+                listIdsIncluded: [1],
+                listIdsExcluded: [4]
+            ),
+        ];
+
+        $expectedResponse = [
+            'id' => 1,
+            'status' => 'created',
+        ];
+
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/imports',
+                [],
+                ['contacts' => array_map(fn(ImportContact $contact) => $contact->toArray(), $contacts)]
+            )
+            ->willReturn(new Response(201, ['Content-Type' => 'application/json'], json_encode($expectedResponse)));
+
+        $response = $this->contact->importContacts($contacts);
+        $responseData = ResponseHelper::toArray($response);
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertArrayHasKey('id', $responseData);
+        $this->assertEquals(1, $responseData['id']);
+        $this->assertEquals('created', $responseData['status']);
+    }
+
+    public function testGetContactImportInProgress(): void
+    {
+        $importId = 1;
+        $expectedResponse = [
+            'id' => $importId,
+            'status' => 'created',
+        ];
+
+        $this->contact->expects($this->once())
+            ->method('httpGet')
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/imports/' . $importId)
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedResponse)));
+
+        $response = $this->contact->getContactImport($importId);
+        $responseData = ResponseHelper::toArray($response);
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertArrayHasKey('id', $responseData);
+        $this->assertEquals($importId, $responseData['id']);
+        $this->assertEquals('created', $responseData['status']);
+    }
+
+    public function testGetContactImportFinished(): void
+    {
+        $importId = 1;
+        $expectedResponse = [
+            'id' => $importId,
+            'status' => 'finished',
+            'created_contacts_count' => 2,
+            'updated_contacts_count' => 0,
+            'contacts_over_limit_count' => 0,
+        ];
+
+        $this->contact->expects($this->once())
+            ->method('httpGet')
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/imports/' . $importId)
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedResponse)));
+
+        $response = $this->contact->getContactImport($importId);
+        $responseData = ResponseHelper::toArray($response);
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertArrayHasKey('id', $responseData);
+        $this->assertEquals($importId, $responseData['id']);
+        $this->assertEquals('finished', $responseData['status']);
+        $this->assertEquals(2, $responseData['created_contacts_count']);
+        $this->assertEquals(0, $responseData['updated_contacts_count']);
+        $this->assertEquals(0, $responseData['contacts_over_limit_count']);
+    }
+
+    public function testGetContactImportNotFound(): void
+    {
+        $importId = 999;
+
+        $this->contact->expects($this->once())
+            ->method('httpGet')
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/imports/' . $importId)
+            ->willReturn(
+                new Response(404, ['Content-Type' => 'application/json'], json_encode(['error' => 'Not Found']))
+            );
+
+        $this->expectException(HttpClientException::class);
+        $this->expectExceptionMessage('Errors: Not Found.');
+
+        $this->contact->getContactImport($importId);
+    }
+
+    public function testImportContactsValidationError(): void
+    {
+        $contacts = [
+            new ImportContact(
+                email: 'invalid-email',
+                fields: ['first_name' => 'John'],
+                listIdsIncluded: [],
+                listIdsExcluded: []
+            ),
+        ];
+
+        $expectedResponse = [
+            'errors' => [
+                [
+                    'email' => 'invalid-email',
+                    'errors' => [
+                        'email' => [
+                            'is invalid',
+                            'top level domain is too short',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/imports',
+                [],
+                ['contacts' => array_map(fn(ImportContact $contact) => $contact->toArray(), $contacts)]
+            )
+            ->willReturn(
+                new Response(422, ['Content-Type' => 'application/json'], json_encode($expectedResponse))
+            );
+
+        $this->expectException(HttpClientException::class);
+        $this->expectExceptionMessage('Errors: email -> invalid-email. errors -> email -> is invalid. top level domain is too short.');
+
+        $this->contact->importContacts($contacts);
+    }
+
+    public function testImportContactsThrowsExceptionForInvalidInput(): void
+    {
+        $contacts = [
+            new ImportContact(
+                email: 'valid@example.com',
+                fields: ['first_name' => 'John'],
+                listIdsIncluded: [1],
+                listIdsExcluded: []
+            ),
+            // Invalid input
+            new UpdateContact(
+                email: 'valid@example.com',
+                fields: ['first_name' => 'John'],
+                listIdsIncluded: [1],
+                listIdsExcluded: []
+            ),
+        ];
+
+        $this->contact->expects($this->never())->method('httpPost');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Each contact must be an instance of ImportContact.');
+
+        $this->contact->importContacts($contacts);
     }
 
     private function getExpectedContactFields(): array

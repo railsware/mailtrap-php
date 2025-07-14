@@ -1,3 +1,6 @@
+## [3.6.0] - 2025-07-15
+- Add Contact Imports API functionality
+
 ## [3.5.0] - 2025-07-12
 - Add Contact Fields API functionality
 

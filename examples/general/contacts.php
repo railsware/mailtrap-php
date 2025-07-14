@@ -2,6 +2,7 @@
 
 use Mailtrap\Config;
 use Mailtrap\DTO\Request\Contact\CreateContact;
+use Mailtrap\DTO\Request\Contact\ImportContact;
 use Mailtrap\DTO\Request\Contact\UpdateContact;
 use Mailtrap\Helper\ResponseHelper;
 use Mailtrap\MailtrapGeneralClient;
@@ -268,6 +269,54 @@ try {
 
     // Print the response status code
     var_dump($response->getStatusCode());
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), PHP_EOL;
+}
+
+
+/**
+ * Import contacts in bulk with support for custom fields and list management.
+ * Existing contacts with matching email addresses will be updated automatically.
+ * You can import up to 50,000 contacts per request.
+ * The import process runs asynchronously - use the returned import ID to check the status and results.
+ *
+ * POST https://mailtrap.io/api/accounts/{account_id}/contacts/imports
+ */
+try {
+    $contactsToImport = [
+        new ImportContact(
+            email: 'customer1@example.com',
+            fields: ['first_name' => 'John', 'last_name' => 'Smith', 'zip_code' => 11111],
+            listIdsIncluded: [1, 2],
+            listIdsExcluded: [4, 5]
+        ),
+        new ImportContact(
+            email: 'customer2@example.com',
+            fields: ['first_name' => 'Joe', 'last_name' => 'Doe', 'zip_code' => 22222],
+            listIdsIncluded: [1],
+            listIdsExcluded: [4]
+        ),
+    ];
+
+    $response = $contacts->importContacts($contactsToImport);
+    // print the response body (array)
+    var_dump(ResponseHelper::toArray($response));
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), PHP_EOL;
+}
+
+
+/**
+ * Get the status of a contact import by ID.
+ *
+ * GET https://mailtrap.io/api/accounts/{account_id}/contacts/imports/{import_id}
+ */
+try {
+    $importId = 1; // Replace 1 with the actual import ID
+    $response = $contacts->getContactImport($importId);
+
+    // print the response body (array)
+    var_dump(ResponseHelper::toArray($response));
 } catch (Exception $e) {
     echo 'Caught exception: ',  $e->getMessage(), PHP_EOL;
 }

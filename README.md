@@ -33,6 +33,7 @@ Currently with this SDK you can:
   - Fields CRUD
   - Contacts CRUD
   - Lists CRUD
+  - Import
 - General
   - Templates CRUD
   - Suppressions management (find and delete)
