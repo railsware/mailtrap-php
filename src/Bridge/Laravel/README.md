@@ -274,7 +274,7 @@ Artisan::command('send-template-mail', function () {
     ;
 
     MailtrapClient::initSendingEmails(
-        apiKey: env('MAILTRAP_API_KEY') // your API token from here https://mailtrap.io/api-tokens
+        apiKey: config('services.mailtrap-sdk.apiKey') // your API token from here https://mailtrap.io/api-tokens
     )->send($email);
 })->purpose('Send Template Mail');
 ```
@@ -300,12 +300,12 @@ Artisan::command('batch-send-mail', function () {
     // Choose either Transactional API or Bulk API
     // For Transactional API
     $mailtrap = MailtrapClient::initSendingEmails(
-        apiKey: env('MAILTRAP_API_KEY'), // Your API token from https://mailtrap.io/api-tokens
+        apiKey: config('services.mailtrap-sdk.apiKey'), // Your API token from https://mailtrap.io/api-tokens
     );
 
     // OR for Bulk API (uncomment the line below and comment out the transactional initialization)
     // $mailtrap = MailtrapClient::initSendingEmails(
-    //    apiKey: env('MAILTRAP_API_KEY'), // Your API token from https://mailtrap.io/api-tokens
+    //    apiKey: config('services.mailtrap-sdk.apiKey'), // Your API token from https://mailtrap.io/api-tokens
     //    isBulk: true // Enable bulk sending
     //);
 
@@ -342,6 +342,18 @@ The Mailtrap library is fully compatible with **Laravel 9.x and above**.
 
 But you can still use this library as a standalone. More example how to use, you can find [here](../../../examples)
 
+### WARNING
+If you encounter the `IncompleteDsnException` error, it is likely that you are using an outdated Laravel version 
+and the configuration parameters were not set automatically by Laravel service provider.
+Please add them manually to the `config/services.php` file and after that run the `php artisan config:clear` command.
+
+```php
+'mailtrap-sdk' => [
+    'host' => env('MAILTRAP_HOST', 'send.api.mailtrap.io'),
+    'apiKey' => env('MAILTRAP_API_KEY'),
+    'inboxId' => env('MAILTRAP_INBOX_ID'),
+],
+```
 
 ## Resources
 
