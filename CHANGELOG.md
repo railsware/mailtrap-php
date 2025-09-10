@@ -1,3 +1,7 @@
+## [3.7.0] - 2025-09-15
+- Add Sending Domains API functionality
+- Add current billing cycle usage
+
 ## [3.6.0] - 2025-07-15
 - Add Contact Imports API functionality
 
