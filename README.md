@@ -22,6 +22,7 @@ Currently with this SDK you can:
   - Send an email (Transactional and Bulk streams)
   - Send an email with a Template
   - Send a batch of emails (Transactional and Bulk streams)
+  - Sending domain management CRUD
 - Email Sandbox
   - Send an email
   - Send an email with a template
@@ -34,9 +35,11 @@ Currently with this SDK you can:
   - Contacts CRUD
   - Lists CRUD
   - Import
+  - Events
 - General
   - Templates CRUD
   - Suppressions management (find and delete)
+  - Billing info
 
 
 ## Installation

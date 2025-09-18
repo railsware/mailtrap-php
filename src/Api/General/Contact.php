@@ -7,6 +7,7 @@ namespace Mailtrap\Api\General;
 use Mailtrap\Api\AbstractApi;
 use Mailtrap\ConfigInterface;
 use Mailtrap\DTO\Request\Contact\CreateContact;
+use Mailtrap\DTO\Request\Contact\CreateContactEvent;
 use Mailtrap\DTO\Request\Contact\ImportContact;
 use Mailtrap\DTO\Request\Contact\UpdateContact;
 use Mailtrap\Exception\InvalidArgumentException;
@@ -287,6 +288,23 @@ class Contact extends AbstractApi implements GeneralInterface
     {
         return $this->handleResponse(
             $this->httpGet($this->getBasePath() . '/imports/' . $importId)
+        );
+    }
+
+    /**
+     * Create a new Contact Event.
+     *
+     * @param string $contactIdentifier Contact ID (UUID) or email
+     * @param CreateContactEvent $event
+     * @return ResponseInterface
+     */
+    public function createContactEvent(string $contactIdentifier, CreateContactEvent $event): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpPost(
+                path: $this->getBasePath() . '/' . urlencode($contactIdentifier) . '/events',
+                body: $event->toArray()
+            )
         );
     }
 

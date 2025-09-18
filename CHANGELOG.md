@@ -1,3 +1,6 @@
+## [3.8.0] - 2025-09-22
+- Add Create Contact event API functionality
+
 ## [3.7.0] - 2025-09-15
 - Add Sending Domains API functionality
 - Add current billing cycle usage
