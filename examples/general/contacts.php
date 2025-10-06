@@ -2,6 +2,7 @@
 
 use Mailtrap\Config;
 use Mailtrap\DTO\Request\Contact\CreateContact;
+use Mailtrap\DTO\Request\Contact\CreateContactEvent;
 use Mailtrap\DTO\Request\Contact\ImportContact;
 use Mailtrap\DTO\Request\Contact\UpdateContact;
 use Mailtrap\Helper\ResponseHelper;
@@ -314,6 +315,33 @@ try {
 try {
     $importId = 1; // Replace 1 with the actual import ID
     $response = $contacts->getContactImport($importId);
+
+    // print the response body (array)
+    var_dump(ResponseHelper::toArray($response));
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), PHP_EOL;
+}
+
+
+/**
+ * Create a new Contact Event
+ *
+ * POST https://mailtrap.io/api/accounts/{account_id}/contacts/{contact_identifier}/events
+ */
+try {
+    // Create event using contact email
+    $response = $contacts->createContactEvent(
+        'john.smith@example.com', // Contact identifier (email or UUID)
+        CreateContactEvent::init(
+            'UserLogin',
+            [
+                'user_id' => 101,
+                'user_name' => 'John Smith',
+                'is_active' => true,
+                'last_seen' => null
+            ]
+        )
+    );
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));

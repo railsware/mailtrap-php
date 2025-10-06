@@ -5,6 +5,7 @@ namespace Mailtrap\Tests\Api\General;
 use Mailtrap\Api\AbstractApi;
 use Mailtrap\Api\General\Contact;
 use Mailtrap\DTO\Request\Contact\CreateContact;
+use Mailtrap\DTO\Request\Contact\CreateContactEvent;
 use Mailtrap\DTO\Request\Contact\UpdateContact;
 use Mailtrap\DTO\Request\Contact\ImportContact;
 use Mailtrap\Exception\HttpClientException;
@@ -651,6 +652,277 @@ class ContactTest extends MailtrapTestCase
         $this->expectExceptionMessage('Each contact must be an instance of ImportContact.');
 
         $this->contact->importContacts($contacts);
+    }
+
+    public function testCreateContactEvent(): void
+    {
+        $contactIdentifier = 'john.smith@example.com';
+        $eventData = new CreateContactEvent(
+            'UserLogin',
+            [
+                'user_id' => 101,
+                'user_name' => 'John Smith',
+                'is_active' => true,
+                'last_seen' => null,
+            ]
+        );
+
+        $expectedResponse = [
+            'contact_id' => '018dd5e3-f6d2-7c00-8f9b-e5c3f2d8a132',
+            'contact_email' => 'john.smith@example.com',
+            'name' => 'UserLogin',
+            'params' => [
+                'user_id' => 101,
+                'user_name' => 'John Smith',
+                'is_active' => true,
+                'last_seen' => null,
+            ],
+        ];
+
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/' . urlencode($contactIdentifier) . '/events',
+                [],
+                $eventData->toArray()
+            )
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedResponse)));
+
+        $response = $this->contact->createContactEvent($contactIdentifier, $eventData);
+        $responseData = ResponseHelper::toArray($response);
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertArrayHasKey('contact_id', $responseData);
+        $this->assertArrayHasKey('name', $responseData);
+        $this->assertEquals('UserLogin', $responseData['name']);
+        $this->assertEquals(101, $responseData['params']['user_id']);
+    }
+
+    public function testCreateContactEventWithContactId(): void
+    {
+        $contactId = '018dd5e3-f6d2-7c00-8f9b-e5c3f2d8a132';
+        $eventData = new CreateContactEvent(
+            'PurchaseCompleted',
+            [
+                'order_id' => 'ORD-12345',
+                'amount' => 99.99,
+                'currency' => 'USD',
+            ]
+        );
+
+        $expectedResponse = [
+            'contact_id' => $contactId,
+            'contact_email' => 'john.smith@example.com',
+            'name' => 'PurchaseCompleted',
+            'params' => [
+                'order_id' => 'ORD-12345',
+                'amount' => 99.99,
+                'currency' => 'USD',
+            ],
+        ];
+
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/' . urlencode($contactId) . '/events',
+                [],
+                $eventData->toArray()
+            )
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedResponse)));
+
+        $response = $this->contact->createContactEvent($contactId, $eventData);
+        $responseData = ResponseHelper::toArray($response);
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertArrayHasKey('contact_id', $responseData);
+        $this->assertEquals('PurchaseCompleted', $responseData['name']);
+        $this->assertEquals('ORD-12345', $responseData['params']['order_id']);
+    }
+
+    public function testCreateContactEventWithEmptyParams(): void
+    {
+        $contactIdentifier = 'test@example.com';
+        $eventData = new CreateContactEvent('SimpleEvent');
+
+        $expectedResponse = [
+            'contact_id' => '018dd5e3-f6d2-7c00-8f9b-e5c3f2d8a132',
+            'contact_email' => 'test@example.com',
+            'name' => 'SimpleEvent',
+            'params' => [],
+        ];
+
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/' . urlencode($contactIdentifier) . '/events',
+                [],
+                $eventData->toArray()
+            )
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedResponse)));
+
+        $response = $this->contact->createContactEvent($contactIdentifier, $eventData);
+        $responseData = ResponseHelper::toArray($response);
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertEquals('SimpleEvent', $responseData['name']);
+        $this->assertEmpty($responseData['params']);
+    }
+
+    public function testCreateContactEventNotFound(): void
+    {
+        $contactIdentifier = 'nonexistent@example.com';
+        $eventData = new CreateContactEvent('UserLogin', ['user_id' => 101]);
+
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/' . urlencode($contactIdentifier) . '/events',
+                [],
+                $eventData->toArray()
+            )
+            ->willReturn(
+                new Response(404, ['Content-Type' => 'application/json'], json_encode(['error' => 'Contact not found']))
+            );
+
+        $this->expectException(HttpClientException::class);
+        $this->expectExceptionMessage('Errors: Contact not found.');
+
+        $this->contact->createContactEvent($contactIdentifier, $eventData);
+    }
+
+    public function testCreateContactEventValidationError(): void
+    {
+        $contactIdentifier = 'test@example.com';
+        $eventData = new CreateContactEvent('', []); // Empty event name
+
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/' . urlencode($contactIdentifier) . '/events',
+                [],
+                $eventData->toArray()
+            )
+            ->willReturn(
+                new Response(422, ['Content-Type' => 'application/json'], json_encode([
+                    'errors' => [
+                        'name' => ['The name field is required.']
+                    ]
+                ]))
+            );
+
+        $this->expectException(HttpClientException::class);
+        $this->expectExceptionMessage('Errors: name -> The name field is required.');
+
+        $this->contact->createContactEvent($contactIdentifier, $eventData);
+    }
+
+    public function testCreateContactEventUnauthorized(): void
+    {
+        $contactIdentifier = 'test@example.com';
+        $eventData = new CreateContactEvent('UserLogin', ['user_id' => 101]);
+
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/' . urlencode($contactIdentifier) . '/events',
+                [],
+                $eventData->toArray()
+            )
+            ->willReturn(
+                new Response(401, ['Content-Type' => 'application/json'], json_encode([
+                    'error' => 'Incorrect API token'
+                ]))
+            );
+
+        $this->expectException(HttpClientException::class);
+        $this->expectExceptionMessage('Errors: Incorrect API token.');
+
+        $this->contact->createContactEvent($contactIdentifier, $eventData);
+    }
+
+    public function testCreateContactEventForbidden(): void
+    {
+        $contactIdentifier = 'test@example.com';
+        $eventData = new CreateContactEvent('UserLogin', ['user_id' => 101]);
+
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/' . urlencode($contactIdentifier) . '/events',
+                [],
+                $eventData->toArray()
+            )
+            ->willReturn(
+                new Response(403, ['Content-Type' => 'application/json'], json_encode([
+                    'errors' => 'Access forbidden'
+                ]))
+            );
+
+        $this->expectException(HttpClientException::class);
+        $this->expectExceptionMessage('Errors: Access forbidden.');
+
+        $this->contact->createContactEvent($contactIdentifier, $eventData);
+    }
+
+    public function testCreateContactEventComplexValidationErrors(): void
+    {
+        $contactIdentifier = 'test@example.com';
+        $eventData = new CreateContactEvent(
+            'VeryLongEventNameThatExceedsTheMaximumAllowedLength',
+            ['invalid_param_structure' => 'not_a_hash']
+        );
+
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/' . urlencode($contactIdentifier) . '/events',
+                [],
+                $eventData->toArray()
+            )
+            ->willReturn(
+                new Response(422, ['Content-Type' => 'application/json'], json_encode([
+                    'errors' => [
+                        'name' => [
+                            'must be a string',
+                            'is too long'
+                        ],
+                        'params' => [
+                            'must be a hash',
+                            "key 'foo' is too long",
+                            "value for 'bar' is too long"
+                        ]
+                    ]
+                ]))
+            );
+
+        $this->expectException(HttpClientException::class);
+        $this->expectExceptionMessage('Errors: name -> must be a string. is too long. params -> must be a hash. key \'foo\' is too long. value for \'bar\' is too long.');
+
+        $this->contact->createContactEvent($contactIdentifier, $eventData);
+    }
+
+    public function testCreateContactEventRateLimitExceeded(): void
+    {
+        $contactIdentifier = 'test@example.com';
+        $eventData = new CreateContactEvent('UserLogin', ['user_id' => 101]);
+
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/' . urlencode($contactIdentifier) . '/events',
+                [],
+                $eventData->toArray()
+            )
+            ->willReturn(
+                new Response(429, ['Content-Type' => 'application/json'], json_encode([
+                    'errors' => 'Rate limit exceeded'
+                ]))
+            );
+
+        $this->expectException(HttpClientException::class);
+        $this->expectExceptionMessage('Errors: Rate limit exceeded.');
+
+        $this->contact->createContactEvent($contactIdentifier, $eventData);
     }
 
     private function getExpectedContactFields(): array
