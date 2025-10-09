@@ -8,6 +8,7 @@ use Mailtrap\Api\AbstractApi;
 use Mailtrap\ConfigInterface;
 use Mailtrap\DTO\Request\Contact\CreateContact;
 use Mailtrap\DTO\Request\Contact\CreateContactEvent;
+use Mailtrap\DTO\Request\Contact\ContactExportFilter;
 use Mailtrap\DTO\Request\Contact\ImportContact;
 use Mailtrap\DTO\Request\Contact\UpdateContact;
 use Mailtrap\Exception\InvalidArgumentException;
@@ -305,6 +306,50 @@ class Contact extends AbstractApi implements GeneralInterface
                 path: $this->getBasePath() . '/' . urlencode($contactIdentifier) . '/events',
                 body: $event->toArray()
             )
+        );
+    }
+
+    /**
+     * Create a new Contact Export.
+     *
+     * POST https://mailtrap.io/api/accounts/{account_id}/contacts/exports
+     *
+     * @param ContactExportFilter[] $filters
+     * @return ResponseInterface
+     */
+    public function createContactExport(array $filters = []): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpPost(
+                path: $this->getBasePath() . '/exports',
+                body: [
+                    'filters' => array_map(
+                        function ($filter): array {
+                            if (!$filter instanceof ContactExportFilter) {
+                                throw new InvalidArgumentException('Each filter must be an instance of ContactExportFilter.');
+                            }
+
+                            return $filter->toArray();
+                        },
+                        $filters
+                    )
+                ]
+            )
+        );
+    }
+
+    /**
+     * Get Contact Export status/info by ID.
+     *
+     * GET https://mailtrap.io/api/accounts/{account_id}/contacts/exports/{export_id}
+     *
+     * @param int $exportId
+     * @return ResponseInterface
+     */
+    public function getContactExport(int $exportId): ResponseInterface
+    {
+        return $this->handleResponse(
+            $this->httpGet($this->getBasePath() . '/exports/' . $exportId)
         );
     }
 

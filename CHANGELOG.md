@@ -1,3 +1,6 @@
+## [3.9.0] - 2025-10-14
+- Add Contact Export functionality
+
 ## [3.8.0] - 2025-09-22
 - Add Create Contact event API functionality
 
