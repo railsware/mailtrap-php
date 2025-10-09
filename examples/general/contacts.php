@@ -7,6 +7,7 @@ use Mailtrap\DTO\Request\Contact\ImportContact;
 use Mailtrap\DTO\Request\Contact\UpdateContact;
 use Mailtrap\Helper\ResponseHelper;
 use Mailtrap\MailtrapGeneralClient;
+use Mailtrap\DTO\Request\Contact\ContactExportFilter;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -342,6 +343,43 @@ try {
             ]
         )
     );
+
+    // print the response body (array)
+    var_dump(ResponseHelper::toArray($response));
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), PHP_EOL;
+}
+
+/**
+ * Create a new Contact Export (asynchronous task)
+ *
+ * POST https://mailtrap.io/api/accounts/{account_id}/contacts/exports
+ */
+try {
+    $filters = [
+        // Export contacts that belong to lists 1 or 2
+        ContactExportFilter::init('list_id', 'equal', [1, 2]),
+        // Only subscribed contacts
+        ContactExportFilter::init('subscription_status', 'equal', 'subscribed'),
+    ];
+
+    $response = $contacts->createContactExport($filters);
+
+    // print the response body (array)
+    var_dump(ResponseHelper::toArray($response));
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), PHP_EOL;
+}
+
+/**
+ * Get Contact Export status / download URL
+ * (Poll this endpoint until status becomes `finished` and `url` is not null)
+ *
+ * GET https://mailtrap.io/api/accounts/{account_id}/contacts/exports/{export_id}
+ */
+try {
+    $exportId = 1; // Replace 1 with the actual export ID obtained from createContactExport
+    $response = $contacts->getContactExport($exportId);
 
     // print the response body (array)
     var_dump(ResponseHelper::toArray($response));

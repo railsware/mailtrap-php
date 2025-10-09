@@ -6,6 +6,7 @@ use Mailtrap\Api\AbstractApi;
 use Mailtrap\Api\General\Contact;
 use Mailtrap\DTO\Request\Contact\CreateContact;
 use Mailtrap\DTO\Request\Contact\CreateContactEvent;
+use Mailtrap\DTO\Request\Contact\ContactExportFilter;
 use Mailtrap\DTO\Request\Contact\UpdateContact;
 use Mailtrap\DTO\Request\Contact\ImportContact;
 use Mailtrap\Exception\HttpClientException;
@@ -925,6 +926,139 @@ class ContactTest extends MailtrapTestCase
         $this->contact->createContactEvent($contactIdentifier, $eventData);
     }
 
+    /**
+     * =============================
+     * Contact Exports
+     * =============================
+     */
+    public function testCreateContactExport(): void
+    {
+        $filters = [
+            new ContactExportFilter('list_id', 'equal', [101, 102]),
+            new ContactExportFilter('subscription_status', 'equal', 'subscribed'),
+        ];
+        $expectedResponse = [
+            'id' => 1,
+            'status' => 'started',
+            'created_at' => '2025-01-01T00:00:00Z',
+            'updated_at' => '2025-05-01T00:00:00Z',
+            'url' => null,
+        ];
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/exports',
+                [],
+                ['filters' => array_map(fn(ContactExportFilter $f) => $f->toArray(), $filters)]
+            )
+            ->willReturn(new Response(201, ['Content-Type' => 'application/json'], json_encode($expectedResponse)));
+        $response = $this->contact->createContactExport($filters);
+        $responseData = ResponseHelper::toArray($response);
+        $this->assertArrayHasKey('id', $responseData);
+    }
+
+    public function testCreateContactExportUnauthorized(): void
+    {
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/exports',
+                [],
+                ['filters' => []]
+            )
+            ->willReturn(new Response(401, ['Content-Type' => 'application/json'], json_encode(['error' => 'Incorrect API token'])));
+        $this->expectException(HttpClientException::class);
+        $this->expectExceptionMessage('Errors: Incorrect API token.');
+        $this->contact->createContactExport();
+    }
+
+    public function testCreateContactExportForbidden(): void
+    {
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/exports',
+                [],
+                ['filters' => []]
+            )
+            ->willReturn(new Response(403, ['Content-Type' => 'application/json'], json_encode(['errors' => 'Access forbidden'])));
+        $this->expectException(HttpClientException::class);
+        $this->expectExceptionMessage('Errors: Access forbidden.');
+        $this->contact->createContactExport();
+    }
+
+    public function testCreateContactExportValidationError(): void
+    {
+        $filters = [new ContactExportFilter('list_id', 'equal', [1])];
+        $errors = [
+            'errors' => [
+                'filters' => 'invalid',
+                'base' => [
+                    'There is a previous export initiated. You will be notified by email once it is completed.'
+                ],
+            ],
+        ];
+
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/exports',
+                [],
+                ['filters' => array_map(fn(ContactExportFilter $f) => $f->toArray(), $filters)]
+            )
+            ->willReturn(new Response(422, ['Content-Type' => 'application/json'], json_encode($errors)));
+
+        $this->expectException(HttpClientException::class);
+        $this->expectExceptionMessage('Errors: filters -> invalid. base -> There is a previous export initiated. You will be notified by email once it is completed.');
+
+        $this->contact->createContactExport($filters);
+    }
+
+    public function testCreateContactExportRateLimitExceeded(): void
+    {
+        $this->contact->expects($this->once())
+            ->method('httpPost')
+            ->with(
+                AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/exports',
+                [],
+                ['filters' => []]
+            )
+            ->willReturn(new Response(429, ['Content-Type' => 'application/json'], json_encode(['errors' => 'Rate limit exceeded'])));
+        $this->expectException(HttpClientException::class);
+        $this->expectExceptionMessage('Errors: Rate limit exceeded.');
+        $this->contact->createContactExport();
+    }
+
+    public function testGetContactExport(): void
+    {
+        $exportId = 1;
+        $expectedResponse = [
+            'id' => $exportId,
+            'status' => 'started',
+            'created_at' => '2021-01-01T00:00:00Z',
+            'updated_at' => '2021-01-01T00:00:00Z',
+            'url' => null,
+        ];
+        $this->contact->expects($this->once())
+            ->method('httpGet')
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/exports/' . $exportId)
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], json_encode($expectedResponse)));
+        $response = $this->contact->getContactExport($exportId);
+        $responseData = ResponseHelper::toArray($response);
+        $this->assertArrayHasKey('id', $responseData);
+    }
+
+    public function testGetContactExportNotFound(): void
+    {
+        $exportId = 9999;
+        $this->contact->expects($this->once())
+            ->method('httpGet')
+            ->with(AbstractApi::DEFAULT_HOST . '/api/accounts/' . self::FAKE_ACCOUNT_ID . '/contacts/exports/' . $exportId)
+            ->willReturn(new Response(404, ['Content-Type' => 'application/json'], json_encode(['error' => 'Not Found'])));
+        $this->expectException(HttpClientException::class);
+        $this->expectExceptionMessage('Errors: Not Found.');
+        $this->contact->getContactExport($exportId);
+    }
     private function getExpectedContactFields(): array
     {
         return [
