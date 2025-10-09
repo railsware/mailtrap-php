@@ -6,7 +6,7 @@ use Mailtrap\Api\AbstractApi;
 use Mailtrap\Api\General\Contact;
 use Mailtrap\DTO\Request\Contact\CreateContact;
 use Mailtrap\DTO\Request\Contact\CreateContactEvent;
-use Mailtrap\DTO\Request\Contact\ContactExportFilter; // replaced
+use Mailtrap\DTO\Request\Contact\ContactExportFilter;
 use Mailtrap\DTO\Request\Contact\UpdateContact;
 use Mailtrap\DTO\Request\Contact\ImportContact;
 use Mailtrap\Exception\HttpClientException;
