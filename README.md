@@ -34,7 +34,7 @@ Currently with this SDK you can:
   - Fields CRUD
   - Contacts CRUD
   - Lists CRUD
-  - Import
+  - Import/Export
   - Events
 - General
   - Templates CRUD
